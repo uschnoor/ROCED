@@ -95,7 +95,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
         # cmd_idle = "condor_q -constraint 'JobStatus == 1' -slotads slotads_bwforcluster " \
         #            "-analyze:summary,reverse | tail -n1 | awk -F ' ' " \
         #            "'{print $3 "\n" $4}'| sort -n | head -n1"
-        constraint = "( %s ) && ( %s )" % (self._query_constraints, self.getConfig(self.configCondorConstraint))
+        #constraint = "( %s ) && ( %s )" % (self._query_constraints, self.getConfig(self.configCondorConstraint))
 
         #cmd = ("condor_q -global -allusers -nobatch -constraint '%s' %s" % (constraint, self._query_format_string))
         cmd = 'squeue --all --noheader --format="%T %r %c"'

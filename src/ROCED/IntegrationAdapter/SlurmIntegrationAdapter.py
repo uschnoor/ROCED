@@ -32,32 +32,32 @@ from Util import ScaleTools
 from Util.PythonTools import Caching
 
 
-class HTCondorIntegrationAdapter(IntegrationAdapterBase):
+class SlurmIntegrationAdapter(IntegrationAdapterBase):
     configIntLogger = "logger_name"
-    configCondorName = "site_name"
-    configCondorConstraint = "condor_constraint"
-    configCondorUser = "condor_user"
-    configCondorKey = "condor_key"
-    configCondorServer = "condor_server"
-    configCondorWaitPD = "condor_wait_pd"
-    configCondorWaitWorking = "condor_wait_working"
-    configCondorDeadline = "condor_deadline"
+    configSlurmName = "site_name"
+    configSlurmConstraint = "slurm_constraint"
+    configSlurmUser = "slurm_user"
+    configSlurmKey = "slurm_key"
+    configSlurmServer = "slurm_server"
+    configSlurmWaitPD = "slurm_wait_pd"
+    configSlurmWaitWorking = "slurm_wait_working"
+    configSlurmDeadline = "slurm_deadline"
 
     # list of the different slot states for each machine, e.g. [slot1,slot2,...]
-    reg_site_condor_status = "condor_slot_status"
+    reg_site_slurm_status = "slurm_slot_status"
     reg_status_last_update = MachineRegistry.MachineRegistry.regStatusLastUpdate
     # possible slot state
-    condorStatusClaimed = "Claimed"
+    slurmStatusClaimed = "Claimed"
     # Both states show an empty/idling machine. "Owner" means that there are some job requirements
     # defined on the machine which have to be met, before a job is assigned.
     # "Unclaimed" machines will accept any job.
-    condorStatusOwner = "Owner"
-    condorStatusUnclaimed = "Unclaimed"
-    condorStatusIdle = [condorStatusOwner, condorStatusUnclaimed]
-    condorStatusRetiring = "Retiring"
+    slurmStatusOwner = "Owner"
+    slurmStatusUnclaimed = "Unclaimed"
+    slurmStatusIdle = [slurmStatusOwner, slurmStatusUnclaimed]
+    slurmStatusRetiring = "Retiring"
     # possible slot activity
-    condorActivityDrained = "Drained"
-    # condor machine name saved in machine registry - communication to site adapter(s)
+    slurmActivityDrained = "Drained"
+    # slurm machine name saved in machine registry - communication to site adapter(s)
     reg_site_server_node_name = "reg_site_server_node_name"
 
     # Output and its parsing
@@ -66,38 +66,38 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
     collector_error_string = "Failed to end classad message"
 
     def __init__(self):
-        """HT Condor specific integration adapter. Monitors collector via condor_status and updates machine states.
+        """Slurm specific integration adapter. Monitors collector via slurm_status and updates machine states.
 
         Load config keys from config file
 
         :return:
         """
-        super(HTCondorIntegrationAdapter, self).__init__()
+        super(SlurmIntegrationAdapter, self).__init__()
         self.addOptionalConfigKeys(self.configIntLogger, Config.ConfigTypeString,
                                    description="logger name",
-                                   default="HTC_Int")
-        self.addOptionalConfigKeys(self.configCondorConstraint, Config.ConfigTypeString,
-                                   description="ClassAd constraint to filter machines in condor_status",
+                                   default="Slurm_Int")
+        self.addOptionalConfigKeys(self.configSlurmConstraint, Config.ConfigTypeString,
+                                   description="ClassAd constraint to filter machines in slurm_status",
                                    default="True")
-        self.addOptionalConfigKeys(key=self.configCondorUser, datatype=Config.ConfigTypeString,
-                                   description="Login name for condor collector server.",
+        self.addOptionalConfigKeys(key=self.configSlurmUser, datatype=Config.ConfigTypeString,
+                                   description="Login name for slurm collector server.",
                                    default=getpass.getuser())
-        self.addOptionalConfigKeys(key=self.configCondorServer, datatype=Config.ConfigTypeString,
+        self.addOptionalConfigKeys(key=self.configSlurmServer, datatype=Config.ConfigTypeString,
                                    description="Hostname of collector server. If machines are connected to connector "
                                                "and have commandline interface installed, localhost can easily be used "
                                                "because we query with \"global\".",
                                    default="localhost")
-        self.addOptionalConfigKeys(key=self.configCondorKey, datatype=Config.ConfigTypeString,
+        self.addOptionalConfigKeys(key=self.configSlurmKey, datatype=Config.ConfigTypeString,
                                    description="Path to SSH key for remote login. Not necessary with server localhost.",
                                    default="~/")
-        self.addCompulsoryConfigKeys(self.configCondorName, Config.ConfigTypeString, description="Site name")
-        self.addOptionalConfigKeys(self.configCondorWaitPD, Config.ConfigTypeInt,
+        self.addCompulsoryConfigKeys(self.configSlurmName, Config.ConfigTypeString, description="Site name")
+        self.addOptionalConfigKeys(self.configSlurmWaitPD, Config.ConfigTypeInt,
                                    description="Wait for x minutes before changing to disintegrating.",
                                    default=0)
-        self.addOptionalConfigKeys(self.configCondorWaitWorking, Config.ConfigTypeInt,
+        self.addOptionalConfigKeys(self.configSlurmWaitWorking, Config.ConfigTypeInt,
                                    description="Wait for x minutes before changing to pending disintegration.",
                                    default=0)
-        self.addCompulsoryConfigKeys(self.configCondorDeadline, Config.ConfigTypeInt,
+        self.addCompulsoryConfigKeys(self.configSlurmDeadline, Config.ConfigTypeInt,
                                      description="Timeout (in minutes) before a machine stuck in "
                                                  "status integrating/disintegrating is considered lost.")
 
@@ -108,7 +108,7 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
 
         :return:
         """
-        super(HTCondorIntegrationAdapter, self).init()
+        super(SlurmIntegrationAdapter, self).init()
         self.mr.registerListener(self)
 
     @classmethod
@@ -127,13 +127,13 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
         machine = cls.mr.machines[machine_id]
         cores_claimed = 0.0
         machine[cls.mr.regMachineLoad] = 0.0
-        for slot in range(len(machine[cls.reg_site_condor_status])):
-            if machine[cls.reg_site_condor_status][slot][0] in cls.condorStatusClaimed:
+        for slot in range(len(machine[cls.reg_site_slurm_status])):
+            if machine[cls.reg_site_slurm_status][slot][0] in cls.slurmStatusClaimed:
                 cores_claimed += 1
                 # set a timestamp on this event
                 machine[cls.reg_status_last_update] = datetime.now()
                 # update machine load in machine object
-                machineLoad = cores_claimed / len(machine[cls.reg_site_condor_status])
+                machineLoad = cores_claimed / len(machine[cls.reg_site_slurm_status])
                 machine[cls.mr.regMachineLoad] = machineLoad
         return machine[cls.mr.regMachineLoad]
 
@@ -148,11 +148,11 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
         nDrainedSlots = 0
         statusDraining = False
         try:
-            for slot in cls.mr.machines[machine_id][cls.reg_site_condor_status]:
-                if slot[0] == cls.condorActivityDrained:
+            for slot in cls.mr.machines[machine_id][cls.reg_site_slurm_status]:
+                if slot[0] == cls.slurmActivityDrained:
                     nDrainedSlots += 1
                     statusDraining = True
-                if slot[1] == cls.condorStatusRetiring:
+                if slot[1] == cls.slurmStatusRetiring:
                     statusDraining = True
         except KeyError:
             pass
@@ -164,7 +164,7 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
 
         :return: site_name
         """
-        return self.getConfig(self.configCondorName)
+        return self.getConfig(self.configSlurmName)
 
     def getSiteMachines(self, status=None, machineType=None):
         """Get machines running at site
@@ -191,13 +191,13 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
         :return:
         """
 
-        condor_timeout = self.getConfig(self.configCondorDeadline) * 60
-        condor_wait_working = self.getConfig(self.configCondorWaitWorking) * 60
-        condor_wait_PD = self.getConfig(self.configCondorWaitPD) * 60
+        slurm_timeout = self.getConfig(self.configSlurmDeadline) * 60
+        slurm_wait_working = self.getConfig(self.configSlurmWaitWorking) * 60
+        slurm_wait_PD = self.getConfig(self.configSlurmWaitPD) * 60
 
         try:
             slurm_machines = self.slurmList
-            if condor_machines is None or len(self.mr.getMachines(self.siteName)) == 0:
+            if slurm_machines is None or len(self.mr.getMachines(self.siteName)) == 0:
                 raise ValueError
         except ValueError as err:
             if str(err):
@@ -209,27 +209,27 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
         for mid in self.mr.getMachines(self.siteName):
             machine_ = self.mr.machines[mid]
 
-            # Is an "Integrating" machine completely started up? (appears in condor) -> "Working"
+            # Is an "Integrating" machine completely started up? (appears in slurm) -> "Working"
             if machine_[self.mr.regStatus] == self.mr.statusIntegrating:
-                if machine_[self.reg_site_server_node_name] in condor_machines:
+                if machine_[self.reg_site_server_node_name] in slurm_machines:
                     self.mr.updateMachineStatus(mid, self.mr.statusWorking)
                     # number of cores = number of slots
-                    self.mr.machines[mid][self.reg_site_condor_status] = condor_machines[
+                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
                         machine_[self.reg_site_server_node_name]]
                     self.mr.machines[mid][self.mr.regMachineCores] = len(
-                        self.mr.machines[mid][self.reg_site_condor_status])
+                        self.mr.machines[mid][self.reg_site_slurm_status])
                 # Machine stuck integrating? -> Disintegrated
-                elif self.mr.calcLastStateChange(mid) > condor_timeout:
+                elif self.mr.calcLastStateChange(mid) > slurm_timeout:
                     self.mr.updateMachineStatus(mid, self.mr.statusDisintegrated)
 
             # "Working" machines need machine load > 0.01, otherwise they are "unclaimed".
             # -> "pending disintegration"
             if machine_[self.mr.regStatus] == self.mr.statusWorking:
-                if machine_[self.reg_site_server_node_name] in condor_machines:
-                    # update condor slot status & calculate machine load
-                    self.mr.machines[mid][self.reg_site_condor_status] = condor_machines[
+                if machine_[self.reg_site_server_node_name] in slurm_machines:
+                    # update slurm slot status & calculate machine load
+                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
                         machine_[self.reg_site_server_node_name]]
-                    if self.calcMachineLoad(mid) <= 0.01 and self.mr.calcLastStateChange(mid) > condor_wait_working:
+                    if self.calcMachineLoad(mid) <= 0.01 and self.mr.calcLastStateChange(mid) > slurm_wait_working:
                         self.mr.updateMachineStatus(mid, self.mr.statusPendingDisintegration)
                     # If slot activity/machine state indicate draining -> Pending Disintegration
                     if self.calcDrainStatus(mid)[1] is True:
@@ -241,11 +241,11 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
             # check if machines pending disintegration can be (disintegrating) or were shut down
             # (disintegrated)
             elif machine_[self.mr.regStatus] == self.mr.statusPendingDisintegration:
-                # is machine (still) listed in condor machines (search for "condor name")?
+                # is machine (still) listed in slurm machines (search for "slurm name")?
                 if self.reg_site_server_node_name in machine_:
-                    if machine_[self.reg_site_server_node_name] in condor_machines:
-                        # update condor slot status & calculate machine load
-                        self.mr.machines[mid][self.reg_site_condor_status] = condor_machines[
+                    if machine_[self.reg_site_server_node_name] in slurm_machines:
+                        # update slurm slot status & calculate machine load
+                        self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
                             machine_[self.reg_site_server_node_name]]
                         self.calcMachineLoad(mid)
 
@@ -255,7 +255,7 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
                             # Only re-enable non-draining nodes
                             if self.calcDrainStatus(mid)[1] is False:
                                 self.mr.updateMachineStatus(mid, self.mr.statusWorking)
-                        elif self.mr.calcLastStateChange(mid) > condor_wait_PD:
+                        elif self.mr.calcLastStateChange(mid) > slurm_wait_PD:
                             self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
                     else:
                         self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
@@ -263,14 +263,14 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
                     self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
 
             # "Disintegrating": -> Shutdown should be started (by site adapter)
-            # # If it's not listed in condor, it's done shutting down -> "disintegrated"
+            # # If it's not listed in slurm, it's done shutting down -> "disintegrated"
             if machine_[self.mr.regStatus] == self.mr.statusDisintegrating:
-                if (machine_[self.reg_site_server_node_name] not in condor_machines or
-                            self.mr.calcLastStateChange(mid) > condor_timeout):
+                if (machine_[self.reg_site_server_node_name] not in slurm_machines or
+                            self.mr.calcLastStateChange(mid) > slurm_timeout):
                     self.mr.updateMachineStatus(mid, self.mr.statusDisintegrated)
 
         self.logger.debug("Content of machine registry:\n%s" % self.getSiteMachines())
-        self.logger.debug("Content of condor machines:\n%s" % condor_machines.items())
+        self.logger.debug("Content of slurm machines:\n%s" % slurm_machines.items())
 
     def onEvent(self, evt):
         """Event handler
@@ -288,7 +288,7 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
 
     def parse_sinfo_output(self,output):
         nlist = []
-        for line in output:
+        for line in output.splitlines():
             if line.split(',')[0] not in nlist:
                 nlist.append(line.split(','))
         return nlist
@@ -299,7 +299,7 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
 
     @property
     def description(self):
-        return "HTCondorIntegrationAdapter"
+        return "SlurmIntegrationAdapter"
 
     @property
     @Caching(validityPeriod=-1, redundancyPeriod=900)
@@ -311,35 +311,39 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
         """
 
         # load the connection settings from config
-        condor_server = self.getConfig(self.configCondorServer)
-        condor_user = self.getConfig(self.configCondorUser)
-        condor_key = self.getConfig(self.configCondorKey)
-        condor_constraint = self.getConfig(self.configCondorConstraint)
-        condor_ssh = ScaleTools.Ssh(condor_server, condor_user, condor_key)
+        slurm_server = self.getConfig(self.configSlurmServer)
+        slurm_user = self.getConfig(self.configSlurmUser)
+        slurm_key = self.getConfig(self.configSlurmKey)
+        slurm_constraint = self.getConfig(self.configSlurmConstraint)
+        slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
 
-        cmd = ("sinfo -l -N --format %n,%C -p nemo_vm_altjak,nemo_vm_atlsch,nemo_vm_atlher")
+        cmd = ("sinfo -h -l -N --format %n,%C -p nemo_vm_altjak")
 
-        # get a list of the condor machines (SSH)
-        condor_result = condor_ssh.handleSshCall(call=cmd, quiet=True)
-        condor_ssh.debugOutput(self.logger, "EKP-manage", condor_result)
+        # get a list of the slurm machines (SSH)
+        slurm_result = slurm_ssh.handleSshCall(call=cmd, quiet=True)
+        slurm_ssh.debugOutput(self.logger, "EKP-manage", slurm_result)
 
-        if condor_result[0] != 0:
-            raise ValueError("SSH connection to HTCondor collector could not be established.")
-        elif self.collector_error_string in condor_result[1]:
+        if slurm_result[0] != 0:
+            raise ValueError("SSH connection to Slurm collector could not be established.")
+        elif self.collector_error_string in slurm_result[1]:
             raise ValueError("Collector(s) didn't answer.")
 
-        # prepare list of condor machines
-        tmp_slurm_machines=parse_sinfo_output(slurm_result[1])
+        # prepare list of slurm machines
+        logging.debug("Trying to parse sinfo output" )
+        tmp_slurm_machines=self.parse_sinfo_output(slurm_result[1])
 
         slurm_machines = defaultdict(list)
-        for node in tmp_slurm_list:
+        logging.debug(tmp_slurm_machines)
+        for node in tmp_slurm_machines:
+            logging.debug(node)
             machine_name=node[0]
             cpus=node[1].split('/')
             i=0
-            for slot in range(cpus[-1]):
+            logging.debug(node)
+            for slot in range(int(cpus[-1])):
                 state='idle'
                 activity=None
-                if i<cpus[0]: state='allocated'
+                if i<int(cpus[0]): state='allocated'
                 slurm_machines[machine_name].append([state, activity])
                 i+=1
 
@@ -349,12 +353,12 @@ class HTCondorIntegrationAdapter(IntegrationAdapterBase):
     @classmethod
     def drainMachine(cls, mid):
         # type: (dict) -> None
-        """ Send "condor_drain" command to machine (draining machines won't accept new jobs).
+        """ Send "slurm_drain" command to machine (draining machines won't accept new jobs).
 
-        This usually happens in preparation of shutting the machine down. condor_drain is an
-        administrative command, so condor_user requires condor admin access rights."""
-        # TODO: Implement "condor_drain"
-        # TODO: Must be class method (external call!); access instance attribute condor_server...
+        This usually happens in preparation of shutting the machine down. slurm_drain is an
+        administrative command, so slurm_user requires slurm admin access rights."""
+        # TODO: Implement "slurm_drain"
+        # TODO: Must be class method (external call!); access instance attribute slurm_server...
         if cls.calcDrainStatus(mid)[1] is True:
             logging.debug("Machine is already in drain mode.")
         logging.warning("Send draining command to VM not yet implemented.")
