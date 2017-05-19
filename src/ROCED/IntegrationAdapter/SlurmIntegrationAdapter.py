@@ -317,7 +317,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         slurm_constraint = self.getConfig(self.configSlurmConstraint)
         slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
 
-        cmd = ("sinfo -h -l -N --format %n,%C -p nemo_vm_altjak")
+        cmd = ("sinfo -h -l -N -p nemo_vm_atlsch --format %n,%C")
 
         # get a list of the slurm machines (SSH)
         slurm_result = slurm_ssh.handleSshCall(call=cmd, quiet=True)
@@ -333,13 +333,10 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         tmp_slurm_machines=self.parse_sinfo_output(slurm_result[1])
 
         slurm_machines = defaultdict(list)
-        logging.debug(tmp_slurm_machines)
         for node in tmp_slurm_machines:
-            logging.debug(node)
             machine_name=node[0]
             cpus=node[1].split('/')
             i=0
-            logging.debug(node)
             for slot in range(int(cpus[-1])):
                 state='idle'
                 activity=None

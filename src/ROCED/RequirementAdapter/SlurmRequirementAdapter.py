@@ -112,7 +112,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
         required_cpus_running_jobs = 0
         cpus_dependency_jobs = 0
 
-        for line in squeue_out:
+        for line in result[1]:
             values = line.split()
             #print values
 
