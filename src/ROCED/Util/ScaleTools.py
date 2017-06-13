@@ -254,7 +254,7 @@ class Ssh(object):
     @staticmethod
     def debugOutput(logger, scope, result):
         logger.debug("[%s] SSH return code: %i" % (scope, result[0]))
-        logger.debug("[%s] SSH stdout: %s" % (scope, result[1].strip()))
+        #logger.debug("[%s] SSH stdout: %s" % (scope, result[1].strip()))
         if result[2]:
             logger.debug("[%s] SSH stderr: %s" % (scope, result[2].strip()))
 

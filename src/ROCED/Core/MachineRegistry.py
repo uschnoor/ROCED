@@ -50,6 +50,7 @@ class MachineRegistry(Event.EventPublisher, Singleton):
     regStatus = "status"
     regStatusLastUpdate = "status_last_update"
     regHostname = "hostname"
+    regHostIp = "hostip"
     regInternalIp = "internal_ip"
     regUsesGateway = "uses_gateway"
     regGatewayIp = "gateway_ip"
@@ -107,6 +108,12 @@ class MachineRegistry(Event.EventPublisher, Singleton):
 
         self.logger.info("Updating status of %s: %s -> %s" % (mid, oldStatus, newStatus))
         self.publishEvent(StatusChangedEvent(mid, oldStatus, newStatus))
+
+    def updateMachineIp(self, mid, ip):
+        """Change Machine IP"""
+        self.machines[mid][self.regHostIp] = ip
+        self.logger.info("Updating status of %s: IP=%s" % (mid, ip))
+
 
     def calcLastStateChange(self, mid):
         # type: (str) -> int

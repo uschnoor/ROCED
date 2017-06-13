@@ -154,7 +154,7 @@ class SiteAdapterBase(AdapterBase):
         decision = copy.deepcopy(decision)
         running_machines_count = self.runningMachinesCount
         max_machines = self.getConfig(self.ConfigMaxMachines)
-
+        self.logger.debug("running_machines_count=%s" % running_machines_count)
         for (machine_type, n_machines) in decision.items():
             # calc relative value when there are already machines running
             n_running_machines = 0
@@ -162,6 +162,7 @@ class SiteAdapterBase(AdapterBase):
                 n_running_machines = running_machines_count[machine_type]
                 decision[machine_type] -= n_running_machines
 
+            self.logger.debug("decision=%s" % decision)
             # spawn
             if decision[machine_type] > 0:
                 # TODO: Implement max_machines per site, not per machine type!!!

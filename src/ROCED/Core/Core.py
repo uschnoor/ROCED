@@ -152,11 +152,13 @@ class ScaleCore(object):
         decision = self.siteBox.modServiceMachineDecision(decision)
 
         logger.info("Decision: %s" % decision)
-
+        logger.debug(runningBySite)
         # make machine counts absolute, as they come in relative from the broker
         for (ksite, vmach) in decision.items():
+            logger.debug("vmatch=%s" % vmach)
             for kmach in vmach:
                 decision[ksite][kmach] += runningBySite[ksite].get(kmach, [])
+                logger.debug("decision[ksite][kmach]=%s" % decision[ksite][kmach])
         logger.info("Absolute Decision: %s" % decision)
 
         self.siteBox.applyMachineDecision(decision)

@@ -22,7 +22,7 @@ from __future__ import unicode_literals, absolute_import
 
 import getpass
 import logging
-import re
+import pprint
 from collections import defaultdict
 from datetime import datetime
 
@@ -47,23 +47,24 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
     reg_site_slurm_status = "slurm_slot_status"
     reg_status_last_update = MachineRegistry.MachineRegistry.regStatusLastUpdate
     # possible slot state
-    slurmStatusClaimed = "Claimed"
+    slurmStatusAllocated = "allocated"
     # Both states show an empty/idling machine. "Owner" means that there are some job requirements
     # defined on the machine which have to be met, before a job is assigned.
     # "Unclaimed" machines will accept any job.
-    slurmStatusOwner = "Owner"
-    slurmStatusUnclaimed = "Unclaimed"
-    slurmStatusIdle = [slurmStatusOwner, slurmStatusUnclaimed]
-    slurmStatusRetiring = "Retiring"
+    #slurmStatusOwner = "Owner"
+    #slurmStatusUnclaimed = "Unclaimed"
+    slurmStatusIdle = "idle" #[slurmStatusOwner, slurmStatusUnclaimed]
+    #slurmStatusRetiring = "Retiring"
     # possible slot activity
-    slurmActivityDrained = "Drained"
+    slurmStatusDraining = "draining"
+    slurmStatusDrained = "drained"
     # slurm machine name saved in machine registry - communication to site adapter(s)
     reg_site_server_node_name = "reg_site_server_node_name"
 
     # Output and its parsing
-    _query_format_string = "-autoformat: Machine State Activity"
-    regex_queue_parser = re.compile("([a-z-0-9]+).* ([a-zA-Z]+) ([a-zA-Z]+)", re.MULTILINE)
-    collector_error_string = "Failed to end classad message"
+    #_query_format_string = "-autoformat: Machine State Activity"
+    #regex_queue_parser = re.compile("([a-z-0-9]+).* ([a-zA-Z]+) ([a-zA-Z]+)", re.MULTILINE)
+    #collector_error_string = "Failed to end classad message"
 
     def __init__(self):
         """Slurm specific integration adapter. Monitors collector via slurm_status and updates machine states.
@@ -128,7 +129,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         cores_claimed = 0.0
         machine[cls.mr.regMachineLoad] = 0.0
         for slot in range(len(machine[cls.reg_site_slurm_status])):
-            if machine[cls.reg_site_slurm_status][slot][0] in cls.slurmStatusClaimed:
+            if machine[cls.reg_site_slurm_status][slot][0] in cls.slurmStatusAllocated:
                 cores_claimed += 1
                 # set a timestamp on this event
                 machine[cls.reg_status_last_update] = datetime.now()
@@ -149,10 +150,8 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         statusDraining = False
         try:
             for slot in cls.mr.machines[machine_id][cls.reg_site_slurm_status]:
-                if slot[0] == cls.slurmActivityDrained:
+                if cls.slurmStatusDraining in slot[0]  or cls.slurmStatusDrained in slot[0]:
                     nDrainedSlots += 1
-                    statusDraining = True
-                if slot[1] == cls.slurmStatusRetiring:
                     statusDraining = True
         except KeyError:
             pass
@@ -174,6 +173,9 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         :return: machine_registry
         """
         return self.mr.getMachines(self.siteName, status, machineType)
+
+    def getSlurmHostname(self, ip):
+        return 'host-'+ip.replace('.','-')
 
     def manage(self):
         """Manage machine status
@@ -205,72 +207,94 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
             self.logger.debug("Content of machine registry:\n%s" % self.getSiteMachines())
             return None
 
+        self.logger.debug("Slurm Machines: %s", slurm_machines)
+        #self.logger.debug("Machine regestry=")# % self.mr.getMachines(self.siteName))
+        #pprint(self.mr.getMachines(self.siteName))
         # check machine registry
         for mid in self.mr.getMachines(self.siteName):
             machine_ = self.mr.machines[mid]
-
+            
             # Is an "Integrating" machine completely started up? (appears in slurm) -> "Working"
             if machine_[self.mr.regStatus] == self.mr.statusIntegrating:
-                if machine_[self.reg_site_server_node_name] in slurm_machines:
+                self.logger.debug("Node in Moab=%s", machine_[self.reg_site_server_node_name])
+                if self.getSlurmHostname(machine_[self.mr.regHostIp]) in slurm_machines:
+                    self.logger.debug("Found Node in Slurm List :-)")
+                    self.logger.debug("Working machine -> statusWorking")
                     self.mr.updateMachineStatus(mid, self.mr.statusWorking)
                     # number of cores = number of slots
-                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
-                        machine_[self.reg_site_server_node_name]]
-                    self.mr.machines[mid][self.mr.regMachineCores] = len(
-                        self.mr.machines[mid][self.reg_site_slurm_status])
+                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[self.getSlurmHostname(machine_[self.mr.regHostIp])]
+                    self.mr.machines[mid][self.mr.regMachineCores] = len(self.getSlurmHostname(machine_[self.mr.regHostIp]))
                 # Machine stuck integrating? -> Disintegrated
                 elif self.mr.calcLastStateChange(mid) > slurm_timeout:
+                    self.logger.debug("Working stuck integrating -> statusDisintegrated")
                     self.mr.updateMachineStatus(mid, self.mr.statusDisintegrated)
 
-            # "Working" machines need machine load > 0.01, otherwise they are "unclaimed".
-            # -> "pending disintegration"
             if machine_[self.mr.regStatus] == self.mr.statusWorking:
-                if machine_[self.reg_site_server_node_name] in slurm_machines:
-                    # update slurm slot status & calculate machine load
-                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
-                        machine_[self.reg_site_server_node_name]]
-                    if self.calcMachineLoad(mid) <= 0.01 and self.mr.calcLastStateChange(mid) > slurm_wait_working:
-                        self.mr.updateMachineStatus(mid, self.mr.statusPendingDisintegration)
+                if self.getSlurmHostname(machine_[self.mr.regHostIp]) in slurm_machines:
+                    # update slurm slot status
+                    self.logger.debug("update slurm slot status: %s" % slurm_machines[self.getSlurmHostname(machine_[self.mr.regHostIp])])
+                    self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[self.getSlurmHostname(machine_[self.mr.regHostIp])]
+                    
+                    # Update machineLoad
+                    load = self.calcMachineLoad(mid)
+                    self.logger.debug("Machine load: %s" % load)
+                    
+                    #if self.calcMachineLoad(mid) <= 0.01 and self.mr.calcLastStateChange(mid) > slurm_wait_working:
+                    #    self.logger.debug("Working machine but without load -> statusPendingDisintegration")
+                    #    self.mr.updateMachineStatus(mid, self.mr.statusPendingDisintegration)
+
                     # If slot activity/machine state indicate draining -> Pending Disintegration
                     if self.calcDrainStatus(mid)[1] is True:
+                        self.logger.debug("Working machine but draining -> statusPendingDisintegration")
                         self.mr.updateMachineStatus(mid, self.mr.statusPendingDisintegration)
                 else:
                     # Machine disappeared
+                    self.logger.debug("Working machine disappeared -> statusDisintegrating")
                     self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
 
             # check if machines pending disintegration can be (disintegrating) or were shut down
             # (disintegrated)
-            elif machine_[self.mr.regStatus] == self.mr.statusPendingDisintegration:
-                # is machine (still) listed in slurm machines (search for "slurm name")?
-                if self.reg_site_server_node_name in machine_:
-                    if machine_[self.reg_site_server_node_name] in slurm_machines:
-                        # update slurm slot status & calculate machine load
-                        self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
-                            machine_[self.reg_site_server_node_name]]
-                        self.calcMachineLoad(mid)
+            if machine_[self.mr.regStatus] == self.mr.statusPendingDisintegration:
+                # is machine (still) listed in slurm machines?
+                if self.getSlurmHostname(machine_[self.mr.regHostIp]) in slurm_machines:
+                    self.logger.debug("Draining machine is still up")
+                else:
+                    self.logger.debug("PendingDisintegration -> statusDisintegrating")
+                    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
+
+                #if self.reg_site_server_node_name in machine_:
+                #    if self.getSlurmHostname(machine_[self.mr.regHostIp]) in slurm_machines:
+                #        # update slurm slot status & calculate machine load
+                #        self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[
+                #            machine_[self.reg_site_server_node_name]]
+                #        self.calcMachineLoad(mid)
 
                         # machine load > 0.01 -> at least one slot is claimed -> re-enable
                         # TODO: Switch to an integer "cores_claimed" and compare > 0
-                        if self.mr.machines[mid][self.mr.regMachineLoad] > 0.01:
-                            # Only re-enable non-draining nodes
-                            if self.calcDrainStatus(mid)[1] is False:
-                                self.mr.updateMachineStatus(mid, self.mr.statusWorking)
-                        elif self.mr.calcLastStateChange(mid) > slurm_wait_PD:
-                            self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
-                    else:
-                        self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
-                else:
-                    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
+                #        if self.mr.machines[mid][self.mr.regMachineLoad] > 0.01:
+                #            # Only re-enable non-draining nodes
+                #            if self.calcDrainStatus(mid)[1] is False:
+                #                self.logger.debug("PendingDisintegration but with load -> statusWorking")
+                #                self.mr.updateMachineStatus(mid, self.mr.statusWorking)
+                #        elif self.mr.calcLastStateChange(mid) > slurm_wait_PD:
+                #            self.logger.debug("PendingDisintegration 1 -> statusDisintegrating")
+                #            self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
+                #    else:
+                #        self.logger.debug("PendingDisintegration 2 -> statusDisintegrating")
+                #        self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
+                #else:
+                #    self.logger.debug("PendingDisintegration 3 -> statusDisintegrating")
+                #    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
 
             # "Disintegrating": -> Shutdown should be started (by site adapter)
             # # If it's not listed in slurm, it's done shutting down -> "disintegrated"
             if machine_[self.mr.regStatus] == self.mr.statusDisintegrating:
-                if (machine_[self.reg_site_server_node_name] not in slurm_machines or
-                            self.mr.calcLastStateChange(mid) > slurm_timeout):
-                    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrated)
+                #if (self.getSlurmHostname(machine_[self.mr.regHostIp]) not in slurm_machines or self.mr.calcLastStateChange(mid) > slurm_timeout):
+                self.logger.debug("Machine is gone statusDisintegrating -> statusDisintegrated")
+                self.mr.updateMachineStatus(mid, self.mr.statusDisintegrated)
 
-        self.logger.debug("Content of machine registry:\n%s" % self.getSiteMachines())
-        self.logger.debug("Content of slurm machines:\n%s" % slurm_machines.items())
+        self.logger.debug("Content of machine registry:\n%s" % pprint.pformat(self.getSiteMachines()))
+        self.logger.debug("Content of slurm machines:\n%s" % pprint.pformat(slurm_machines.items()))
 
     def onEvent(self, evt):
         """Event handler
@@ -314,35 +338,62 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         slurm_server = self.getConfig(self.configSlurmServer)
         slurm_user = self.getConfig(self.configSlurmUser)
         slurm_key = self.getConfig(self.configSlurmKey)
-        slurm_constraint = self.getConfig(self.configSlurmConstraint)
         slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
 
-        cmd = ("sinfo -h -l -N -p nemo_vm_atlsch --format %n,%C")
-
+        cmd = ("sinfo -h -l -N -p nemo_vm_atlsch --format %n,%C,%T")
+       
         # get a list of the slurm machines (SSH)
         slurm_result = slurm_ssh.handleSshCall(call=cmd, quiet=True)
         slurm_ssh.debugOutput(self.logger, "EKP-manage", slurm_result)
 
         if slurm_result[0] != 0:
             raise ValueError("SSH connection to Slurm collector could not be established.")
-        elif self.collector_error_string in slurm_result[1]:
-            raise ValueError("Collector(s) didn't answer.")
-
+        #elif self.collector_error_string in slurm_result[1]:
+        #    raise ValueError("Collector(s) didn't answer.")
+        
+        # Example Output: <hostname>,<CPU-State: allocated/idle/other/total>
+        # host-10-18-1-0,0/0/4/4
+                
         # prepare list of slurm machines
         logging.debug("Trying to parse sinfo output" )
         tmp_slurm_machines=self.parse_sinfo_output(slurm_result[1])
 
         slurm_machines = defaultdict(list)
         for node in tmp_slurm_machines:
+            
+            # ignore invalid lines
+            if len(node) != 3:
+                continue
+
             machine_name=node[0]
             cpus=node[1].split('/')
-            i=0
-            for slot in range(int(cpus[-1])):
-                state='idle'
-                activity=None
-                if i<int(cpus[0]): state='allocated'
-                slurm_machines[machine_name].append([state, activity])
-                i+=1
+            state=node[2]
+
+            # ignore down machines: host-10-18-1-50,0/0/4/4,down* 
+            if "down" in state:
+                continue
+
+            #ignore machines with no allocated and idle cpus
+            #if int(cpus[0]) == 0 and int(cpus[1]) == 0:
+            #    continue
+
+            allocatedCPUs = int(cpus[0])
+            idleCPUs = int(cpus[1])
+            totalCPUs = int(cpus[3])
+
+            for slot in range(totalCPUs):
+                if allocatedCPUs > 0:
+                    slurm_machines[machine_name].append(['allocated', None])
+                    allocatedCPUs = allocatedCPUs - 1
+                elif idleCPUs > 0:
+                    slurm_machines[machine_name].append(['idle', None])
+                    idleCPUs = idleCPUs - 1
+                elif "draining" in state:
+                    slurm_machines[machine_name].append(['draining', None])
+                elif "drained" in state:
+                    slurm_machines[machine_name].append(['drained', None])
+                else:
+                    print "WARNING!!! this is a bug!"
 
         return slurm_machines
 

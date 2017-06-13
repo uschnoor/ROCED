@@ -98,7 +98,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
         #constraint = "( %s ) && ( %s )" % (self._query_constraints, self.getConfig(self.configCondorConstraint))
 
         #cmd = ("condor_q -global -allusers -nobatch -constraint '%s' %s" % (constraint, self._query_format_string))
-        cmd = 'squeue --all --noheader --format="%T %r %c"'
+        cmd = 'squeue -p nemo_vm_atlsch --noheader --format="%T %r %c"'
         result = ssh.handleSshCall(call=cmd, quiet=True)
         if result[0] != 0:
             self.logger.warning("Could not get Slurm queue status! %d: %s" % (result[0], result[2]))
@@ -107,14 +107,15 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
             self.logger.warning("squeue request timed out.")
             return None
 
+
         required_cpus_total = 0
         required_cpus_idle_jobs = 0
         required_cpus_running_jobs = 0
         cpus_dependency_jobs = 0
 
-        for line in result[1]:
+        for line in result[1].splitlines():
             values = line.split()
-            #print values
+            #self.logger.debug(values)
 
             if len(values) != 3:
                 continue
