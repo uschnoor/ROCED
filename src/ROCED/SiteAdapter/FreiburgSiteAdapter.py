@@ -103,10 +103,11 @@ class FreiburgSiteAdapter(SiteAdapterBase):
         ###
         # Connect IntegrationAdapter with SideAdapter
         ###
+        # This is bullshit! TODO: Remove cross-referenz!
         integrationAdapterType = str("IntegrationAdapter.")+self.getConfig(self.configIntegrationAdapterType)
         IntegrationAdapter = __import__(integrationAdapterType, fromlist=["IntegrationAdapter"] )
 
-        print IntegrationAdapter
+        #print IntegrationAdapter
 
         # TODO: This information is lost, when loading the previous machine registry.
         ###
@@ -285,21 +286,20 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             runningMachinesCount = dict()
             for machineType in runningMachines:
                 # calculate number of drained slots (idle and not accepting new jobs -> not usable)
-                nDrainedSlots = 0
-
+                nDrainedMachines = 0
+                mr = self.getSiteMachines()
                 for mid in runningMachines[machineType]:
-                    nDrainedSlots += self.IntegrationAdapter.calcDrainStatus(mid)[0]
-                nCores = self.getConfig(self.ConfigMachines)[machineType]["cores"]
+                    if mr[mid][self.mr.regStatus] == self.mr.statusPendingDisintegration:
+                        nDrainedMachines += 1
+                #nCores = self.getConfig(self.ConfigMachines)[machineType]["cores"]
                 nMachines = len(runningMachines[machineType])
                 # Calculate the number of available slots
                 # Little trick: floor division with negative values: -9//4 = -3
-                nDrainedSlots = -nDrainedSlots
-                runningMachinesCount[machineType] = nMachines + nDrainedSlots // nCores
-                if nDrainedSlots != 0:
-                    self.logger.debug("%s: running: %d, drained slots: %d"
-                                      " -> recalculated running machines count: %s"
-                                      % (machineType, nMachines, nDrainedSlots,
-                                         runningMachinesCount[machineType]))
+                #nDrainedSlots = -nDrainedSlots
+                runningMachinesCount[machineType] = nMachines - nDrainedMachines
+                if nDrainedMachines != 0:
+                    self.logger.debug("%s: running: %d, drained machines: %d -> recalculated running machines count: %s"
+                                      % (machineType, nMachines, nDrainedMachines, runningMachinesCount[machineType]))
             return runningMachinesCount
 
     def onEvent(self, evt):
@@ -423,7 +423,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
                         self.mr.updateMachineStatus(mid, self.mr.statusUp)
                         self.mr.updateMachineIp(mid, ip)
                         print "IP=" + str(ip)
-                        frJobsRunning.pop(batchJobId)
+                    frJobsRunning.pop(batchJobId)
                 # Machine disappeared. If the machine later appears again, it will be added automatically.
                 elif batchJobId not in frJobsIdle and batchJobId not in frJobsCompleted:
                     self.mr.updateMachineStatus(mid, self.mr.statusDown)
@@ -458,8 +458,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             jsonLog.addItem(self.siteName, "nodes",
                             len(self.getSiteMachines(status=self.mr.statusWorking)))
             jsonLog.addItem(self.siteName, "nodes_draining",
-                            len([mid for mid in self.getSiteMachines(status=self.mr.statusPendingDisintegration)
-                                 if self.IntegrationAdapter.calcDrainStatus(mid)[1] is True]))
+                            len(self.getSiteMachines(status=self.mr.statusPendingDisintegration)))
             jsonLog.addItem(self.siteName, "machines_requested",
                             len(self.getSiteMachines(status=self.mr.statusBooting)) +
                             len(self.getSiteMachines(status=self.mr.statusUp)) +

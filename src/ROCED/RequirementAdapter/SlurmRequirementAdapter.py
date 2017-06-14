@@ -143,6 +143,10 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
         n_cores = - int(self.getConfig(self.configMachines)[self.getNeededMachineType()]["cores"])
         self._curRequirement = - (required_cpus_total // n_cores)
 
+	self.logger.debug("Required CPUs total=%s" % required_cpus_total)
+        self.logger.debug("Required CPUs idle Jobs=%s" % required_cpus_idle_jobs)
+        self.logger.debug("Required CPUs running Jobs=%s" % required_cpus_running_jobs)
+        self.logger.debug("CPUs dependency Jobs=%s" % cpus_dependency_jobs)
         with Logging.JsonLog() as json_log:
             json_log.addItem(self.getNeededMachineType(), "jobs_idle", required_cpus_idle_jobs)
             json_log.addItem(self.getNeededMachineType(), "jobs_running", required_cpus_running_jobs)

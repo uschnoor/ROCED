@@ -223,7 +223,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
                     self.mr.updateMachineStatus(mid, self.mr.statusWorking)
                     # number of cores = number of slots
                     self.mr.machines[mid][self.reg_site_slurm_status] = slurm_machines[self.getSlurmHostname(machine_[self.mr.regHostIp])]
-                    self.mr.machines[mid][self.mr.regMachineCores] = len(self.getSlurmHostname(machine_[self.mr.regHostIp]))
+                    self.mr.machines[mid][self.mr.regMachineCores] = len(self.mr.machines[mid][self.reg_site_slurm_status])
                 # Machine stuck integrating? -> Disintegrated
                 elif self.mr.calcLastStateChange(mid) > slurm_timeout:
                     self.logger.debug("Working stuck integrating -> statusDisintegrated")
