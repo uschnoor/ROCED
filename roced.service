@@ -1,0 +1,13 @@
+After=network.target
+Requires=network.target
+
+[Service]
+User=centos
+WorkingDirectory=/home/centos/ROCED/src/ROCED
+ExecStart=/usr/bin/python2 /home/centos/ROCED/src/ROCED/scale.py --config roced_freiburg_atlas.config --debug standalone
+
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
