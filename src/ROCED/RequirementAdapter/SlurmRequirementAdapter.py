@@ -1,3 +1,4 @@
+
 # ===============================================================================
 #
 # Copyright (c) 2015 by Konrad Meier, Georg Fleig
@@ -36,6 +37,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
     configSlurmServer = "slurm_server"
     configSlurmRequirement = "slurm_requirement"
     configSlurmConstraint = "slurm_constraint"
+    configSlurmPartition = "slurm_partition"
 
     # See https://htcondor-wiki.cs.wisc.edu/index.cgi/wiki?p=MagicNumbers
     condorStatusIdle = 1
@@ -55,6 +57,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
 
         self.setConfig(self.configMachines, dict())
         self.addCompulsoryConfigKeys(self.configMachines, Config.ConfigTypeDictionary)
+        self.addCompulsoryConfigKeys(key=self.configSlurmPartition, datatype=Config.ConfigTypeString, description="Slurm Partition name")
         self.addOptionalConfigKeys(key=self.configSlurmUser, datatype=Config.ConfigTypeString,
                                    description="Login name for slurm collector server.",
                                    default=getpass.getuser())
@@ -98,7 +101,9 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
         #constraint = "( %s ) && ( %s )" % (self._query_constraints, self.getConfig(self.configCondorConstraint))
 
         #cmd = ("condor_q -global -allusers -nobatch -constraint '%s' %s" % (constraint, self._query_format_string))
-        cmd = 'squeue -p nemo_vm_atlsch --noheader --format="%T %r %c"'
+        #cmd = 'squeue -p nemo_vm_atlsch --noheader --format="%T %r %c"'
+        self.logger.info("Checking requirements in partition {}".format( self.getConfig(self.configSlurmPartition) ))
+        cmd = 'squeue -p {} --noheader --format="%T %r %c"'.format(self.getConfig( self.configSlurmPartition))
         result = ssh.handleSshCall(call=cmd, quiet=True)
         if result[0] != 0:
             self.logger.warning("Could not get Slurm queue status! %d: %s" % (result[0], result[2]))
@@ -132,7 +137,7 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
                 required_cpus_running_jobs = required_cpus_running_jobs + int(values[2])
                 continue
             else:
-                self.logger.warning("unknown job state: %s", values[0])
+                self.logger.warning("unknown job state: %s. Ignoring.", values[0])
              
 
 

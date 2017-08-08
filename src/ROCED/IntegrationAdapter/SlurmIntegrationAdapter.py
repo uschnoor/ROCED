@@ -40,6 +40,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
     configSlurmKey = "slurm_key"
     configSlurmServer = "slurm_server"
     configSlurmWaitPD = "slurm_wait_pd"
+    configSlurmPartition = "slurm_partition"
     configSlurmWaitWorking = "slurm_wait_working"
     configSlurmDeadline = "slurm_deadline"
 
@@ -91,6 +92,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         self.addOptionalConfigKeys(key=self.configSlurmKey, datatype=Config.ConfigTypeString,
                                    description="Path to SSH key for remote login. Not necessary with server localhost.",
                                    default="~/")
+        self.addCompulsoryConfigKeys(self.configSlurmPartition, Config.ConfigTypeString, description="Slurm Partition name")
         self.addCompulsoryConfigKeys(self.configSlurmName, Config.ConfigTypeString, description="Site name")
         self.addOptionalConfigKeys(self.configSlurmWaitPD, Config.ConfigTypeInt,
                                    description="Wait for x minutes before changing to disintegrating.",
@@ -339,8 +341,9 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         slurm_user = self.getConfig(self.configSlurmUser)
         slurm_key = self.getConfig(self.configSlurmKey)
         slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
+        slurm_partition = self.getConfig(self.configSlurmPartition)
 
-        cmd = ("sinfo -h -l -N -p nemo_vm_atlsch --format %n,%C,%T")
+        cmd = ("sinfo -h -l -N -p {} --format %n,%C,%T").format( slurm_partition )
        
         # get a list of the slurm machines (SSH)
         slurm_result = slurm_ssh.handleSshCall(call=cmd, quiet=True)

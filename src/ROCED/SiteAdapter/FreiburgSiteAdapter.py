@@ -562,26 +562,36 @@ class FreiburgSiteAdapter(SiteAdapterBase):
 
             for line in itemlist:
                 if line.attributes['State'].value == "Idle":
-                    print "Job is IDLE"
-                    print "  JobID=" +  line.attributes['JobID'].value
+                    self.logger.debug( "Job is IDLE")
+                    self.logger.debug( "  JobID={}".format(   line.attributes['JobID'].value))
                     jobsIdle.append(line.attributes['JobID'].value)
                 elif line.attributes['State'].value == "Running":
-                    print "Job is Running"
-                    print "  JobID=" +  line.attributes['JobID'].value
-                    print "  StartTime=" +  line.attributes['StartTime'].value
-                    print "  ReqAWDuration=" +  line.attributes['ReqAWDuration'].value
+                    self.logger.debug( "Job is Running")
+                    self.logger.debug( "  JobID={}" .format(  line.attributes['JobID'].value))
+                    self.logger.debug( "  StartTime={}".format(  line.attributes['StartTime'].value))
+                    self.logger.debug("  ReqAWDuration={}" .format( line.attributes['ReqAWDuration'].value))
                     req = line.getElementsByTagName('req')[0]
-                    print "  ReqProcs=" +  req.attributes['TPN'].value
+                    self.logger.debug( "  ReqProcs={}".format(  req.attributes['TPN'].value))
                     var = line.getElementsByTagName('Variable')
                     vmIP = ""
                     for v in var:
                         if v.getAttribute('name') == 'VM_IP':
                             vmIP=str(v.childNodes[0].nodeValue)
-                            print "  VM_IP="+ v.childNodes[0].nodeValue
+                            self.logger.debug( "  VM_IP={}".format( v.childNodes[0].nodeValue))
                     jobsRunning[str(line.attributes['JobID'].value)] = {"walltime": str(datetime.timedelta(seconds=int(line.attributes['StartTime'].value)+int(line.attributes['ReqAWDuration'].value)-int(time.time()))), "cores": int(req.attributes['TPN'].value), "IP": vmIP}
                 else:
-                    print "ERROR"
-                    print "Job is " + line.attributes['State'].value
+                    self.logger.debug("ERROR")
+                    self.logger.debug( "Job is {}".format( line.attributes['State'].value))
+                    self.logger.debug("  JobID={}".format(  line.attributes['JobID'].value))
+                    self.logger.debug("  StartTime={}" .format(  line.attributes['StartTime'].value))
+                    self.logger.debug( "  ReqAWDuration={}" .format(  line.attributes['ReqAWDuration'].value))
+                    req = line.getElementsByTagName('req')[0]
+                    self.logger.debug("  ReqProcs={}".format( req.attributes['TPN'].value))
+                    var = line.getElementsByTagName('Variable')
+                    for v in var:
+                        if v.getAttribute('name') == 'VM_IP':
+                            self.logger.debug( "  VM_IP={}".format( v.childNodes[0].nodeValue))
+
                     jobsIdle.append(line.attributes['JobID'].value)
     
         return {'jobsIdle': jobsIdle, 'jobsRunning': jobsRunning}
