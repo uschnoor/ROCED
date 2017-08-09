@@ -368,7 +368,7 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
             slurm_result_nn = slurm_ssh.handleSshCall(call=cmd, quiet=True)
             slurm_result_status += slurm_result_nn[0]
             slurm_result_sinfos += slurm_result_nn[1] + "\n"
-            slurm_ssh_error += str(slurm_result_n[2])
+            slurm_ssh_error += str( slurm_result_nn[2] )
 
         #put slurm_result together in the way it is needed:
         slurm_result = (slurm_result_status,  slurm_result_sinfos , slurm_ssh_error)
