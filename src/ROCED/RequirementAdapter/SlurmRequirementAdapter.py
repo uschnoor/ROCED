@@ -141,8 +141,8 @@ class SlurmRequirementAdapter(RequirementAdapterBase):
              
 
 
-        self.logger.debug("Slurm queue: Idle: %d; Running: %d." %
-                          (required_cpus_idle_jobs, required_cpus_running_jobs))
+        self.logger.debug("Slurm queue: Idle: %d; Running: %d. in partition: %s." %
+                          (required_cpus_idle_jobs, required_cpus_running_jobs, self.getConfig(self.configSlurmPartition) ))
 
         # cores->machines: machine definition required for RequirementAdapter
         n_cores = - int(self.getConfig(self.configMachines)[self.getNeededMachineType()]["cores"])

@@ -343,11 +343,41 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
         slurm_partition = self.getConfig(self.configSlurmPartition)
 
-        cmd = ("sinfo -h -l -N -p {} --format %n,%C,%T").format( slurm_partition )
-       
+
+        self.logger.debug("Getting slurmList for jobs requested on partition {}".format(slurm_partition))
+
+
+        #this outputs those nodes which are used by a job of this queue. It ignores most "down", "drained" and "draining" machines
+        #in addition, one could just get the machines which are draining or drained. It might not matter which service cancels the job
+        #first determine the list of nodes, then make the ssh call for each of them again for sinfo
+
+        # Get all nodes assigned a job in this particular slurm_partition queue
+        cmd = ("squeue -p {} -h --format=%N  | sort | uniq".format(slurm_partition))
+        nodes_from_squeue = slurm_ssh.handleSshCall(call=cmd, quiet=True)
+        nodes_this_partition = nodes_from_squeue[1].split('\n')
+        
+        self.logger.debug("Querying information for these nodes {}".format( nodes_this_partition))
+
+        slurm_result_status = 0
+        slurm_result_sinfos = ""
+        slurm_ssh_error = ""
+        for nn in nodes_this_partition:
+            # for each of these nodes, query its sinfo status 
+            #     in the form <hostname>,<CPU-State: allocated/idle/other/total>,<host state>
+            cmd =  ("sinfo -h -l -N -p {} -n {} --format %n,%C,%T" ).format( slurm_partition , nn)
+            slurm_result_nn = slurm_ssh.handleSshCall(call=cmd, quiet=True)
+            slurm_result_status += slurm_result_nn[0]
+            slurm_result_sinfos += slurm_result_nn[1] + "\n"
+            slurm_ssh_error += str(slurm_result_n[2])
+
+        #put slurm_result together in the way it is needed:
+        slurm_result = (slurm_result_status,  slurm_result_sinfos , slurm_ssh_error)
+
+
         # get a list of the slurm machines (SSH)
-        slurm_result = slurm_ssh.handleSshCall(call=cmd, quiet=True)
         slurm_ssh.debugOutput(self.logger, "EKP-manage", slurm_result)
+
+
 
         if slurm_result[0] != 0:
             raise ValueError("SSH connection to Slurm collector could not be established.")
