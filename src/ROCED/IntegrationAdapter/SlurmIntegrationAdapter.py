@@ -249,10 +249,15 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
                     if self.calcDrainStatus(mid)[1] is True:
                         self.logger.debug("Working machine but draining -> statusPendingDisintegration")
                         self.mr.updateMachineStatus(mid, self.mr.statusPendingDisintegration)
-                else:
-                    # Machine disappeared
-                    self.logger.debug("Working machine disappeared -> statusDisintegrating")
-                    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
+                #else: the machine might belong to a different partition and nothing should be done with it
+
+                #else: just do not do anything??
+                    # Machine disappeared : this appears to be problematic with different partitions !!
+                    # because the if condition fails: since the machine might be working but does not 
+                    # appear in to slurm_machines (why exactly?)
+                    # maybe this is just wrong indentation??
+                #    self.logger.debug("Working machine disappeared -> statusDisintegrating")
+                #    self.mr.updateMachineStatus(mid, self.mr.statusDisintegrating)
 
             # check if machines pending disintegration can be (disintegrating) or were shut down
             # (disintegrated)
@@ -351,17 +356,22 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
         #in addition, one could just get the machines which are draining or drained. It might not matter which service cancels the job
         #first determine the list of nodes, then make the ssh call for each of them again for sinfo
 
-        # Get all nodes assigned a job in this particular slurm_partition queue
+        # Find all nodes assigned a job in this particular slurm_partition queue
         cmd = ("squeue -p {} -h --format=%N  | sort | uniq".format(slurm_partition))
         nodes_from_squeue = slurm_ssh.handleSshCall(call=cmd, quiet=True)
-        nodes_this_partition = nodes_from_squeue[1].split('\n')
-        
+        if len(nodes_from_squeue) <=1 :
+            nodes_this_partition = []
+        else: 
+            nodes_this_partition = nodes_from_squeue[1].split('\n')
+
         self.logger.debug("Querying information for these nodes {}".format( nodes_this_partition))
 
         slurm_result_status = 0
         slurm_result_sinfos = ""
         slurm_ssh_error = ""
         for nn in nodes_this_partition:
+            if nn == "":
+                continue
             # for each of these nodes, query its sinfo status 
             #     in the form <hostname>,<CPU-State: allocated/idle/other/total>,<host state>
             cmd =  ("sinfo -h -l -N -p {} -n {} --format %n,%C,%T" ).format( slurm_partition , nn)
@@ -370,9 +380,10 @@ class SlurmIntegrationAdapter(IntegrationAdapterBase):
             slurm_result_sinfos += slurm_result_nn[1] + "\n"
             slurm_ssh_error += str( slurm_result_nn[2] )
 
+        
         #put slurm_result together in the way it is needed:
         slurm_result = (slurm_result_status,  slurm_result_sinfos , slurm_ssh_error)
-
+        self.logger.debug("slurm_result: {}".format(slurm_result))
 
         # get a list of the slurm machines (SSH)
         slurm_ssh.debugOutput(self.logger, "EKP-manage", slurm_result)
