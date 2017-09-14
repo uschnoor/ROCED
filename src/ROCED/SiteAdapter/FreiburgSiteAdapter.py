@@ -361,11 +361,13 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             frJobsCompleted = {}
 
         mr = self.getSiteMachines()
-        print mr
+        #self.logger.debug( mr) #tmi
+        self.logger.debug("Currently registered machines:")
         for mid in mr:
             batchJobId = mr[mid][self.regMachineJobId]
             #print "mid =" + str(mid)
             # Status handled by Integration Adapter
+
             if mr[mid][self.mr.regStatus] in [self.mr.statusIntegrating, self.mr.statusWorking,
                                               self.mr.statusPendingDisintegration,
                                               self.mr.statusDisintegrating]:
@@ -378,6 +380,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
                     #self.mr.updateMachineStatus(mid, self.mr.statusUp)
                     self.mr.updateMachineIp(mid, ip)
                     print "IP=" + str(ip)
+                self.logger.debug("Moab Job ID: {}. IP: {}. Status: {}.".format(batchJobId, ip, mr[mid][self.mr.regStatus] )  )
 
                 try:
                     frJobsRunning.pop(batchJobId)
@@ -413,7 +416,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             if mr[mid][self.mr.regStatus] == self.mr.statusBooting:
                 # batch job running: machine -> up
                 if batchJobId in frJobsRunning:
-                    print "Job is running!" + str(frJobsRunning)
+                    self.logger.debug( "Job is running! {}".format(frJobsRunning))
                     ip = ''
                     try:
                         ip = frJobsRunning[batchJobId]['IP']
@@ -422,7 +425,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
                     if ip != '':
                         self.mr.updateMachineStatus(mid, self.mr.statusUp)
                         self.mr.updateMachineIp(mid, ip)
-                        print "IP=" + str(ip)
+                        self.logger.debug( "IP={}".format(ip))
                     frJobsRunning.pop(batchJobId)
                 # Machine disappeared. If the machine later appears again, it will be added automatically.
                 elif batchJobId not in frJobsIdle and batchJobId not in frJobsCompleted:
@@ -572,13 +575,14 @@ class FreiburgSiteAdapter(SiteAdapterBase):
                     self.logger.debug("  ReqAWDuration={}" .format( line.attributes['ReqAWDuration'].value))
                     req = line.getElementsByTagName('req')[0]
                     self.logger.debug( "  ReqProcs={}".format(  req.attributes['TPN'].value))
+                    self.logger.debug( "  User={}".format(line.attributes['User'].value) )
                     var = line.getElementsByTagName('Variable')
                     vmIP = ""
                     for v in var:
                         if v.getAttribute('name') == 'VM_IP':
                             vmIP=str(v.childNodes[0].nodeValue)
                             self.logger.debug( "  VM_IP={}".format( v.childNodes[0].nodeValue))
-                    jobsRunning[str(line.attributes['JobID'].value)] = {"walltime": str(datetime.timedelta(seconds=int(line.attributes['StartTime'].value)+int(line.attributes['ReqAWDuration'].value)-int(time.time()))), "cores": int(req.attributes['TPN'].value), "IP": vmIP}
+                    jobsRunning[str(line.attributes['JobID'].value)] = {"walltime": str(datetime.timedelta(seconds=int(line.attributes['StartTime'].value)+int(line.attributes['ReqAWDuration'].value)-int(time.time()))), "cores": int(req.attributes['TPN'].value), "IP": vmIP, "User": line.attributes['User'].value }
                 else:
                     self.logger.debug("ERROR")
                     self.logger.debug( "Job is {}".format( line.attributes['State'].value))
@@ -587,6 +591,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
                     self.logger.debug( "  ReqAWDuration={}" .format(  line.attributes['ReqAWDuration'].value))
                     req = line.getElementsByTagName('req')[0]
                     self.logger.debug("  ReqProcs={}".format( req.attributes['TPN'].value))
+                    self.logger.debug("  User={}".format( line.attributes['User'].value))
                     var = line.getElementsByTagName('Variable')
                     for v in var:
                         if v.getAttribute('name') == 'VM_IP':
@@ -610,7 +615,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             itemlist = minidom.parseString(frResult[1]).getElementsByTagName('job')
            
             for line in itemlist:
-                print "Job is " + line.attributes['State'].value
+                self.logger.debug("Job {} is {} w/ code {}" .format( line.attributes['JobID'].value, line.attributes['State'].value, line.attributes['CompletionCode'].value))
                 jobsCompleted[str(line.attributes['JobID'].value)] = str(line.attributes['CompletionCode'].value)
            
         elif frResult[0] == 255:
@@ -622,7 +627,7 @@ class FreiburgSiteAdapter(SiteAdapterBase):
             self.logger.warning("Problem running remote command (showq -c) (RC %d):\n%s" % (frResult[0], frResult[2]))
             raise ValueError("Problem running remote command (showq -c) (RC %d):\n%s" % (frResult[0], frResult[2]))
 
-        self.logger.debug("Completed:\n%s" % jobsCompleted)
+            #self.logger.debug("Completed jobs dictionary:\n%s" % jobsCompleted)
         return jobsCompleted
 
     @property
