@@ -1,6 +1,9 @@
 ### ROCED ###
 
 src/ROCED/log/
+src/ROCED/log_atlher/
+src/ROCED/log_atlsch/
+src/ROCED/log_atljak/
 
 ### Operating system ###
 *~
