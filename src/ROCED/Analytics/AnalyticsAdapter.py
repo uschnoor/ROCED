@@ -6,7 +6,7 @@ import argparse
 import configparser
 import os
 from xml.dom import minidom
-
+import time
 
 from Core import MachineRegistry, Config, Adapter
 from Core.Core import ScaleCoreFactory
@@ -16,7 +16,7 @@ import getpass
 
 from Util import ScaleTools
 
-class ListMachines(AdapterBase):
+class AnalyticsAdapter(AdapterBase):
     #retrieve the configuration in order to know slurm_partition and e.g. keys
     
     configFreiburgUser = "freiburg_user"
@@ -89,7 +89,7 @@ class ListMachines(AdapterBase):
                 self.hostDict[nodename] = {}
         
 
-        freiburg_users = ["fr_ms1414","fr_herten","fr_cs97"]
+        freiburg_users = ["fr_ms1414","fr_herten","fr_cw97"]
         freiburg_key = self.config.get("freiburg_cloud",self.configFreiburgKey)
         freiburg_server = self.config.get("freiburg_cloud",self.configFreiburgServer)
 
@@ -97,6 +97,7 @@ class ListMachines(AdapterBase):
 
 
         for user in freiburg_users:
+            print(freiburg_server, user, freiburg_key)
             frSsh = ScaleTools.Ssh(freiburg_server, user, freiburg_key)
             cmd="checkjob ALL --xml"
             frResult = frSsh.handleSshCall(call=cmd, quiet=False)
@@ -307,14 +308,14 @@ class ListMachines(AdapterBase):
 if __name__ == "__main__":
 
     
-    lm = ListMachines()
+    anatool = AnalyticsAdapter()
 
 
 
-    if lm.args["slurmfree"]:
-        print( "Querying info on running machines for partition: %s" %(lm.config.get("slurm_req_freiburg",lm.configSlurmPartition)) )
-        lm.getSlurmfree()
+    if anatool.args["slurmfree"]:
+        print( "Querying info on running machines for partition: %s" %(anatool.config.get("slurm_req_freiburg",anatool.configSlurmPartition)) )
+        anatool.getSlurmfree()
 
-    elif lm.args["susers"]:
+    elif anatool.args["susers"]:
         print( "\nUser jobs in n(CPU) running or pending for virtual machines on NEMO" )
-        lm.getSusers()
+        anatool.getSusers()
