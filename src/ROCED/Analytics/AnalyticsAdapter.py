@@ -97,11 +97,11 @@ class AnalyticsAdapter(AdapterBase):
 
 
         for user in freiburg_users:
-            print(freiburg_server, user, freiburg_key)
             frSsh = ScaleTools.Ssh(freiburg_server, user, freiburg_key)
             cmd="checkjob ALL --xml"
             frResult = frSsh.handleSshCall(call=cmd, quiet=False)
-            print ("trying to log into {}".format(freiburg_server))
+            if self.args["verbose"]:
+                print ("trying to log into {} for account {}".format(freiburg_server, user))
             if frResult[0] != 0:
                 print ("SSH connection to NEMO via {} could not be established, error {}.".format(freiburg_server, frResult[0]))
                 for nodename in self.listOfHosts:
@@ -220,9 +220,19 @@ class AnalyticsAdapter(AdapterBase):
         slurm_key = self.config.get("slurm_req_freiburg",self.configSlurmKey)
         slurm_ssh = ScaleTools.Ssh(slurm_server, slurm_user, slurm_key)
         
-        
-        cmd =  ("squeue -p {} -h --format %u,%T,%C" ).format( slurm_partition )
-        results_squeue = slurm_ssh.handleSshCall(call=cmd, quiet=False) 
+        results_status = 0
+        results_squeues = ""
+        results_ssh_error = ""
+        for slurm_partition in ["nemo_vm_atlsch","nemo_vm_atljak","nemo_vm_atlher"]:
+            cmd =  ("squeue -p {} -h --format %u,%T,%C" ).format( slurm_partition )
+            results_squeue_q = slurm_ssh.handleSshCall(call=cmd, quiet=False) 
+            results_status += results_squeue_q[0]
+            results_squeues += results_squeue_q[1] 
+            results_ssh_error += str(results_squeue_q[2])
+        results_squeue = (results_status, results_squeues, results_ssh_error)    
+        print results_squeue
+
+
         if results_squeue[0] != 0:
             raise ValueError("SSH connection to Slurm collector could not be established.")
         
