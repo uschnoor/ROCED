@@ -97,7 +97,7 @@ grestore
 Particle Physics experiments at the Large Hadron Collider (LHC) need a high
 amount of computing resources for data processing, simulation, and analysis.
 High-Performance Computing (HPC) resources provided by universities
-can be useful supplements to the existing WLCG computing resources
+can be useful supplements to the existing World-wide LHC Computing Grid resources
 allocated by the collaboration. At the university of Freiburg, the
 shared HPC cluster "NEMO" has been made available to ATLAS and CMS
 users accessing NEMO from external collaboration-specific resources.
@@ -105,7 +105,7 @@ users accessing NEMO from external collaboration-specific resources.
  is provided. The interplay between the NEMO and the external
  resources' schedulers is ensured through the ROCED service.
 An OpenStack infrastructure is deployed at NEMO to orchestrate the
-parallel usage for bare metal and virtualized jobs.
+simultaneous usage for bare metal and virtualized jobs.
 Through the setup, resources are provided to users in an automatized,
 on-demand way. The performance of the virtualized environment has been
 evaluated for particle physics jobs.
@@ -132,9 +132,6 @@ is deploying an OpenStack instance to handle the virtual machines.
 The schedulers on the NEMO and the external resources are connected
 through the ROCED service\cite{ROCED}.
 
-
-%virtualizing the ATLAS software environment to run both data analysis and production on the HPC host system which is connected to the existing Tier-3 infrastructure. Main challenges include the integration into the NEMO and Tier-3 schedulers in a dynamic, on-demand way, the scalability of the OpenStack infrastructure, as well as the automatic generation of a fully functional virtual machine image providing access to the local user environment, the dCache storage element and the parallel file system. The performance in the virtualized environment is evaluated for typical High-Energy Physics applications.
-%
 
 \section{Virtualization infrastructure}
 \label{sec:openstack}
