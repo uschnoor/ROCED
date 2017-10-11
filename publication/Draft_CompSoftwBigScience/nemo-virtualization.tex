@@ -72,6 +72,7 @@ grestore
 %\titlerunning{Short form of title}        % if too long for running head
 
 \author{Felix B\"uhrer \and Anton Gamel  \and Michael Janczyk \and
+  Markus Schumacher \and
   Ulrike Schnoor \and Bernd Wiebelt \and People from KIT
   % etc.
 }
@@ -136,34 +137,38 @@ through the ROCED service\cite{ROCED}.
 \section{Virtualization infrastructure}
 \label{sec:openstack}
 Description of infrastructure for virtualized research environments
-(OpenStack, startVM etc) on NEMO -- Rechenzentrum
+(OpenStack, startVM etc) on NEMO \\$\to$Rechenzentrum
 
 
 \section{Generation of the image}
 
-
+The image for the virtual machine should be provided in an automatized
+way allowing versioning of the images. The approaches used in the
+different groups are described in the following.
 
 \subsection{Packer combined with Puppet}
-packer\cite{packer}, puppet\cite{puppet}
-ATLAS Freiburg
+One approach to generating the image is the open-source tool
+packer\cite{packer}, interfaced to puppet\cite{puppet}.
+\\ 
+$\to$ATLAS Freiburg
 \subsection{Karlsruhe's method}
-CMS Karlsruhe
+$\to$CMS Karlsruhe
 
 \section{Interfacing the schedulers using ROCED}
 
 \subsection{ROCED}
- CMS Karlsruhe
+$\to$ CMS Karlsruhe
 \subsection{Using HTCondor as front-end scheduler}
-Karlsruhe
+$\to$ CMS Karlsruhe
 
 \subsection{Using SLURM as front-end scheduler}
-ATLAS-Freiburg
+$\to$ ATLAS Freiburg
 \section{Performance}
 
 
 
 \subsection{HEPSPEC benchmarks}
-ATLAS Freiburg
+$\to$ ATLAS Freiburg
 \begin{figure}[htbp]
 %% For example, with the graphicx package use
   \includegraphics[width=\columnwidth]{figures/HEPSPECpCPUvsCPU.pdf}
@@ -175,11 +180,13 @@ ATLAS Freiburg
 
 
 
-\subsection{Simulation data production}
-ATLAS Freiburg
+\subsection{Production of simulation data}
+$\to$ATLAS Freiburg
 \subsection{Data analysis}
+$\to$ATLAS Freiburg 
 
-\subsection{Other performance analysis? Karlsruhe}
+\subsection{Other performance analysis?}
+$\to$CMS Karlsruhe?
 
 \section{Conclusions and Outlook}
 
