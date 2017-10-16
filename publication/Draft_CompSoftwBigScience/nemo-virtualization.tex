@@ -136,14 +136,17 @@ through the ROCED service\cite{ROCED}.
 
 \section{Virtualization infrastructure}
 \label{sec:openstack}
-Description of infrastructure for virtualized research environments
+Motivation for virtualized approach (increase the number of potential
+user groups without increasing the administrative effort); virtualized
+research environments; description of infrastructure for virtualized research environments
 (OpenStack, startVM etc) on NEMO \\$\to$Rechenzentrum
 
 
 \section{Generation of the image}
 
 The image for the virtual machine should be provided in an automatized
-way allowing versioning of the images. The approaches used in the
+way allowing versioning and archiving of the environments captured in
+the images. The approaches used in the
 different groups are described in the following.
 
 \subsection{Packer combined with Puppet}
@@ -155,16 +158,78 @@ $\to$ATLAS Freiburg
 $\to$CMS Karlsruhe
 
 \section{Interfacing the schedulers using ROCED}
-
+Introduction about the requirements for an in-between layer
+\\$\to $ Karlsruhe
 \subsection{ROCED}
 $\to$ CMS Karlsruhe
-\subsection{Using HTCondor as front-end scheduler}
+\subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 $\to$ CMS Karlsruhe
 
 \subsection{Using SLURM as front-end scheduler}
-$\to$ ATLAS Freiburg
-\section{Performance}
+$\to$ ATLAS Freiburg\\
+Alternatively to the approach in Sec.~\ref{sec:ROCED:HTCondor}, the
+scheduler \textsc{Slurm} has been incorporated into the ROCED setup by
+a group at University of Freiburg.
+While \textsc{Slurm} provides a built-in functionality for dynamic
+startup of resources in the \textit{Slurm Elastic Computing} module\cite{SlurmElastic}. 
+However, this is not suitable for resources which are not
+expected to be available nearly instantaneously, in this case due to
+the presence of a queue in the host system which may postpone the start
+of a resource by a significant, varying period.
+In addition, the transfer of information from one scheduler the the
+other, and therefore to the user, is very limited.
+Therefore, ROCED has been chosen as the interface between the
+\textsc{Moab} scheduler on the host system and the \textsc{Slurm}
+scheduler on the submission side.
 
+For \textsc{Slurm}, it is necessary that each potential virtual
+machine is registered in the configuration at the time of start of the
+slurm server as well as the client. \textsc{Slurm} configurations also
+need to be in agreement between server and client.
+Therefore, a range of hostnames is registered in the configuration in
+a way that is mapped to potential IP addresses of virtual machines.
+These virtual machines have a fixed number of CPUs and memory and are
+registered under a certain partition.
+When a job is submitted to this partition and no other resource is
+available, information from the \textsc{Slurm} \texttt{squeue} and
+\texttt{sinfo} commands is requested and parsed in such a way to
+obtain the amount of requested information.
+
+Since the ATLAS Freiburg group comprises three sub-groups, each mapped
+to a different account on \textsc{Moab}/ NEMO, special care is taken to
+avoid interference of resources used by another account, while
+allowing jobs from one group to occupy otherwise idle resources of another group.
+
+
+ROCED determines the amount of VMs to be started and sends the
+corresponding startVM commands to \textsc{Moab}.
+After the virtual machine has booted, the hostname is set to the IP
+dependent name which is known to the \textsc{Slurm} configuration.
+A cron job executes a few sanity
+checks on the system.
+Upon successful execution of these tests, the \textsc{Slurm} client
+running in the VM starts accepting the queued jobs.
+After completion of the jobs and a certain period of being idle, the
+\textsc{Slurm} client in the machine drains itself and the machine
+shuts itself down.
+The IP address as well as the corresponding hostname in \textsc{Slurm}
+are then released and can be used again.
+
+
+
+
+
+
+
+
+\section{Analysis of performance and usage}
+
+The approach described so far has been implemented and put into
+production in the research groups at University of Freiburg
+(Physikalisches Institut) and Karlsruhe (... Institut).
+The following chapter presents statistical results of the analysis of
+the performance of the virtualized setup both in terms of job
+performance as well as usage statistics.
 
 
 \subsection{HEPSPEC benchmarks}
@@ -185,11 +250,23 @@ $\to$ATLAS Freiburg
 \subsection{Data analysis}
 $\to$ATLAS Freiburg 
 
-\subsection{Other performance analysis?}
+\subsection{Usage statistics}
 $\to$CMS Karlsruhe?
 
 \section{Conclusions and Outlook}
 
+
+A system for the dynamic, on-demand provisioning of virtual machines
+to run jobs in a High-Energy Physics context on an external, not
+dedicated resource as realized at the HPC
+cluster ``NEMO'' at University of Freiburg has been described. 
+Reasons for the need for an interface between the schedulers of the host system
+and the external system from which requests are sent have been
+explained. 
+The performance and usage have been analyzed for two groups. 
+
+This approach can be generalized to other platforms and possibly also
+other forms of virtualized environments (containers).
 
 
 
@@ -287,6 +364,8 @@ Packer: tool for creating machine and container images for multiple platforms fr
 Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
 \url{https://puppet.com/}, accessed 2017-01-10
 
+\bibitem{SlurmElastic}
+Slurm Elastic Computing ....
 %\bibitem{RefJ}
 % Format for Journal Reference
 %Author, Article title, Journal, Volume, page numbers (year)
