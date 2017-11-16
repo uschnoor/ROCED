@@ -62,8 +62,8 @@ grestore
 %
 \begin{document}
 
-\title{Virtualization of Particle Physics environments on
-  High-Performance Computing cluster%\thanks{Grants or other notes
+\title{Dynamic Virtualized Deployment of Particle Physics Environments on a
+  High-Performance Computing Cluster%\thanks{Grants or other notes
 %about the article that should go on the front page should be
 %placed here. General acknowledgments should be placed at the end of the article.}
 }
@@ -99,7 +99,7 @@ Particle Physics experiments at the Large Hadron Collider (LHC) need a high
 amount of computing resources for data processing, simulation, and analysis.
 High-Performance Computing (HPC) resources provided by universities
 can be useful supplements to the existing World-wide LHC Computing Grid resources
-allocated by the collaboration. At the university of Freiburg, the
+allocated by the collaboration. At the university of Frei\-burg, the
 shared HPC cluster "NEMO" has been made available to ATLAS and CMS
 users accessing NEMO from external collaboration-specific resources.
  To this effect, the full environment corresponding to a WLCG center
@@ -123,25 +123,12 @@ evaluated for particle physics jobs.
 
 \section{Introduction}
 \label{intro}
-
-This paper presents the concepts and implementation of providing a HPC
-resource to ATLAS and CMS users accessing external clusters connected
-to the World-wide computing grid (WLCG) with the purpose of running
-data production as well as data analysis on the HPC host system.
-For this purpose, the HPC cluster NEMO at the University of Freiburg
-is deploying an OpenStack instance to handle the virtual machines.
-The schedulers on the NEMO and the external resources are connected
-through the ROCED service\cite{ROCED}.
-
+\input{include/Introduction.tex}
 
 \section{Virtualization infrastructure}
 \label{sec:openstack}
-Motivation for virtualized approach (increase the number of potential
-user groups without increasing the administrative effort); virtualized
-research environments; description of infrastructure for virtualized research environments
-(OpenStack, startVM etc) on NEMO \\$\to$Rechenzentrum
-
-
+$\to$Rechenzentrum\\
+\input{include/Infrastructure.tex}
 \section{Generation of the image}
 
 The image for the virtual machine should be provided in an automatized
@@ -150,12 +137,14 @@ the images. The approaches used in the
 different groups are described in the following.
 
 \subsection{Packer combined with Puppet}
-One approach to generating the image is the open-source tool
-packer\cite{packer}, interfaced to puppet\cite{puppet}.
-\\ 
-$\to$ATLAS Freiburg
+$\to$ATLAS Freiburg\\
+\input{include/PackerPuppet.tex}
+
+
+
 \subsection{Karlsruhe's method}
-$\to$CMS Karlsruhe
+$\to$CMS Karlsruhe\\
+\input{include/KarlsruheImageGen.tex}
 
 \section{Interfacing the schedulers using ROCED}
 Introduction about the requirements for an in-between layer
@@ -170,53 +159,7 @@ $\to$ CMS Karlsruhe
 
 \subsection{Using SLURM as front-end scheduler}
 $\to$ ATLAS Freiburg\\
-Alternatively to the approach in Sec.~\ref{sec:ROCED:HTCondor}, the
-scheduler \textsc{Slurm} has been incorporated into the ROCED setup by
-a group at University of Freiburg.
-While \textsc{Slurm} provides a built-in functionality for dynamic
-startup of resources in the \textit{Slurm Elastic Computing} module\cite{SlurmElastic}. 
-However, this is not suitable for resources which are not
-expected to be available nearly instantaneously, in this case due to
-the presence of a queue in the host system which may postpone the start
-of a resource by a significant, varying period.
-In addition, the transfer of information from one scheduler the the
-other, and therefore to the user, is very limited.
-Therefore, ROCED has been chosen as the interface between the
-\textsc{Moab} scheduler on the host system and the \textsc{Slurm}
-scheduler on the submission side.
-
-For \textsc{Slurm}, it is necessary that each potential virtual
-machine is registered in the configuration at the time of start of the
-slurm server as well as the client. \textsc{Slurm} configurations also
-need to be in agreement between server and client.
-Therefore, a range of hostnames is registered in the configuration in
-a way that is mapped to potential IP addresses of virtual machines.
-These virtual machines have a fixed number of CPUs and memory and are
-registered under a certain partition.
-When a job is submitted to this partition and no other resource is
-available, information from the \textsc{Slurm} \texttt{squeue} and
-\texttt{sinfo} commands is requested and parsed in such a way to
-obtain the amount of requested information.
-
-Since the ATLAS Freiburg group comprises three sub-groups, each mapped
-to a different account on \textsc{Moab}/ NEMO, special care is taken to
-avoid interference of resources used by another account, while
-allowing jobs from one group to occupy otherwise idle resources of another group.
-
-
-ROCED determines the amount of VMs to be started and sends the
-corresponding startVM commands to \textsc{Moab}.
-After the virtual machine has booted, the hostname is set to the IP
-dependent name which is known to the \textsc{Slurm} configuration.
-A cron job executes a few sanity
-checks on the system.
-Upon successful execution of these tests, the \textsc{Slurm} client
-running in the VM starts accepting the queued jobs.
-After completion of the jobs and a certain period of being idle, the
-\textsc{Slurm} client in the machine drains itself and the machine
-shuts itself down.
-The IP address as well as the corresponding hostname in \textsc{Slurm}
-are then released and can be used again.
+\input{include/Slurm.tex}
 
 
 \section{Analysis of performance and usage}
