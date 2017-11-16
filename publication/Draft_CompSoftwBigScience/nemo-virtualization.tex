@@ -150,13 +150,15 @@ $\to$CMS Karlsruhe\\
 Introduction about the requirements for an in-between layer
 \\$\to $ Karlsruhe
 \subsection{ROCED}
-$\to$ CMS Karlsruhe
+%$\to$ CMS Karlsruhe
+The cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
+fashion and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of a specific user group or workflow. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Maob-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
+
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 $\to$ CMS Karlsruhe
 
 \subsection{Using SLURM as front-end scheduler}
 $\to$ ATLAS Freiburg\\
-
 \input{include/Slurm.tex}
 
 
@@ -189,7 +191,16 @@ $\to$ATLAS Freiburg
 $\to$ATLAS Freiburg 
 
 \subsection{Usage statistics}
-$\to$CMS Karlsruhe?
+Figure \ref{fig-frplots} show the utilization of virtual machines which were orchestraded by ROCED depending on the resource demands of the users of the KIT group. At peak times, up to 9000 virtual cores were filled with user jobs, which is more than half of the 16.000 cores of the NEMO cluster. 
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{figures/NEMO_KIT_utiliztion.pdf}
+  \caption{Utilization of the shared HPC system by booted virtual machines. Up to 9000 virtual cores were in use at peak times. The fluctuations in the utilization reflects the patterns of the submission of jobs by our institute users. The number of draining slots displays the amount of job slots still processing jobs while the rest of the node's slot are already empty.}
+  \label{fig-frplots}
+\end{center}
+\end{figure}
+
 
 \section{Conclusions and Outlook}
 
@@ -290,8 +301,9 @@ OpenStack Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2017-01-10
 
 \bibitem{ROCED}
-Authors, Article Title, Journal, Volume, , page numbers (year)
-=reference for ROCED
+ROCED Cloud Meta-Scheduler project website
+\url{https://github.com/roced-scheduler/ROCED}, accessed 2017-01-10
+
 \bibitem{packer}
 
 Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
