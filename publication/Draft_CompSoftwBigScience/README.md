@@ -1,4 +1,4 @@
-Repository klonen entweder per SSH (mit github-Account und Key) oder per HTTPS:
+Repository klonen entweder per SSH (mit github-Account und ggf. Key) oder per HTTPS:
 
 git clone https://github.com/uschnoor/ROCED.git
 git clone git@github.com:uschnoor/ROCED.git
