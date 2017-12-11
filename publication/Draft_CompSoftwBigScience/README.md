@@ -3,6 +3,10 @@ Repository klonen entweder per SSH (mit github-Account und ggf. Key) oder per HT
 git clone https://github.com/uschnoor/ROCED.git
 git clone git@github.com:uschnoor/ROCED.git
 
+cd ROCED/publication/Draft_CompSoftwBigScience
+
+pdflatex nemo-virtualization.tex
+
 
 Änderungen im Text vornehmen, dann einen Branch machen und diesen per Pull request einfügen:
 
