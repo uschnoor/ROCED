@@ -6,11 +6,11 @@ git clone git@github.com:uschnoor/ROCED.git
 
 Änderungen im Text vornehmen, dann einen Branch machen und diesen per Pull request einfügen:
 
-git status
-git checkout -b <Branchname>
-git add <file>
-git commit -m "what you have changed"
-git push origin <Branchname>
+- git status
+- git checkout -b <Branchname>
+- git add <file>
+- git commit -m "what you have changed"
+- git push origin <Branchname>
 
 Pull request im Webinterface machen:
 - Auf den Branch wechseln
