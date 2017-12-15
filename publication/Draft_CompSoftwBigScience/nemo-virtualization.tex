@@ -143,17 +143,26 @@ $\to$ATLAS Freiburg\\
 
 
 
-\subsection{Karlsruhe's method}
-$\to$CMS Karlsruhe\\
+\subsection{Image generation using the Oz toolkit}
+%$\to$CMS Karlsruhe\\
 \input{include/KarlsruheImageGen.tex}
 
 \section{Interfacing the schedulers using ROCED}
 Introduction about the requirements for an in-between layer
 \\$\to $ Karlsruhe
 \subsection{ROCED}
+\begin{figure*}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{figures/roced_design_flat.pdf}
+  \caption{Overview of the ROCED modular design. The ROCED Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on an cloud site and the Integration Adapter ensure that newly booted machines are integrated into the batch system.}
+  \label{fig-frplots}
+\end{center}
+\end{figure*}
+
 %$\to$ CMS Karlsruhe
 The cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
 fashion and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of a specific user group or workflow. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Maob-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
+
 
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
