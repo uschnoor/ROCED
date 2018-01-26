@@ -147,9 +147,9 @@ $\to$ATLAS Freiburg\\
 %$\to$CMS Karlsruhe\\
 \input{include/KarlsruheImageGen.tex}
 
-\section{Interfacing the schedulers using ROCED}
-Introduction about the requirements for an in-between layer
-\\$\to $ Karlsruhe
+\section{Interfacing batch systems and virtual resources using ROCED}
+While virtualized HPC systems and commercial cloud offerings provide the necessities to acquire computing and storage capacity by dynamic resource booking, the computing needs of High-Energy Physics research groups additionally require workflow management systems which are able to manage thousands of running jobs. While some cloud providers, for example Amazon with AWS Batch~\cite{awsbatch}, provide a service for workflow management, these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
+
 \subsection{ROCED}
 \begin{figure*}
 \begin{center}
@@ -160,7 +160,7 @@ Introduction about the requirements for an in-between layer
 \end{figure*}
 
 %$\to$ CMS Karlsruhe
-The cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
+Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
 fashion and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of a specific user group or workflow. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Maob-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
 
 
@@ -313,6 +313,10 @@ ROCED Cloud Meta-Scheduler project website
 \bibitem{OZ}
 Oz image generation toolkit
 \url{https://github.com/clalancette/oz}, accessed 2017-01-10
+
+\bibitem{awsbatch}
+Amazon AWS Batch
+\url{https://aws.amazon.com/batch/}, accessed 2017-01-10
 
 \bibitem{HTCondor}
 HTCondor workload manager
