@@ -1,10 +1,15 @@
+This paper presents the concepts and implementation of providing a HPC resource
+to ATLAS and CMS users accessing external clusters connected to the World-wide
+computing grid (WLCG) with the purpose of running data production as well as
+data analysis on the HPC host system.  For this purpose, the HPC cluster NEMO at
+the University of Freiburg is deploying an OpenStack instance to handle the
+virtual machines.  The schedulers on the NEMO and the external resources are
+connected through the ROCED service\cite{ROCED}.
 
-This paper presents the concepts and implementation of providing a HPC
-resource to ATLAS and CMS users accessing external clusters connected
-to the World-wide computing grid (WLCG) with the purpose of running
-data production as well as data analysis on the HPC host system.
-For this purpose, the HPC cluster NEMO at the University of Freiburg
-is deploying an OpenStack instance to handle the virtual machines.
-The schedulers on the NEMO and the external resources are connected
-through the ROCED service\cite{ROCED}.
+The CMS and ATLAS groups cooperated in this project with the HPC team of the
+eScience group of the computer center of University of Freiburg (UFR) to tackle
+the particular challenges of VREs like provisioning, setup, scheduling and
+decommissioning. A VRE in the context of this paper is a complete software stack
+as it would get installed on a compute cluster fitted to ATLAS or CMS groups
+demand.
 
