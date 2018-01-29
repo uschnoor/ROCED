@@ -1,21 +1,22 @@
 Virtualization became mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
 separate users of software environments. While widespread in computer center
-operation it is still sceptically seen in the field of scientific computing and
-thus seldomly applied in HPC.
+operation it is still skeptically seen in the field of scientific computing and
+thus seldom applied in HPC.
 
-\subsection{Computing at the UFR computer center}
+\subsection{Computing at the University of Freiburg}
 
-The task of the computer center of UFR is to provide reasonably scaled research
-infrastructures like cloud, storage and especially HPC services to cater to the
-needs of various scientific communities. To operate compute systems comprised of
-more than 1000 inidividual nodes with a small group of administrators
-significant standardization in hardware and software is necessary.
+The task of the computer center of the University of Freiburg is to provide
+reasonably scaled research infrastructures like cloud, storage and especially
+HPC services to cater to the needs of various scientific communities. To operate
+compute systems comprised of more than 1000 individual nodes with a small group
+of administrators significant standardization in hardware and software is
+necessary.
 
 The level of granularity of the software stack provided is not fine enough to
 directly support the quite special requirements of world-wide efforts like the
 ATLAS or CMS experiments in the field of particle physics. To utilize the system
-optimally and open the cluster to as many different needs as possible without
+optimally and open the cluster to as much different needs as possible without
 overstretching the operating groups own man power novel approaches to the
 utilization of the installed hardware were necessary. As virtualization was
 already in use for the operation of the local private cloud, the eScience group
@@ -23,32 +24,46 @@ pooled in it's expertise in cloud operation especially the use of OpenStack as a
 cloud platform to provide a more flexible software deployment on the cluster
 beside the existing software module system. This produced a couple of
 implications ranging from challenges in the automated creation of suitable
-virtual machines, their on-demoand deployment and the scheduling on the cluster
+virtual machines, their on-demand deployment and the scheduling on the cluster
 and virtual resources level.
 
 \subsection{Separation of software environments}
 
-The filesystem of a virtual machine (or VRE in the described usecase) is a
-container presented as a single file. From the computer center's perspective
-this container is seen as a black box requiring no involvement or efforts like
-updates of the operating system or the provisioning of software packages of a
-certain version. From the researchers perspective the VRE is an individual
-(virtual) server where everything from the hardware level -- at least to a
-certain degree like CPU or RAM dimensioning -- up to the operating system,
+The file system of a virtual machine (or virtualized research environment (VRE)
+in the described use case) is a disk image presented as a single file. From the
+computer center's perspective this image is seen as a black box requiring no
+involvement or efforts like updates of the operating system or the provisioning
+of software packages of a certain version. From the researchers perspective the
+VRE is an individual (virtual) node where everything from the hardware level --
+at least to a certain degree like CPU or RAM -- up to the operating system,
 applications and configurations can be controlled solely by the research groups.
 
 To allow more flexible software environments the standard bare metal operation
-the NEMO cluster got extended with a parallel installation of OpenStack
-components \ref{hpc-symp:2016}. They are getting orchestrated from a special
-management node which provides the necessary interfaces to the other services.
-The NEMO cluster as it's siblings throughout the state use Adaptive's MOAB as a
-scheduler of compute jobs. To allow seemless coexistence of both bare metal and
-virtualied jobs the scheduler has to handle both of them. As the scheduler does
-not look into the VRE virtual machines, it cannot assess if they are actually
-active or idle. To solve this, a customized glue component got introduced (to be
-described in further detail in section XX). The virtual machines started and
-stopped by the OpenStack nova(?) components triggered by ??.
+the bwForCluster NEMO got extended with a parallel installation of OpenStack
+components \cite{hpc-symp:2016}. The NEMO cluster as it's siblings throughout
+the state use Adaptive's Moab Workload Manager as a scheduler of compute jobs.
+Since OpenStack tries to schedule the virtual machines on the same nodes and
+resources itself, it is necessary to define a primary or master scheduler, who
+controls which jobs should run on which worker node. Moab and Openstack are
+unaware that there exists another scheduler within the cluster and no API exists
+so that both can communicate with each other. Since most users still use the
+bare metal HPC cluster Moab is used as the primary scheduler. It allows for
+detailed job description and offers sophisticated scheduling features like
+fair-share, priority-based scheduling, detailed limits and much more. Openstack
+will still schedule the virtual machines, but Moab will initially start the VRE
+jobs and the VRE job will instruct Openstack to start the virtual machine on the
+reserved resources and which flavor to use (resource definition in OpenStack).
 
-Michael fügt hier hoch was am Montag hinzu, da er leider letze Woche gekränket
-hat ;)
-
+When a VRE job is submitted to the NEMO cluster Moab will first calculate the
+priority and the needed resources of the job and then insert it into its queue.
+When the job is in line for execution and the requested resources are available,
+the job will start a script which then starts the VRE on the selected node
+(within the resource boundaries). During the run-time of the VRE a monitoring
+script checks if the VRE is still running and exits the job if the VRE ends.
+When the job ends OpenStack gets a signal to terminate the virtual machine and
+the VRE job ends, as well.  Neither Moab nor OpenStack can look into the VRE and
+so it cannot assess if it is actually active or idle. To solve this issue, a
+customized glue component called ROCED got introduced (to be described in
+further detail in section \ref{section:roced}).  It is used as a broker between
+different HPC schedulers translating resources, monitoring usage inside the
+virtual machine and starting and stopping VRE images by demand.
