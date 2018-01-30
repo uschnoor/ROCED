@@ -1,22 +1,23 @@
-Virtualization became mainstream technology over the last decade as it allows
+Virtualization has become mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
 separate users of software environments. While widespread in computer center
-operation it is still skeptically seen in the field of scientific computing and
-thus seldom applied in HPC.
+operation it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
+thus rarely applied in HPC.
 
 \subsection{Computing at the University of Freiburg}
+% Infrastructure setting
 
-The task of the computer center of the University of Freiburg is to provide
-reasonably scaled research infrastructures like cloud, storage and especially
-HPC services to cater to the needs of various scientific communities. To operate
-compute systems comprised of more than 1000 individual nodes with a small group
-of administrators significant standardization in hardware and software is
-necessary.
+The computer center at University of Freiburg provides
+medium scaled research
+infrastructures like cloud, storage and especially HPC services to cater to the
+needs of various scientific communities. To operate compute systems comprised of
+more than 1000 individual nodes with a small group of administrators
+significant standardization in hardware and software is necessary.
 
 The level of granularity of the software stack provided is not fine enough to
 directly support the quite special requirements of world-wide efforts like the
 ATLAS or CMS experiments in the field of particle physics. To utilize the system
-optimally and open the cluster to as much different needs as possible without
+optimally and open the cluster to as many different needs as possible without
 overstretching the operating groups own man power novel approaches to the
 utilization of the installed hardware were necessary. As virtualization was
 already in use for the operation of the local private cloud, the eScience group
@@ -29,19 +30,20 @@ and virtual resources level.
 
 \subsection{Separation of software environments}
 
-The file system of a virtual machine (or virtualized research environment (VRE)
-in the described use case) is a disk image presented as a single file. From the
-computer center's perspective this image is seen as a black box requiring no
-involvement or efforts like updates of the operating system or the provisioning
-of software packages of a certain version. From the researchers perspective the
-VRE is an individual (virtual) node where everything from the hardware level --
-at least to a certain degree like CPU or RAM -- up to the operating system,
+The file system of a virtual machine (or virtualized research environment (VRE) in the described use case) is a
+disk image presented as a single file. From the computer center's perspective
+this image is seen as a black box requiring no involvement or efforts like
+updates of the operating system or the provisioning of software packages of a
+certain version. From the researchers perspective the VRE is an individual
+(virtual) node where everything from the hardware level -- at least to a
+certain degree like CPU or RAM -- up to the operating system,
 applications and configurations can be controlled solely by the research groups.
 
 To allow more flexible software environments the standard bare metal operation
 the bwForCluster NEMO got extended with a parallel installation of OpenStack
-components \cite{hpc-symp:2016}. The NEMO cluster as it's siblings throughout
-the state use Adaptive's Moab Workload Manager as a scheduler of compute jobs.
+components \cite{hpc-symp:2016}.
+The NEMO cluster as it's siblings throughout the state use Adaptive's Moab Workload Manager as a
+scheduler of compute jobs.
 Since OpenStack tries to schedule the virtual machines on the same nodes and
 resources itself, it is necessary to define a primary or master scheduler, who
 controls which jobs should run on which worker node. Moab and Openstack are
