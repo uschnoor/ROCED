@@ -40,9 +40,9 @@ certain degree like CPU or RAM -- up to the operating system,
 applications and configurations can be controlled solely by the research groups.
 
 To allow more flexible software environments the standard bare metal operation
-the bwForCluster NEMO got extended with a parallel installation of OpenStack
-components \cite{hpc-symp:2016}.
-The NEMO cluster as it's siblings throughout the state use Adaptive's Moab Workload Manager as a
+the bwForCluster NEMO is extended with a parallel installation of OpenStack
+components~\cite{hpc-symp:2016}.
+The NEMO cluster uses Adaptive's Moab Workload Manager as a
 scheduler of compute jobs.
 Since OpenStack tries to schedule the virtual machines on the same nodes and
 resources itself, it is necessary to define a primary or master scheduler, who
@@ -60,12 +60,12 @@ When a VRE job is submitted to the NEMO cluster Moab will first calculate the
 priority and the needed resources of the job and then insert it into its queue.
 When the job is in line for execution and the requested resources are available,
 the job will start a script which then starts the VRE on the selected node
-(within the resource boundaries). During the run-time of the VRE a monitoring
+within the resource boundaries. During the run-time of the VRE a monitoring
 script checks if the VRE is still running and exits the job if the VRE ends.
-When the job ends OpenStack gets a signal to terminate the virtual machine and
-the VRE job ends, as well.  Neither Moab nor OpenStack can look into the VRE and
+When the job ends, OpenStack gets a signal to terminate the virtual machine and
+the VRE job ends as well.  Neither Moab nor OpenStack can look into the VRE and
 so it cannot assess if it is actually active or idle. To solve this issue, a
-customized glue component called ROCED got introduced (to be described in
-further detail in section \ref{section:roced}).  It is used as a broker between
+customized glue component called ROCED has been introduced (described in
+further detail in Section \ref{section:roced}).  It is used as a broker between
 different HPC schedulers translating resources, monitoring usage inside the
 virtual machine and starting and stopping VRE images by demand.
