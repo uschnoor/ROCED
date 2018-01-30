@@ -10,20 +10,22 @@ thus rarely applied in HPC.
 The computer center at University of Freiburg provides
 medium scaled research
 infrastructures like cloud, storage and especially HPC services to cater to the
-needs of various scientific communities. To operate compute systems comprised of
-more than 1000 individual nodes with a small group of administrators
-significant standardization in hardware and software is necessary.
+needs of various scientific communities. Significant standardization
+in hardware and software is necessary for the operation of compute systems comprised of
+more than 1000 individual nodes with a small group of administrators.
 
 The level of granularity of the software stack provided is not fine enough to
 directly support the quite special requirements of world-wide efforts like the
-ATLAS or CMS experiments in the field of particle physics. To utilize the system
-optimally and open the cluster to as many different needs as possible without
-overstretching the operating groups own man power novel approaches to the
-utilization of the installed hardware were necessary. As virtualization was
-already in use for the operation of the local private cloud, the eScience group
-pooled in it's expertise in cloud operation especially the use of OpenStack as a
-cloud platform to provide a more flexible software deployment on the cluster
-beside the existing software module system. This produced a couple of
+ATLAS or CMS experiments.
+To utilize the system
+optimally and to open the cluster to as many different needs as
+possible without increasing the person power required for operation, novel approaches to the
+utilization of the installed hardware are necessary.
+Transfering expertise from the operation of the established local private cloud,
+the use of OpenStack as a cloud platform has been identified as a
+suitable solution for NEMO to provide a more flexible software
+deployment in addition to the existing software module system.
+This produced a couple of
 implications ranging from challenges in the automated creation of suitable
 virtual machines, their on-demand deployment and the scheduling on the cluster
 and virtual resources level.
@@ -37,12 +39,12 @@ updates of the operating system or the provisioning of software packages of a
 certain version. From the researchers perspective the VRE is an individual
 (virtual) node where everything from the hardware level -- at least to a
 certain degree like CPU or RAM -- up to the operating system,
-applications and configurations can be controlled solely by the research groups.
+applications and configurations can be controlled autonomously by the research groups.
 
-To allow more flexible software environments the standard bare metal operation
-the bwForCluster NEMO is extended with a parallel installation of OpenStack
+To allow more flexible software environments the standard bare metal
+operation of NEMO is extended with a parallel installation of OpenStack
 components~\cite{hpc-symp:2016}.
-The NEMO cluster uses Adaptive's Moab Workload Manager as a
+The NEMO cluster uses Adaptive's Moab Workload Manager~\cite{Moab} as a
 scheduler of compute jobs.
 Since OpenStack tries to schedule the virtual machines on the same nodes and
 resources itself, it is necessary to define a primary or master scheduler, who
