@@ -1,12 +1,14 @@
-Virtualization became mainstream technology over the last decade as it allows
+Virtualization has become mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
 separate users of software environments. While widespread in computer center
-operation it is still sceptically seen in the field of scientific computing and
-thus seldomly applied in HPC.
+operation it is still sceptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
+thus rarely applied in HPC.
 
-\subsection{Computing at the UFR computer center}
+\subsection{Computing at the University of Freiburg computer center}
+% Infrastructure setting
 
-The task of the computer center of UFR is to provide reasonably scaled research
+The computer center at University of Freiburg (UFR) provides
+reasonably scaled [intermediate scale?] research
 infrastructures like cloud, storage and especially HPC services to cater to the
 needs of various scientific communities. To operate compute systems comprised of
 more than 1000 inidividual nodes with a small group of administrators
@@ -39,7 +41,7 @@ applications and configurations can be controlled solely by the research groups.
 
 To allow more flexible software environments the standard bare metal operation
 the NEMO cluster got extended with a parallel installation of OpenStack
-components \ref{hpc-symp:2016}. They are getting orchestrated from a special
+components \cite{hpc-symp:2016}. They are getting orchestrated from a special
 management node which provides the necessary interfaces to the other services.
 The NEMO cluster as it's siblings throughout the state use Adaptive's MOAB as a
 scheduler of compute jobs. To allow seemless coexistence of both bare metal and
