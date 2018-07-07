@@ -208,6 +208,21 @@ Figure \ref{fig-frplots} show the utilization of virtual machines which were orc
 \end{center}
 \end{figure}
 
+The shared usage of the NEMO cluster between jobs running in virtual
+machines and within the cluster operating system is illustrated in
+Figure~\ref{fig-nodeusage}. It shows the relative contributions of CPU hours used by jobs running
+direcly in the hosts' operating system or in virtual machines per month.
+(Ist das wirklich so angegeben?)
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-08_2017-12.png}
+  \caption{Usage of the NEMO cluster in the time between August 2018
+    to December 2017. The blue bars indicate the usage by jobs
+    running directly in the hosts' operating system, while the orange bars are jobs
+    running in virtual machines.}
+  \label{fig-nodeusage}
+\end{center}
+\end{figure}
 
 \section{Conclusions and Outlook}
 \input{include/Conclusions}
