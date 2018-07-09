@@ -113,7 +113,7 @@ evaluated for particle physics applications.
 
 %Insert your abstract here. Include keywords, PACS and mathematical
 %subject classification numbers as needed.
-\keywords{Virtualization \and Particle Physics \and Grid Computing \and More keywords}
+\keywords{Virtualization \and Particle Physics \and Grid Computing }
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
@@ -190,13 +190,13 @@ performance as well as usage statistics.
 
 
 
-\subsection{Production of simulation data}
-%$\to$ATLAS Freiburg
-\input{include/Simulationtests.tex}
-
-\subsection{Data analysis}
-$\to$ATLAS Freiburg 
-
+%\subsection{Production of simulation data}
+%%$\to$ATLAS Freiburg
+%\input{include/Simulationtests.tex}
+%
+%\subsection{Data analysis}
+%$\to$ATLAS Freiburg 
+%
 \subsection{Usage statistics}
 Figure \ref{fig-frplots} show the utilization of virtual machines which were orchestraded by ROCED depending on the resource demands of the users of the KIT group. At peak times, up to 9000 virtual cores were filled with user jobs, which is more than half of the 16.000 cores of the NEMO cluster. 
 
@@ -213,6 +213,11 @@ machines and within the cluster operating system is illustrated in
 Figure~\ref{fig-nodeusage}. It shows the relative contributions of CPU hours used by jobs running
 direcly in the hosts' operating system or in virtual machines per month.
 (Ist das wirklich so angegeben?)
+The figure shows that the shares of bare-metal and virtualized jobs is
+completely flexible and can be adapted to the current needs and
+priorities of the user community.
+
+
 \begin{figure}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-08_2017-12.png}
@@ -234,7 +239,7 @@ cluster ``NEMO'' at University of Freiburg has been described.
 Reasons for the need for an interface between the schedulers of the host system
 and the external system from which requests are sent have been
 explained. 
-The performance and usage have been analyzed for two groups. 
+The performance and usage have been analyzed for selected cases.
 
 This approach can be generalized to other platforms and possibly also
 other forms of virtualized environments (containers).
