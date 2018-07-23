@@ -198,7 +198,7 @@ performance as well as usage statistics.
 %$\to$ATLAS Freiburg 
 %
 \subsection{Usage statistics}
-Figure \ref{fig-frplots} show the utilization of virtual machines which were orchestraded by ROCED depending on the resource demands of the users of the KIT group. At peak times, up to 9000 virtual cores were filled with user jobs, which is more than half of the 16.000 cores of the NEMO cluster. 
+Figure \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by ROCED depending on the resource demands of the users of the KIT group. At peak times, up to 9000 virtual cores were filled with user jobs, which was at that time more than half of the 16.000 cores of the initial NEMO cluster.
 
 \begin{figure}
 \begin{center}
@@ -208,20 +208,37 @@ Figure \ref{fig-frplots} show the utilization of virtual machines which were orc
 \end{center}
 \end{figure}
 
-The shared usage of the NEMO cluster between jobs running in virtual
-machines and within the cluster operating system is illustrated in
-Figure~\ref{fig-nodeusage}. It shows the relative contributions of CPU hours used by jobs running
-direcly in the hosts' operating system or in virtual machines per month.
-(Ist das wirklich so angegeben?)
-The figure shows that the shares of bare-metal and virtualized jobs is
-completely flexible and can be adapted to the current needs and
-priorities of the user community.
+The usage of the hybrid cluster model is shown in figure~\ref{fig-nodeusage}.
+The diagram shows the shared usage of NEMO's cluster nodes running either
+bare-metal or virtualized jobs. The part of the cluster which runs virtualized
+jobs or VREs changes dynamically from job to job, since the VREs are started by
+a standard bare-metal job.
+
+At the beginning the cluster was only containing the operating system and some
+basic development tools, scientific software was added after the the cluster was
+already in production mode. Since the VRE for the CMS project was already
+available when the NEMO cluster started it could already use the whole cluster
+while other groups still had to wait for the research software to be deployed on
+the cluster. This explains the high usage by VREs in the first months of
+operation. With more and more software being available for bare-metal usage the
+amount of VRE jobs decreased. This figure is only an estimate because VRE
+projects are not forced to use VREs and therefore could run bare-metal jobs as
+well.
+
+% The shared usage of the NEMO cluster between jobs running in virtual
+% machines and within the cluster operating system is illustrated in
+% Figure~\ref{fig-nodeusage}. It shows the relative contributions of CPU hours used by jobs running
+% direcly in the hosts' operating system or in virtual machines per month.
+% (Ist das wirklich so angegeben?)
+% The figure shows that the shares of bare-metal and virtualized jobs is
+% completely flexible and can be adapted to the current needs and
+% priorities of the user community.
 
 
 \begin{figure}
 \begin{center}
-  \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-08_2018-06.png}
-  \caption{Usage of the NEMO cluster in the time between August 2016
+  \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-09_2018-06.png}
+  \caption{Usage of the NEMO cluster in the time between September 2016
     to June 2018. The blue bars indicate the usage by jobs
     running directly in the hosts' operating system, while the orange bars are jobs
     running in virtual machines.}

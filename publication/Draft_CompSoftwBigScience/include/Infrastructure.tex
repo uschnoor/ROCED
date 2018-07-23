@@ -1,13 +1,14 @@
 Virtualization has become mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
 separate users of software environments. While widespread in computer center
-operation it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
-thus rarely applied in HPC.
+operation this technique is rarely applied in HPC.
+% it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
+% thus rarely applied in HPC.
 
 \subsection{Computing at the University of Freiburg}
 % Infrastructure setting
 
-The computer center at University of Freiburg provides
+The computer center at the University of Freiburg provides
 medium scaled research
 infrastructures like cloud, storage and especially HPC services to cater to the
 needs of various scientific communities. Significant standardization
@@ -21,7 +22,7 @@ To utilize the system
 optimally and to open the cluster to as many different needs as
 possible without increasing the person power required for operation, novel approaches to the
 utilization of the installed hardware are necessary.
-Transfering expertise from the operation of the established local private cloud,
+Transferring expertise from the operation of the established local private cloud,
 the use of OpenStack as a cloud platform has been identified as a
 suitable solution for NEMO to provide a more flexible software
 deployment in addition to the existing software module system.
@@ -29,6 +30,17 @@ This produced a couple of
 implications ranging from challenges in the automated creation of suitable
 virtual machines, their on-demand deployment and the scheduling on the cluster
 and virtual resources level.
+
+\subsection{Research Cluster NEMO}
+
+The research cluster \lq{}bwForCluster NEMO\rq{} is a cluster for state-wide
+research in the scientific fields Elementary Particle Physics, Neuroscience and
+Microsystems Engineering. It started its operation on the 1st of August 2016
+with then 748 nodes having 20 physical cores and 128\,GiB of RAM each. The
+high speed network used is Omni-Path. The parallel storage is BeeGFS with
+576\,TB capacity.
+October 2017 the NEMO cluster was extended by scientific groups and has
+currently 900 nodes and a total capacity of 768\,TB of parallel storage.
 
 \subsection{Separation of software environments}
 
@@ -70,4 +82,4 @@ so it cannot assess if it is actually active or idle. To solve this issue, a
 customized glue component called ROCED has been introduced (described in
 further detail in Section \ref{section:roced}).  It is used as a broker between
 different HPC schedulers translating resources, monitoring usage inside the
-virtual machine and starting and stopping VRE images by demand.
+virtual machine and starting and stopping VRE images on demand.
