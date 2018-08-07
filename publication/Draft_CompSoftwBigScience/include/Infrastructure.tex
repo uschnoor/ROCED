@@ -1,6 +1,9 @@
-Virtualization has become mainstream technology over the last decade as it allows
+Hardware virtualization has become mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
-separate users of software environments. While widespread in computer center
+separate users of software environments.
+Hard and software stacks are decoupled and therefore complete software
+environment can be migrated easily.
+While widespread in computer center
 operation this technique is rarely applied in HPC.
 % it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
 % thus rarely applied in HPC.
@@ -23,8 +26,10 @@ optimally and to open the cluster to as many different needs as
 possible without increasing the person power required for operation, novel approaches to the
 utilization of the installed hardware are necessary.
 Transferring expertise from the operation of the established local private cloud,
-the use of OpenStack as a cloud platform has been identified as a
-suitable solution for NEMO to provide a more flexible software
+the use of OpenStack as a cloud platform has been identified
+in cooperation with the ViCE project~\cite{vice}
+as a
+suitable solution for NEMO. This approach provides a more flexible software
 deployment in addition to the existing software module system.
 This produced a couple of
 implications ranging from challenges in the automated creation of suitable
@@ -33,18 +38,19 @@ and virtual resources level.
 
 \subsection{Research Cluster NEMO}
 
-The research cluster \lq{}bwForCluster NEMO\rq{} is a cluster for state-wide
+The research cluster ``bwForCluster NEMO'' is a cluster for state-wide
 research in the scientific fields Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. It started its operation on the 1st of August 2016
-with then 748 nodes having 20 physical cores and 128\,GiB of RAM each. The
-high speed network used is Omni-Path. The parallel storage is BeeGFS with
+with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
+Omni-Path spans a high speed low latency network of 100\,Gbit/s between nodes.
+The parallel storage is BeeGFS with
 576\,TB capacity.
-October 2017 the NEMO cluster was extended by scientific groups and has
+In October 2017 the NEMO cluster was extended by research groups and offers
 currently 900 nodes and a total capacity of 768\,TB of parallel storage.
 
 \subsection{Separation of software environments}
 
-The file system of a virtual machine (or virtualized research environment (VRE) in the described use case) is a
+The file system of a virtual machine (or virtualized research environment in the described use case) is a
 disk image presented as a single file. From the computer center's perspective
 this image is seen as a black box requiring no involvement or efforts like
 updates of the operating system or the provisioning of software packages of a
@@ -63,7 +69,7 @@ resources itself, it is necessary to define a primary or master scheduler, who
 controls which jobs should run on which worker node. Moab and Openstack are
 unaware that there exists another scheduler within the cluster and no API exists
 so that both can communicate with each other. Since most users still use the
-bare metal HPC cluster Moab is used as the primary scheduler. It allows for
+bare metal HPC cluster Moab is deployed as the primary scheduler. It allows for
 detailed job description and offers sophisticated scheduling features like
 fair-share, priority-based scheduling, detailed limits and much more. Openstack
 will still schedule the virtual machines, but Moab will initially start the VRE
@@ -80,6 +86,6 @@ When the job ends, OpenStack gets a signal to terminate the virtual machine and
 the VRE job ends as well.  Neither Moab nor OpenStack can look into the VRE and
 so it cannot assess if it is actually active or idle. To solve this issue, a
 customized glue component called ROCED has been introduced (described in
-further detail in Section \ref{section:roced}).  It is used as a broker between
-different HPC schedulers translating resources, monitoring usage inside the
+further detail in Section~\ref{section:roced}).  It is used as a broker between
+different HPC schedulers. It translates resources and monitors usage inside the
 virtual machine and starting and stopping VRE images on demand.

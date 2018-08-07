@@ -63,7 +63,7 @@ grestore
 \begin{document}
 
 \title{Dynamic Virtualized Deployment of Particle Physics Environments on a
-  High-Performance Computing Cluster%\thanks{Grants or other notes
+  High Performance Computing Cluster%\thanks{Grants or other notes
 %about the article that should go on the front page should be
 %placed here. General acknowledgments should be placed at the end of the article.}
 }
@@ -94,11 +94,11 @@ grestore
 \begin{abstract}
 Particle physics experiments at the Large Hadron Collider (LHC) need a
 great quantity of computing resources for data processing, simulation, and analysis.
-High-Performance Computing (HPC) resources provided by research institutions
+High Performance Computing (HPC) resources provided by research institutions
 can be useful supplements to the existing World-wide LHC Computing
 Grid (WLCG) resources
 allocated by the collaborations. At the University of Frei\-burg, the
-shared HPC cluster NEMO has been made available to ATLAS and CMS
+shared research cluster NEMO has been made available to ATLAS and CMS
 users accessing it from external machines connected to the WLCG.
  To this effect, the full software environment corresponding to a WLCG center
  is provided in a virtual machine image. The interplay between the
@@ -130,12 +130,13 @@ evaluated for particle physics applications.
 
 \input{include/Infrastructure.tex}
 \section{Generation of the image}
-The VREs in the use case described in this paper is simply a OpenStack container
+The VREs for ATLAS and CMS software environments are simply OpenStack containers
 in the format of a compatible VM image.
 These images are provided in an automatized
 way allowing versioning and archiving of the environments captured in
-the images. The approaches used in the
-different groups are described in the following.
+the images.
+% The approaches used in the
+% different groups are described in the following.
 
 \subsection{Packer combined with Puppet}
 
@@ -149,21 +150,21 @@ different groups are described in the following.
 
 \section{Interfacing batch systems and virtual resources using ROCED}
 \label{section:roced}
-While virtualized HPC systems and commercial cloud offerings provide the necessities to acquire computing and storage capacity by dynamic resource booking, the computing needs of High-Energy Physics research groups additionally require workflow management systems which are able to manage thousands of running jobs. While some cloud providers, for example Amazon with AWS Batch~\cite{awsbatch}, provide a service for workflow management, these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
+While virtualized HPC systems and commercial cloud offerings provide the necessities to acquire computing and storage capacity by dynamic resource booking, the computing needs of high energy physics re\-search groups ad\-di\-tion\-al\-ly require work\-flow ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch jobs. While some cloud providers, for example Amazon with AWS Batch~\cite{awsbatch}, provide a service for workflow management, these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
 
 \subsection{ROCED}
 \begin{figure*}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/roced_design_flat.pdf}
   \caption{Overview of the ROCED modular design. The ROCED Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on an cloud site and the Integration Adapter ensure that newly booted machines are integrated into the batch system.}
-  \label{fig-frplots}
+  \label{fig-roced}
 \end{center}
 \end{figure*}
 
 %$\to$ CMS Karlsruhe
 Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
-fashion in python and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of a specific user group or workflow. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Moab-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
-
+fashion in python and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of specific user groups or workflows. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Moab-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
+The modular design of ROCED is shown in fig.~\ref{fig-roced}.
 
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
@@ -176,7 +177,7 @@ fashion in python and the interfaces to batch systems and cloud sites are implem
 
 \section{Analysis of performance and usage}
 
-The approach described above has been implemented and put into
+This approach has been implemented and put into
 production in the research groups at University of Freiburg
 (Physikalisches Institut) and Karlsruhe (... Institut).
 The following chapter presents the statistical analysis of
@@ -198,7 +199,8 @@ performance as well as usage statistics.
 %$\to$ATLAS Freiburg 
 %
 \subsection{Usage statistics}
-Figure \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by ROCED depending on the resource demands of the users of the KIT group. At peak times, up to 9000 virtual cores were filled with user jobs, which was at that time more than half of the 16.000 cores of the initial NEMO cluster.
+Fig. \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by ROCED depending on the resource demands of the users of the KIT group.
+At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 NEMO cores.
 
 \begin{figure}
 \begin{center}
@@ -208,7 +210,7 @@ Figure \ref{fig-frplots} show the utilization of virtual machines which were orc
 \end{center}
 \end{figure}
 
-The usage of the hybrid cluster model is shown in figure~\ref{fig-nodeusage}.
+The usage of the hybrid cluster model is presented in fig.~\ref{fig-nodeusage}.
 The diagram shows the shared usage of NEMO's cluster nodes running either
 bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs or VREs changes dynamically from job to job, since the VREs are started by
@@ -218,8 +220,8 @@ At the beginning the cluster was only containing the operating system and some
 basic development tools, scientific software was added after the the cluster was
 already in production mode. Since the VRE for the CMS project was already
 available when the NEMO cluster started it could already use the whole cluster
-while other groups still had to wait for the research software to be deployed on
-the cluster. This explains the high usage by VREs in the first months of
+while other groups still had to wait for the required scientific software to be deployed on
+the cluster. It explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
 amount of VRE jobs decreased. This figure is only an estimate because VRE
 projects are not forced to use VREs and therefore could run bare-metal jobs as
@@ -249,17 +251,18 @@ well.
 \section{Conclusions and Outlook}
 \input{include/Conclusions}
 
-A system for the dynamic, on-demand provisioning of virtual machines
-to run jobs in a High-Energy Physics context on an external, not
-dedicated resource as realized at the HPC
-cluster ``NEMO'' at University of Freiburg has been described. 
-Reasons for the need for an interface between the schedulers of the host system
-and the external system from which requests are sent have been
-explained. 
-The performance and usage have been analyzed for selected cases.
-
-This approach can be generalized to other platforms and possibly also
-other forms of virtualized environments (containers).
+%%% REDUNDANT
+% A system for the dynamic, on-demand provisioning of virtual machines
+% to run jobs in a high energy physics context on an external, not
+% dedicated resource as realized at the HPC
+% cluster NEMO at University of Freiburg has been described.
+% Reasons for the need for an interface between the schedulers of the host system
+% and the external system from which requests are sent have been
+% explained.
+% The performance and usage have been analyzed for selected cases.
+%
+% This approach can be generalized to other platforms and possibly also
+% other forms of virtualized environments (containers).
 
 
 
@@ -397,11 +400,12 @@ Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
     S. Frixione, P. Nason and C. Oleari, JHEP 0711 (2007) 070, arXiv:0709.2092;
     S. Alioli, P. Nason, C. Oleari and E. Re, JHEP 1006 (2010) 043, arXiv:1002.2581
 
-    \bibitem{Pythia8}
-    
+\bibitem{Pythia8}
+
 T. Sjöstrand et al: An Introduction to PYTHIA 8.2. Comput. Phys. Commun. 191 (2015) 159-177. DOI:10.1016/j.cpc.2015.01.024". arXiv hep-ph 1410.3012
 
-
+\bibitem{vice}
+TODO
 
 %title={Flexible HPC: bwForCluster NEMO},
 %authors={Dirk von Suchodoletz and Bernd Wiebelt and Konrad Meier and

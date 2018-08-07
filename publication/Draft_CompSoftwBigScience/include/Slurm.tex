@@ -1,8 +1,8 @@
-Alternatively to the approach in Sec.~\ref{sec:ROCED:HTCondor}, the
-scheduler \textsc{Slurm} has been incorporated into the ROCED setup by
+Alternatively to the approach in previous seciton, the
+scheduler \textsc{Slurm} has been incorporated into ROCED by
 the ATLAS group at University of Freiburg.
 While \textsc{Slurm} provides a built-in functionality for dynamic
-startup of resources in the \textit{Slurm Elastic Computing} module\cite{SlurmElastic}, this has been found to be unsuitable for resources which are not
+startup of resources in the \textit{Slurm Elastic Computing} module~\cite{SlurmElastic}, this has been found to be unsuitable for resources which are not
 expected to be available within a fixed time period, in this case due to
 the presence of a queue in the host system which may postpone the start
 of a resource by a significant, varying period.
@@ -18,19 +18,18 @@ slurm server as well as the client. \textsc{Slurm} configurations also
 need to be in agreement between server and client.
 Therefore, a range of hostnames is registered in the configuration in
 a way that is mapped to potential IP addresses of virtual machines.
-These virtual machines have a fixed number of CPUs and memory and are
+These virtual machines have a fixed number of CPUs and memory assigned and are
 registered under a certain \textsc{Slurm} partition.
 When a job is submitted to this partition and no other resource is
 available, information from the \textsc{Slurm} \texttt{squeue} and
 \texttt{sinfo} commands is requested and parsed for the required information.
 
 Since the ATLAS Freiburg group comprises three sub-groups, each mapped
-to a different account on \textsc{Moab}/ NEMO, special care is taken to
-avoid interference of resources used by another account to ensure fair share on NeMO, while
+to a different account on NE\-MO, special care is taken to
+avoid interference of resources used by another account to ensure fair share on NEMO, while
 allowing jobs from one group to occupy otherwise idle resources of another group.
 
-
-ROCED determines the amount of VMs to be started and sends the
+ROCED determines the amount of virtual machines to be started and sends the
 corresponding VRE job submission commands to \textsc{Moab}.
 After the virtual machine has booted, the hostname is set to the IP
 dependent name which is known to the \textsc{Slurm} configuration.
@@ -42,8 +41,4 @@ After completion of the jobs and a certain period of receiving no new jobs from 
 \textsc{Slurm} client in the machine drains itself and the machine
 shuts itself down.
 The IP address as well as the corresponding hostname in \textsc{Slurm}
-are then released and can be used again.
-
-
-
-
+are released and can be reused by future VREs.
