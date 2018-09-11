@@ -1,0 +1,44 @@
+Besides the use of the legacy HEP-SPEC06 (HS06) benchmark \cite{Hepspec}, the performance of the compute resources is furthermore evaluated with two fast benchmarks
+developed to provide real-time information of the WLCG performance and available in the CERN benchmark suite \cite{Alef:2017jyx}; the Dirac Benchmark 2012 DB12 \cite{DB12}
+and the ATLAS Kit Validation KV \cite{DeSalvo:2010zza}. The DB12 program is evaluating the performance of CPUs through floating-point arithmetic operations, while the KV benchmark
+is making use of the simulation toolkit GEANT4 \cite{Agostinelli:2002hh} to simulate the interactions of single muon events in the detector of the ATLAS experiment. As our primary
+target is to measure performances of CPUs in the context of High Energy Physics applications, the KV benchmark constitutes a realistic workload. The DB12 benchmark is using
+the HS06 units, and the KV output provides the number of events produced per second. \\
+
+To assess the impact of the virtualisation, the performance of the same hardware configuration (20 cores Intel Xeon E5-2630 CPUs) has been determined either deployed via
+the standard bare metal operation on the NEMO cluster (NEMO bare metal) and on the local ATLAS Tier-3 centre in Freiburg (ATLAS-BFG bare metal), or as virtual machines on the
+NEMO cluster (NEMO VM). On the ATLAS-BFG bare metal and on the virtual machines running on the NEMO cluster, hyper-threading (HT) technology is activated. Both are using Scientific
+Linux 6 \cite{SL6} as operating system. The NEMO bare metal has no HT activated due to the more general use case of the system, and uses CentOS7 as operating system \cite{CentOS7}. % \\
+The scores of the HEP-SPEC06, DB12, and KV benchmarks have been determined for these three configurations as a function of the number of cores actually used by the benchmarking processes.
+This number ranges from 2 to 40 for the ATLAS-BFG bare metal and for the NEMO VM, for which HT is enabled, and from 2 to 20 for the NEMO bare metal,
+for which HT is not implemented. The results have been determined by step of two core units. The benchmarks have been run 20 times for each core multiplicity value, and the means
+and standard deviations of the corresponding distributions have been extracted. \\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.44\textwidth]{figures/benchmark-hepspec06-total.pdf}
+\includegraphics[width=0.44\textwidth]{figures/DB12-BFG-BM-NEMO-VM-NEMO-BM-total.pdf} 
+\includegraphics[width=0.44\textwidth]{figures/kv-BFG-BM-NEMO-VM-NEMO-BM-total.pdf} 
+\caption{Total score as a function of the core multiplicity for the HEP-SPEC06 (top), DB12 (middle) and KV (bottom) benchmarks
+for the ATLAS-BFG bare metal (blue open circles), the NEMO VMs (red full circles) and the NEMO bare metal (black open squares). The data points represent
+the average values of the benchmarks for each core multiplicity, and the vertical bars show the associated standard deviations.}
+\label{bmk-total}
+\end{figure}
+
+The total scores are presented in figure \ref{bmk-total} for the three benchmarks and the three configurations considered, except for the KV software for which the NEMO bare metal
+results are not yet available. The total scores observed for the different benchmarks are increasing until the maximum number of physical cores has been reached, and are characterized by a flattening increase
+or a constant behaviour afterwards. The benchmark scores of the virtual machines running on the NEMO cluster are only slightly lower than those obtained for the NEMO bare metal operation, and the lost of performance
+due to the virtualisation does not exceed 10$\%$. For the ATLAS-BFG bare metal and the VMs running on the NEMO cluster, the interplay between the virtualisation and the different operating systems leads
+to similar benchmark behaviours for the two configurations.
+
+% References for HEPSPEC
+%%https://indico.cern.ch/event/49388/contributions/2014772/attachments/960838/1363966/20090127_NewCPUbenchmark_final.pdf
+%%http://w3.hepix.org/benchmarking.html
+%%https://spec.org/benchmarks.html
+%%
+
+%
+%realistic load: as user
+%machine reserved: root
+%Hier sieht man, dass die Bare-Metal-User-Jobs wesentlich weniger performant sind, und die User-Jobs auf den VMs beinahe an die ROOT-Tests auf bare-metal herankommen. Interessant ist auch, dass bei den User-Jobs der Trend umgekehrt ist: Dort ist die HEPSPEC pro Core(!) etwas besser fuer 8 Cores. Es koennte aber auch sein, dass das bei den ROOT-Jobs auch so waere, dort haben wir die Zahlen in dem Bereich ja nicht.
+%
