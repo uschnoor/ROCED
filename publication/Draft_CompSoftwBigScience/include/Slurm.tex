@@ -1,5 +1,5 @@
-Alternatively to the approach in previous seciton, the
-scheduler \textsc{Slurm} has been incorporated into ROCED by
+Alternatively to the approach described in the previous section, the
+scheduler \textsc{Slurm} has been incorporated into \Roced by
 the ATLAS group at University of Freiburg.
 While \textsc{Slurm} provides a built-in functionality for dynamic
 startup of resources in the \textit{Slurm Elastic Computing} module~\cite{SlurmElastic}, this has been found to be unsuitable for resources which are not
@@ -8,13 +8,22 @@ the presence of a queue in the host system which may postpone the start
 of a resource by a significant, varying period.
 In addition the transfer of information, such as error states, from one scheduler the the
 other, and therefore to the user, is very limited.
-Therefore, ROCED has been chosen as the interface between the
-\textsc{Moab} scheduler on the host system and the \textsc{Slurm}
+Therefore, \Roced has been chosen as the interface between the
+\Moab scheduler on the host system and the \textsc{Slurm}
 scheduler on the submission side.
 
-For \textsc{Slurm}, it is necessary that each potential virtual
+
+\begin{figure}
+
+\includegraphics[width=0.95\linewidth]{figures/virtualisierung_ROCED.png}
+\caption{Implementation of \Roced with \Slurm on the BFG cluster used by ATLAS researchers.}
+\label{fig:slurmRocedBFG}
+\end{figure}
+
+The scheduling system is illustrated in Fig.~\ref{fig:slurmRocedBFG}.
+For \Slurm, it is necessary that each potential virtual
 machine is registered in the configuration at the time of start of the
-slurm server as well as the client. \textsc{Slurm} configurations also
+\Slurm server as well as the client. \textsc{Slurm} configurations also
 need to be in agreement between server and client.
 Therefore, a range of hostnames is registered in the configuration in
 a way that is mapped to potential IP addresses of virtual machines.

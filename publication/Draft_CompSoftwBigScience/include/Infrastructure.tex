@@ -1,7 +1,7 @@
 Hardware virtualization has become mainstream technology over the last decade as it allows
 both to host more than one operating system on a single server and to strictly
 separate users of software environments.
-Hard and software stacks are decoupled and therefore complete software
+Hardware and software stacks are decoupled and therefore complete software
 environment can be migrated easily.
 While widespread in computer center
 operation this technique is rarely applied in HPC.
@@ -19,38 +19,37 @@ in hardware and software is necessary for the operation of compute systems compr
 more than 1000 individual nodes with a small group of administrators.
 
 The level of granularity of the software stack provided is not fine enough to
-directly support the quite special requirements of world-wide efforts like the
+directly support the requirements of world-wide efforts like the
 ATLAS or CMS experiments.
-To utilize the system
-optimally and to open the cluster to as many different needs as
-possible without increasing the person power required for operation, novel approaches to the
-utilization of the installed hardware are necessary.
-Transferring expertise from the operation of the established local private cloud,
-the use of OpenStack as a cloud platform has been identified
-in cooperation with the ViCE project~\cite{vice}
+Therefore, novel approaches are necessary to ensure optimal use of the system and to open the cluster to as many different use-cases as
+possible without increasing the operational effort.
+Transferring expertise from the operation of the established local
+private cloud, %in cooperation with the ViCE project~\cite{vice},
+the use of \Openstack as a cloud platform has been identified
 as a
-suitable solution for NEMO. This approach provides a more flexible software
+suitable solution for \NEMO. This approach provides a more flexible software
 deployment in addition to the existing software module system.
-This produced a couple of
-implications ranging from challenges in the automated creation of suitable
-virtual machines, their on-demand deployment and the scheduling on the cluster
-and virtual resources level.
+The resulting challenges range from the automated creation of suitable
+virtual machines to their on-demand deployment and the scheduling on
+the level of the cluster and the virtual resources.
 
 \subsection{Research Cluster NEMO}
 
 The research cluster ``bwForCluster NEMO'' is a cluster for state-wide
 research in the scientific fields Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. It started its operation on the 1st of August 2016
-with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
-Omni-Path spans a high speed low latency network of 100\,Gbit/s between nodes.
-The parallel storage is BeeGFS with
-576\,TB capacity.
-In October 2017 the NEMO cluster was extended by research groups and offers
-currently 900 nodes and a total capacity of 768\,TB of parallel storage.
+%with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
+and consists currently of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
+Omni-Path~\cite{Omnipath} spans a high speed low latency network of 100\,Gbit/s between nodes.
+The parallel storage is based on BeeGFS~\cite{BeeGFS} with
+% 576\,TB capacity.
+768\,TB capacity.
+%In October 2017 the NEMO cluster was extended by research groups and offers
+%currently 900 nodes and a total capacity of 768\,TB of parallel storage.
 
 \subsection{Separation of software environments}
 
-The file system of a virtual machine (or virtualized research environment in the described use case) is a
+The file system of a virtual machine or VRE is a
 disk image presented as a single file. From the computer center's perspective
 this image is seen as a black box requiring no involvement or efforts like
 updates of the operating system or the provisioning of software packages of a
@@ -60,23 +59,23 @@ certain degree like CPU or RAM -- up to the operating system,
 applications and configurations can be controlled autonomously by the research groups.
 
 To allow more flexible software environments the standard bare metal
-operation of NEMO is extended with a parallel installation of OpenStack
+operation of NEMO is extended with a parallel installation of \Openstack
 components~\cite{hpc-symp:2016}.
-The NEMO cluster uses Adaptive's Moab Workload Manager~\cite{Moab} as a
+The NEMO cluster uses Adaptive's \Moab Workload Manager~\cite{Moab} as a
 scheduler of compute jobs.
-Since OpenStack tries to schedule the virtual machines on the same nodes and
+Since \Openstack tries to schedule the virtual machines on the same nodes and
 resources itself, it is necessary to define a primary or master scheduler, who
-controls which jobs should run on which worker node. Moab and Openstack are
+controls which jobs should run on which worker node. \Moab and \Openstack are
 unaware that there exists another scheduler within the cluster and no API exists
-so that both can communicate with each other. Since most users still use the
-bare metal HPC cluster Moab is deployed as the primary scheduler. It allows for
+so that both can communicate with each other. Since the majority of users still use the
+bare metal HPC cluster, \Moab is deployed as the primary scheduler. It allows for
 detailed job description and offers sophisticated scheduling features like
-fair-share, priority-based scheduling, detailed limits and much more. Openstack
-will still schedule the virtual machines, but Moab will initially start the VRE
-jobs and the VRE job will instruct Openstack to start the virtual machine on the
-reserved resources and which flavor to use (resource definition in OpenStack).
+fair-share, priority-based scheduling, detailed limits,
+etc. \Openstack 's task is to schedule the virtual machines, but \Moab will initially start the VRE
+jobs and the VRE job will instruct \Openstack to start the virtual machine on the
+reserved resources with the required flavor, i.e. the resource definition in \Openstack.
 
-When a VRE job is submitted to the NEMO cluster Moab will first calculate the
+When a VRE job is submitted to the NEMO cluster, \Moab will first calculate the
 priority and the needed resources of the job and then insert it into its queue.
 When the job is in line for execution and the requested resources are available,
 the job will start a script which then starts the VRE on the selected node

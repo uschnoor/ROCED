@@ -46,6 +46,7 @@ grestore
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
 \usepackage{graphicx}
+\usepackage{xspace}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -56,6 +57,16 @@ grestore
 %
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
+\newcommand{\Openstack}{\texttt{OpenStack}\xspace}
+\newcommand{\Roced}{\texttt{Roced}\xspace}
+\newcommand{\ATLAS}{ATLAS\xspace}
+\newcommand{\CMS}{CMS\xspace}
+\newcommand{\NEMO}{NEMO\xspace}
+\newcommand{\Packer}{\texttt{Packer}\xspace}
+\newcommand{\Puppet}{\texttt{Puppet}\xspace}
+\newcommand{\Hieradata}{\texttt{Hieradata}\xspace}
+\newcommand{\Moab}{\texttt{Moab}\xspace}
+\newcommand{\Slurm}{\texttt{Slurm}\xspace}
 %
 % Insert the name of "your journal" with
 % \journalname{myjournal}
@@ -93,19 +104,16 @@ grestore
 \maketitle
 
 \begin{abstract}
-Particle physics experiments at the Large Hadron Collider (LHC) need a
-great quantity of computing resources for data processing, simulation, and analysis.
-High Performance Computing (HPC) resources provided by research institutions
-can be useful supplements to the existing World-wide LHC Computing
-Grid (WLCG) resources
-allocated by the collaborations. At the University of Frei\-burg, the
-shared research cluster NEMO has been made available to ATLAS and CMS
-users accessing it from external machines connected to the WLCG.
- To this effect, the full software environment corresponding to a WLCG center
+The NEMO High Performance Computing Cluster at the University of
+Frei\-burg has been made available to
+researchers of the \ATLAS and \CMS experiments.
+Users access the cluster from external machines connected to the
+World-wide LHC Computing Grid (WLCG).
+ This paper describes how the full software environment corresponding to a WLCG center
  is provided in a virtual machine image. The interplay between the
- schedulers for NEMO and for the external
- cluster is ensured through the ROCED service.
-An OpenStack infrastructure is deployed at NEMO to orchestrate the
+ schedulers for \NEMO and for the external
+ clusters is coordinated through the \Roced service.
+A cloud computing infrastructure is deployed at \NEMO to orchestrate the
 simultaneous usage by bare metal and virtualized jobs.
 Through the setup, resources are provided to users in a transparent,
 automatized, and
@@ -165,7 +173,7 @@ While virtualized HPC systems and commercial cloud offerings provide the necessi
 %$\to$ CMS Karlsruhe
 Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
 fashion in python and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of specific user groups or workflows. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Moab-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
-The modular design of ROCED is shown in fig.~\ref{fig-roced}.
+The modular design of ROCED is shown in Fig.~\ref{fig-roced}.
 
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
@@ -206,7 +214,7 @@ At peak times, up to 9000 virtual cores were filled with user jobs, consuming mo
 \end{center}
 \end{figure}
 
-The usage of the hybrid cluster model is presented in fig.~\ref{fig-nodeusage}.
+The usage of the hybrid cluster model is presented in Fig.~\ref{fig-nodeusage}.
 The diagram shows the shared usage of NEMO's cluster nodes running either
 bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs or VREs changes dynamically from job to job, since the VREs are started by
@@ -339,6 +347,11 @@ well.
 % and use \bibitem to create references. Consult the Instructions
 % for authors for reference list style.
 %
+\bibitem{HLLHCcompneeds}
+  ATLAS Public results
+  \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/diskHLLHC.pdf},
+  accessed 2018-09-19
+
 \bibitem{Openstack}
 OpenStack Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2018-07-03
@@ -347,13 +360,29 @@ OpenStack Open Source Cloud Computing Software
 ROCED Cloud Meta-Scheduler project website
 \url{https://github.com/roced-scheduler/ROCED}, accessed 2018-07-03
 
+\bibitem{Omnipath}
+  Omni-Path:
+"Intel Architects High Performance Computing System Designs to Bring
+Power of Supercomputing Mainstream",
+\url{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/},
+Intel. 16 November 2015, accessed 2018-09-20
+
+\bibitem{BeeGFS}
+BeeGFS Parallel Cluster File system:
+\url{https://www.beegfs.io/content/}, accessed 2018-09-20
+\bibitem{hpc-symp:2016}
+Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
+  Flexible HPC: bwForCluster NEMO,
+  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
+
+
+%\bibitem{VirtualisationScientificComp}
+%  This needs a reference
+
+
 \bibitem{Moab}
 Adaptive Computing Moab
 \url{http://www.adaptivecomputing.com/moab-hpc-basic-edition/}, accessed 2018-07-03
-
-% Commented out, because reference is not used in text currently
-%\bibitem{VirtualisationScientificComp}
-%  This needs a reference
 
 \bibitem{OZ}
 Oz image generation toolkit
@@ -388,10 +417,6 @@ Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
 Slurm Elastic Computing
 \url{https://slurm.schedmd.com/elastic_computing.html}, accessed 2018-07-03
 
-\bibitem{hpc-symp:2016}
-Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
-  Flexible HPC: bwForCluster NEMO,
-  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
   \url{http://books.ub.uni-heidelberg.de/heibooks/reader/download/308/308-4-79237-1-10-20171002.pdf}
 
 \bibitem{Hepspec} HEPiX Benchmarking Working Group:
@@ -444,8 +469,7 @@ The CentOS Project,
 
 T. Sjöstrand et al: An Introduction to PYTHIA 8.2. Comput. Phys. Commun. 191 (2015) 159-177. DOI:10.1016/j.cpc.2015.01.024". arXiv hep-ph 1410.3012
 
-\bibitem{vice}
-TODO
+
 
 %title={Flexible HPC: bwForCluster NEMO},
 %authors={Dirk von Suchodoletz and Bernd Wiebelt and Konrad Meier and

@@ -1,8 +1,17 @@
-This paper presents the concepts and implementation of providing a HPC resource
-to ATLAS and CMS users accessing external clusters connected to the World-wide
-computing grid (WLCG) with the purpose of running data production as well as
-data analysis on the HPC host system.  For this purpose, the HPC cluster NEMO at
-the University of Freiburg is deploying an OpenStack instance to handle the
+
+Particle physics experiments at the Large Hadron Collider (LHC) need a
+great quantity of computing resources for data processing, simulation, and analysis.
+This demand will be growing with the upcoming High-Luminosity upgrade of the LHC~\cite{HLLHCcompneeds}.
+To help fulfill this need, High Performance Computing (HPC) resources provided by research institutions
+can be useful supplements to the existing World-wide LHC Computing
+Grid (WLCG) resources
+allocated by the collaborations.
+
+
+This paper presents the concepts and implementation of providing a HPC resource, the
+shared research cluster NEMO at the University of Freiburg, to ATLAS and CMS users accessing external clusters connected to the WLCG with the purpose of running data production as well as
+data analysis on the HPC host system. The HPC cluster NEMO at
+the University of Freiburg is deploying an \Openstack~\cite{Openstack} instance to handle the
 virtual machines. The challenge is in provisioning, setup, scheduling, and decommissioning the virtual research environments (VRE) dynamically and according to demand. For this purpose, the schedulers on NEMO and on the external resources are
 connected through the ROCED service~\cite{ROCED}.
 
