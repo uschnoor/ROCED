@@ -13,7 +13,7 @@ operation this technique is rarely applied in HPC.
 
 The computer center at the University of Freiburg provides
 medium scaled research
-infrastructures like cloud, storage and especially HPC services to cater to the
+infrastructures like cloud, storage, and especially HPC services adapted to the
 needs of various scientific communities. Significant standardization
 in hardware and software is necessary for the operation of compute systems comprised of
 more than 1000 individual nodes with a small group of administrators.
@@ -30,8 +30,7 @@ as a
 suitable solution for \NEMO. This approach provides a more flexible software
 deployment in addition to the existing software module system.
 The resulting challenges range from the automated creation of suitable
-virtual machines to their on-demand deployment and the scheduling on
-the level of the cluster and the virtual resources.
+virtual machines to their on-demand deployment and scheduling.
 
 \subsection{Research Cluster NEMO}
 
@@ -54,22 +53,23 @@ disk image presented as a single file. From the computer center's perspective
 this image is a ``black box'' requiring no involvement or efforts like
 updates of the operating system or the provisioning of software packages of a
 certain version. From the researcher's perspective the VRE is an individual
-(virtual) node where everything from the hardware level -- at least to a
-certain degree, e.g. CPU or RAM -- up to the operating system,
-applications and configurations can be controlled autonomously by the research groups.
+virtual node whose operating system, applications and configurations
+as well as certain hardware-level parameters, e.g. CPU and RAM, can be
+configured fully autonomously by the researcher.
 
-To allow more flexible software environments, the standard bare metal
+
+To increase the flexibility in hosted software environments, the standard bare metal
 operation of \NEMO is extended with a parallel installation of \Openstack
 components~\cite{hpc-symp:2016}.
-The \NEMO cluster uses Adaptive's \Moab Workload Manager~\cite{Moab} as a
+The \NEMO cluster uses Adaptive's Workload Manager \Moab~\cite{Moab} as a
 scheduler of compute jobs.
 \Openstack as well can schedule virtual machines on the same nodes and
 resources.
-To avoid overlap/interference, it is necessary to define a the master scheduler
+To avoid overlap, it is necessary to define the master scheduler
 which decides the job assignment to the worker nodes.
-\Moab and \Openstack are
-unaware that there exists another scheduler within the cluster and no API exists
-so that both can communicate with each other. Since the majority of users still use the
+Both \Moab and \Openstack are
+unaware that another scheduler exists within the cluster and there is
+no API which enables them to  communicate with each other. Since the majority of users still use the
 bare metal HPC cluster, \Moab is deployed as the primary scheduler. It allows for
 detailed job description and offers sophisticated scheduling features like
 fair-share, priority-based scheduling, detailed limits,
@@ -82,11 +82,15 @@ priority and the needed resources of the job and then insert it into its queue.
 When the job is in line for execution and the requested resources are available,
 the job will start a script which then starts the VRE on the selected node
 within the resource boundaries. During the run-time of the VRE a monitoring
-script checks if the VRE is still running and exits the job if the VRE ends.
+script regularly checks if the VRE is still running and terminates the job when
+the VRE has ended.
 When the job ends, \Openstack gets a signal to terminate the virtual machine and
-the VRE job ends as well.  Neither \Moab nor \Openstack can look into the VRE and
-so it cannot assess if it is actually active or idle. To solve this issue, a
-customized glue component called ROCED has been introduced (described in
-further detail in Section~\ref{section:roced}).  It is used as a broker between
-different HPC schedulers. It translates resources and monitors usage inside the
-virtual machine and starting and stopping VRE images on demand.
+the VRE job ends as well.  Neither \Moab nor \Openstack have access
+inside the VRE, so they cannot assess if the VRE is actually active or
+idle.
+The software package \Roced (described in
+further detail in Section~\ref{section:roced}) has been introduced to
+solve this issue.
+It is used as a broker between
+different HPC schedulers,  translating resources and monitoring usage inside the
+virtual machine, as well as starting and stopping VRE images on demand.

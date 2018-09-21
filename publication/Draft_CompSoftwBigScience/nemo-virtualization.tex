@@ -47,6 +47,7 @@ grestore
 %
 \usepackage{graphicx}
 \usepackage{xspace}
+\usepackage{hyperref}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -68,6 +69,9 @@ grestore
 \newcommand{\Moab}{\texttt{Moab}\xspace}
 \newcommand{\Slurm}{\texttt{Slurm}\xspace}
 \newcommand{\BeeGFS}{\textsc{BeeGFS}\xspace}
+\newcommand{\OZ}{\texttt{OZ}\xspace}
+\newcommand{\HTCondor}{\texttt{HTCondor}\xspace}
+
 
 
 % Insert the name of "your journal" with
@@ -141,8 +145,8 @@ evaluated for particle physics applications.
 
 \input{include/Infrastructure.tex}
 \section{Generation of the image}
-The VREs for ATLAS and CMS software environments are simply OpenStack containers
-in the format of a compatible VM image.
+The VREs for ATLAS and CMS software environments consist in \Openstack containers
+in the format of compatible VM images.
 These images are provided in an automatized
 way allowing versioning and archiving of the environments captured in
 the images.
@@ -159,9 +163,19 @@ the images.
 %$\to$CMS Karlsruhe\\
 \input{include/KarlsruheImageGen.tex}
 
+
+
+
 \section{Interfacing batch systems and virtual resources using ROCED}
 \label{section:roced}
-While virtualized HPC systems and commercial cloud offerings provide the necessities to acquire computing and storage capacity by dynamic resource booking, the computing needs of high energy physics re\-search groups ad\-di\-tion\-al\-ly require work\-flow ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch jobs. While some cloud providers, for example Amazon with AWS Batch~\cite{awsbatch}, provide a service for workflow management, these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
+While virtualized HPC systems and commercial cloud providers offer the
+necessities to acquire computing and storage capacity by dynamic
+resource booking, the computing needs of high energy physics
+re\-search groups ad\-di\-tion\-al\-ly require work\-flow
+ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch
+jobs. Some cloud providers, for example Amazon with AWS
+Batch~\cite{awsbatch}, provide a service for workflow management,
+however these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
 
 \subsection{ROCED}
 \begin{figure*}
@@ -173,9 +187,23 @@ While virtualized HPC systems and commercial cloud offerings provide the necessi
 \end{figure*}
 
 %$\to$ CMS Karlsruhe
-Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
-fashion in python and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of specific user groups or workflows. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Moab-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
-The modular design of ROCED is shown in Fig.~\ref{fig-roced}.
+Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler \Roced (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. \Roced is written in a modular
+fashion in python and the interfaces to batch systems and cloud sites
+are implemented as so-called \textit{Adapters}. This makes \Roced
+independent of specific user groups or workflows. It provides a
+scheduling core which collects the current requirement of computing
+resources and decides if virtual machines need to be started or can be
+stopped. One or more Requirement Adapters report the current queue
+status of batch systems to the central scheduling core. Currently,
+Requirement Adapters are implemented for the Slurm, Torque, HTCondor
+and GridEngine batch systems. The Site Adapters allow \Roced to start,
+stop, and monitor virtual machines on multiple cloud
+sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and
+Moab-based virtualization at HPC centers. Special care has been put
+into the resilience of \Roced: it can automatically terminate
+non-responsive machines and restart virtual machines in case some
+machines have dropped out. This allows VM setups orchestrated by \Roced with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
+The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
@@ -189,7 +217,7 @@ The modular design of ROCED is shown in Fig.~\ref{fig-roced}.
 \section{Analysis of performance and usage}
 
 The approach described above has been implemented and put into production in the research groups at the University of Freiburg (Physikalisches Institut) and the Karlsruhe Institute of Technology (Institute of Experimental
-Particle Physics). The following section presents the statistical analysis of the performance of the virtualized setup both in terms of CPU performance and usage statistics.
+Particle Physics). The following section presents the statistical analysis of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics.
 
 \subsection{Benchmarks}
 %$\to$ ATLAS Freiburg\\
@@ -205,7 +233,7 @@ Particle Physics). The following section presents the statistical analysis of th
 %$\to$ATLAS Freiburg 
 %
 \subsection{Usage statistics}
-Fig. \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by ROCED depending on the resource demands of the users of the KIT group.
+Fig. \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by \Roced depending on the resource demands of the users of the KIT group.
 At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 NEMO cores.
 
 \begin{figure}
@@ -223,11 +251,11 @@ jobs or VREs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
 At the beginning the cluster was only containing the operating system and some
-basic development tools, scientific software was added after the the cluster was
+basic development tools, scientific software was added after the  cluster was
 already in production mode. Since the VRE for the CMS project was already
-available when the NEMO cluster started it could already use the whole cluster
+available when the NEMO cluster started, it could already use the whole cluster
 while other groups still had to wait for the required scientific software to be deployed on
-the cluster. It explains the high usage by VREs in the first months of
+the cluster. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
 amount of VRE jobs decreased. This figure is only an estimate because VRE
 projects are not forced to use VREs and therefore could run bare-metal jobs as
@@ -366,9 +394,9 @@ ROCED Cloud Meta-Scheduler project website
   Omni-Path:
 "Intel Architects High Performance Computing System Designs to Bring
 Power of Supercomputing Mainstream",
-\url{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/},
+\texttt{\href{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/}{https://newsroom.intel.com/news-releases/intel-\\architects-high-performance-computing-system-\\designs-to-bring-power-of-supercomputing-mainstream}},
 Intel. 16 November 2015, accessed 2018-09-20
-
+%https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream
 \bibitem{BeeGFS}
 BeeGFS Parallel Cluster File system:
 \url{https://www.beegfs.io/content/}, accessed 2018-09-20
@@ -386,6 +414,21 @@ Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
 Adaptive Computing Moab
 \url{http://www.adaptivecomputing.com/moab-hpc-basic-edition/}, accessed 2018-07-03
 
+
+\bibitem{packer}
+
+Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
+\url{https://www.packer.io/}, accessed 2018-07-03
+
+\bibitem{kickstart}
+\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
+
+\bibitem{puppet}
+
+Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
+\url{https://puppet.com/}, accessed 2018-07-03
+
+
 \bibitem{OZ}
 Oz image generation toolkit
 \url{https://github.com/clalancette/oz}, accessed 2018-07-03
@@ -402,19 +445,10 @@ HTCondor workload manager
 HTCondor Connection Brokering
 \url{http://research.cs.wisc.edu/htcondor/manual/v8.6/3_9Networking_includes.html}, accessed 2018-07-03
 
-\bibitem{packer}
-
-Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
-\url{https://www.packer.io/}, accessed 2018-07-03
-
-\bibitem{kickstart}
-\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
-
-\bibitem{puppet}
-
-Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
-\url{https://puppet.com/}, accessed 2018-07-03
-
+\bibitem{Slurm}
+  Slurm
+  \url{https://slurm.schedmd.com}, accessed 2018-07-03
+    
 \bibitem{SlurmElastic}
 Slurm Elastic Computing
 \url{https://slurm.schedmd.com/elastic_computing.html}, accessed 2018-07-03
