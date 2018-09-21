@@ -41,7 +41,7 @@ Microsystems Engineering. It started its operation on the 1st of August 2016
 %with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
 and consists currently of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
 Omni-Path~\cite{Omnipath} spans a high speed low latency network of 100\,Gbit/s between nodes.
-The parallel storage is based on BeeGFS~\cite{BeeGFS} with
+The parallel storage is based on \BeeGFS~\cite{BeeGFS} with
 % 576\,TB capacity.
 768\,TB capacity.
 %In October 2017 the NEMO cluster was extended by research groups and offers
@@ -51,21 +51,23 @@ The parallel storage is based on BeeGFS~\cite{BeeGFS} with
 
 The file system of a virtual machine or VRE is a
 disk image presented as a single file. From the computer center's perspective
-this image is seen as a black box requiring no involvement or efforts like
+this image is a ``black box'' requiring no involvement or efforts like
 updates of the operating system or the provisioning of software packages of a
-certain version. From the researchers perspective the VRE is an individual
+certain version. From the researcher's perspective the VRE is an individual
 (virtual) node where everything from the hardware level -- at least to a
-certain degree like CPU or RAM -- up to the operating system,
+certain degree, e.g. CPU or RAM -- up to the operating system,
 applications and configurations can be controlled autonomously by the research groups.
 
-To allow more flexible software environments the standard bare metal
-operation of NEMO is extended with a parallel installation of \Openstack
+To allow more flexible software environments, the standard bare metal
+operation of \NEMO is extended with a parallel installation of \Openstack
 components~\cite{hpc-symp:2016}.
-The NEMO cluster uses Adaptive's \Moab Workload Manager~\cite{Moab} as a
+The \NEMO cluster uses Adaptive's \Moab Workload Manager~\cite{Moab} as a
 scheduler of compute jobs.
-Since \Openstack tries to schedule the virtual machines on the same nodes and
-resources itself, it is necessary to define a primary or master scheduler, who
-controls which jobs should run on which worker node. \Moab and \Openstack are
+\Openstack as well can schedule virtual machines on the same nodes and
+resources.
+To avoid overlap/interference, it is necessary to define a the master scheduler
+which decides the job assignment to the worker nodes.
+\Moab and \Openstack are
 unaware that there exists another scheduler within the cluster and no API exists
 so that both can communicate with each other. Since the majority of users still use the
 bare metal HPC cluster, \Moab is deployed as the primary scheduler. It allows for
@@ -75,14 +77,14 @@ etc. \Openstack 's task is to schedule the virtual machines, but \Moab will init
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
 reserved resources with the required flavor, i.e. the resource definition in \Openstack.
 
-When a VRE job is submitted to the NEMO cluster, \Moab will first calculate the
+When a VRE job is submitted to the \NEMO cluster, \Moab will first calculate the
 priority and the needed resources of the job and then insert it into its queue.
 When the job is in line for execution and the requested resources are available,
 the job will start a script which then starts the VRE on the selected node
 within the resource boundaries. During the run-time of the VRE a monitoring
 script checks if the VRE is still running and exits the job if the VRE ends.
-When the job ends, OpenStack gets a signal to terminate the virtual machine and
-the VRE job ends as well.  Neither Moab nor OpenStack can look into the VRE and
+When the job ends, \Openstack gets a signal to terminate the virtual machine and
+the VRE job ends as well.  Neither \Moab nor \Openstack can look into the VRE and
 so it cannot assess if it is actually active or idle. To solve this issue, a
 customized glue component called ROCED has been introduced (described in
 further detail in Section~\ref{section:roced}).  It is used as a broker between
