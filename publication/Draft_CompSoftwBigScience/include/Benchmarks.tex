@@ -7,17 +7,10 @@ constitutes a realistic workload. \\
 To assess the impact of the virtualization, the performance of the same hardware configuration (20 cores Intel Xeon E5-2630 CPUs) has been determined either deployed via
 the standard bare metal operation on the NEMO cluster (NEMO bare metal) and on the ATLAS Tier-3 center in Freiburg (ATLAS Tier-3 bare metal), or as virtual machines on the
 NEMO cluster (NEMO VM). On the ATLAS Tier-3 bare metal and on the virtual machines running on the NEMO cluster, hyper-threading (HT) technology is activated. Both are using Scientific
-Linux 6 \cite{SL6} as operating system. The NEMO bare metal has no HT activated due to the more general use case of the system, and uses CentOS7 as operating system \cite{CentOS7}. \\
-
+Linux 6 \cite{SL6} as operating system. The NEMO bare metal has no HT activated due to the more general use case of the system, and uses CentOS7 as operating system \cite{CentOS7}. 
 The scores of the HEP-SPEC06 and KV benchmarks have been determined for these three configurations as a function of the number of cores actually used by the benchmarking processes.
 This number ranges from 2 to 40 for the ATLAS Tier-3 bare metal and for the NEMO VM, for which HT is enabled, and from 2 to 20 for the NEMO bare metal, for which HT is not implemented.
-The benchmarks have been run 20 times for each core multiplicity value, and the means and standard deviations of the corresponding distributions have been extracted.
-The HEP-SPEC06 and KV results are presented in figure \ref{bmk-total} for the three configurations considered.
-The total scores of the two benchmarks are increasing until the maximum number of physical cores has been reached, and are characterized by a flattening increase afterwards.
-The scores of the virtual machines running on the NEMO cluster are only slightly lower than those obtained for the NEMO bare metal, and the lost of performance
-due to the virtualization does not exceed 10$\%$.
-For the VMs running on the NEMO cluster and the ATLAS Tier-3 bare metal, the interplay between the virtualization and the different operating systems leads to very similar scores for the two configurations,
-particularly for the KV benchmark, and the lost of performance is smaller than 10$\%$ as well.
+The benchmarks have been run 20 times for each core multiplicity value, and the means and standard deviations of the corresponding distributions have been extracted. \\
 
 \begin{figure}[htbp]
 \centering
@@ -29,6 +22,12 @@ and the vertical bars show the associated standard deviations.}
 \label{bmk-total}
 \end{figure}
 
+The HEP-SPEC06 and KV results are presented in figure \ref{bmk-total} for the three configurations considered.
+The total scores of the two benchmarks are increasing until the maximum number of physical cores has been reached, and are characterized by a flattening increase afterwards.
+The scores of the virtual machines running on the NEMO cluster are only slightly lower than those obtained for the NEMO bare metal, and the lost of performance
+due to the virtualization does not exceed 10$\%$.
+For the VMs running on the NEMO cluster and the ATLAS Tier-3 bare metal, the interplay between the virtualization and the different operating systems leads to very similar scores
+for the two configurations, particularly for the KV benchmark, and the lost of performance is smaller than 10$\%$ as well.
 
 % References for HEPSPEC
 %%https://indico.cern.ch/event/49388/contributions/2014772/attachments/960838/1363966/20090127_NewCPUbenchmark_final.pdf
