@@ -34,7 +34,7 @@ virtual machines to their on-demand deployment and scheduling.
 
 \subsection{Research Cluster NEMO}
 
-The research cluster ``bwForCluster NEMO'' is a cluster for state-wide
+The research cluster ``bwForCluster \NEMO'' is a cluster for state-wide
 research in the scientific fields Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. It started its operation on the 1st of August 2016
 %with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
@@ -43,7 +43,7 @@ Omni-Path~\cite{Omnipath} spans a high speed low latency network of 100\,Gbit/s 
 The parallel storage is based on \BeeGFS~\cite{BeeGFS} with
 % 576\,TB capacity.
 768\,TB capacity.
-%In October 2017 the NEMO cluster was extended by research groups and offers
+%In October 2017 the \NEMO cluster was extended by research groups and offers
 %currently 900 nodes and a total capacity of 768\,TB of parallel storage.
 
 \subsection{Separation of software environments}
@@ -78,7 +78,7 @@ jobs and the VRE job will instruct \Openstack to start the virtual machine on th
 reserved resources with the required flavor, i.e. the resource definition in \Openstack.
 
 When a VRE job is submitted to the \NEMO cluster, \Moab will first calculate the
-priority and the needed resources of the job and then insert it into its queue.
+priority and the needed resources of the job and then inserts it into its queue.
 When the job is in line for execution and the requested resources are available,
 the job will start a script which then starts the VRE on the selected node
 within the resource boundaries. During the run-time of the VRE a monitoring

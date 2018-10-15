@@ -59,7 +59,7 @@ grestore
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
 \newcommand{\Openstack}{\texttt{OpenStack}\xspace}
-\newcommand{\Roced}{\texttt{Roced}\xspace}
+\newcommand{\Roced}{\texttt{ROCED}\xspace}
 \newcommand{\ATLAS}{ATLAS\xspace}
 \newcommand{\CMS}{CMS\xspace}
 \newcommand{\NEMO}{NEMO\xspace}
@@ -111,7 +111,7 @@ grestore
 \maketitle
 
 \begin{abstract}
-The NEMO High Performance Computing Cluster at the University of
+The \NEMO High Performance Computing Cluster at the University of
 Frei\-burg has been made available to
 researchers of the \ATLAS and \CMS experiments.
 Users access the cluster from external machines connected to the
@@ -169,7 +169,7 @@ the images.
 
 \section{Interfacing batch systems and virtual resources using ROCED}
 \label{section:roced}
-While virtualized HPC systems and commercial cloud providers offer the
+While HPC systems with support for virtualized research environments and commercial cloud providers offer the
 necessities to acquire computing and storage capacity by dynamic
 resource booking, the computing needs of high energy physics
 re\-search groups ad\-di\-tion\-al\-ly require work\-flow
@@ -182,7 +182,7 @@ however these offerings are often limited to one specific cloud instance. To dyn
 \begin{figure*}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/roced_design_flat.pdf}
-  \caption{Overview of the ROCED modular design. The ROCED Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on an cloud site and the Integration Adapter ensure that newly booted machines are integrated into the batch system.}
+  \caption{Overview of the \Roced modular design. The  \Roced Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on an cloud site and the Integration Adapter ensure that newly booted machines are integrated into the batch system.}
   \label{fig-roced}
 \end{center}
 \end{figure*}
@@ -196,7 +196,7 @@ scheduling core which collects the current requirement of computing
 resources and decides if virtual machines need to be started or can be
 stopped. One or more Requirement Adapters report the current queue
 status of batch systems to the central scheduling core. Currently,
-Requirement Adapters are implemented for the Slurm, Torque, HTCondor
+Requirement Adapters are implemented for the Slurm, Torque/Moab, HTCondor
 and GridEngine batch systems. The Site Adapters allow \Roced to start,
 stop, and monitor virtual machines on multiple cloud
 sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and
@@ -217,7 +217,7 @@ The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \section{Analysis of performance and usage}
 
-This approach has been implemented and put into production in the research groups at the University of Freiburg (Physikalisches Institut) and the Karlsruhe Institute of Technology (Institute of Experimental
+This approach has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
 Particle Physics). The following section presents the statistical analysis of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics.
 
 \subsection{Benchmarks}
@@ -235,7 +235,7 @@ Particle Physics). The following section presents the statistical analysis of th
 %
 \subsection{Usage statistics}
 Fig. \ref{fig-frplots} shows the utilization of virtual machines which were orchestrated by \Roced depending on the resource demands of the users of the KIT group.
-At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 NEMO cores.
+At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 \NEMO cores.
 
 \begin{figure}
 \begin{center}
@@ -246,7 +246,7 @@ At peak times, up to 9000 virtual cores were filled with user jobs, consuming mo
 \end{figure}
 
 The usage of the hybrid cluster model is presented in Fig.~\ref{fig-nodeusage}.
-The diagram shows the shared usage of NEMO's cluster nodes running either
+The diagram shows the shared usage of \NEMO's cluster nodes running either
 bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs or VREs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
@@ -254,7 +254,7 @@ a standard bare-metal job.
 At the beginning the cluster was only containing the operating system and some
 basic development tools, scientific software was added after the cluster was
 already in production mode. Since the VRE for the CMS project was already
-available when the NEMO cluster started, it could already use the whole cluster
+available when the \NEMO cluster started, it could already use the whole cluster
 while other groups still had to wait for the required scientific software to be deployed on
 the cluster. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
@@ -262,7 +262,7 @@ amount of VRE jobs decreased. This figure is only an estimate because VRE
 projects are not forced to use VREs and therefore could run bare-metal jobs as
 well.
 
-% The shared usage of the NEMO cluster between jobs running in virtual
+% The shared usage of the \NEMO cluster between jobs running in virtual
 % machines and within the cluster operating system is illustrated in
 % Figure~\ref{fig-nodeusage}. It shows the relative contributions of CPU hours used by jobs running
 % direcly in the hosts' operating system or in virtual machines per month.
@@ -275,7 +275,7 @@ well.
 \begin{figure}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-09_2018-06.png}
-  \caption{Usage of the NEMO cluster in the time between September 2016
+  \caption{Usage of the \NEMO cluster in the time between September 2016
     to June 2018. The blue bars indicate the usage by jobs
     running directly in the hosts' operating system, while the orange bars are jobs
     running in virtual machines.}
@@ -290,7 +290,7 @@ well.
 % A system for the dynamic, on-demand provisioning of virtual machines
 % to run jobs in a high energy physics context on an external, not
 % dedicated resource as realized at the HPC
-% cluster NEMO at University of Freiburg has been described.
+% cluster \NEMO at University of Freiburg has been described.
 % Reasons for the need for an interface between the schedulers of the host system
 % and the external system from which requests are sent have been
 % explained.
@@ -362,6 +362,9 @@ well.
 
 
 \begin{acknowledgements}
+The authors acknowledge support by the state of Baden-W\"urttemberg through bwHPC
+and the German Research Foundation (DFG) through grant no INST 39/963-1 FUGG (bwForCluster NEMO).
+
 Vice, BMBF, ...?
   % If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
@@ -389,7 +392,7 @@ OpenStack Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2018-07-03
 
 \bibitem{ROCED}
-ROCED Cloud Meta-Scheduler project website
+\Roced Cloud Meta-Scheduler project website
 \url{https://github.com/roced-scheduler/ROCED}, accessed 2018-07-03
 
 \bibitem{Omnipath}
@@ -404,7 +407,7 @@ BeeGFS Parallel Cluster File system:
 \url{https://www.beegfs.io/content/}, accessed 2018-09-20
 \bibitem{hpc-symp:2016}
 Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
-  Flexible HPC: bwForCluster NEMO,
+  Flexible HPC: bwForCluster \NEMO,
   Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
 
 
@@ -418,7 +421,6 @@ Adaptive Computing Moab
 
 
 \bibitem{packer}
-
 Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
 \url{https://www.packer.io/}, accessed 2018-07-03
 
@@ -426,7 +428,6 @@ Packer: tool for creating machine and container images for multiple platforms fr
 \url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
 
 \bibitem{puppet}
-
 Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
 \url{https://puppet.com/}, accessed 2018-07-03
 
@@ -455,7 +456,6 @@ HTCondor Connection Brokering
 Slurm Elastic Computing
 \url{https://slurm.schedmd.com/elastic_computing.html}, accessed 2018-07-03
 
-  \url{http://books.ub.uni-heidelberg.de/heibooks/reader/download/308/308-4-79237-1-10-20171002.pdf}
 
 \bibitem{Hepspec} HEPiX Benchmarking Working Group:
 \url{https://twiki.cern.ch/twiki/bin/view/FIOgroup/TsiBenchHEPSPEC}, accessed 2018-01-29
@@ -504,7 +504,6 @@ The CentOS Project,
     S. Alioli, P. Nason, C. Oleari and E. Re, JHEP 1006 (2010) 043, arXiv:1002.2581
 
 \bibitem{Pythia8}
-
 T. Sjöstrand et al: An Introduction to PYTHIA 8.2. Comput. Phys. Commun. 191 (2015) 159-177. DOI:10.1016/j.cpc.2015.01.024". arXiv hep-ph 1410.3012
 
 
