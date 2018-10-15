@@ -46,6 +46,8 @@ grestore
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
 \usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{hyperref}
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -56,7 +58,23 @@ grestore
 %
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
-%
+\newcommand{\Openstack}{\texttt{OpenStack}\xspace}
+\newcommand{\Roced}{\texttt{Roced}\xspace}
+\newcommand{\ATLAS}{ATLAS\xspace}
+\newcommand{\CMS}{CMS\xspace}
+\newcommand{\NEMO}{NEMO\xspace}
+\newcommand{\Packer}{\texttt{Packer}\xspace}
+\newcommand{\Puppet}{\texttt{Puppet}\xspace}
+\newcommand{\Hieradata}{\texttt{Hieradata}\xspace}
+\newcommand{\Moab}{\texttt{Moab}\xspace}
+\newcommand{\Slurm}{\texttt{Slurm}\xspace}
+\newcommand{\BeeGFS}{\textsc{BeeGFS}\xspace}
+\newcommand{\OZ}{\texttt{OZ}\xspace}
+\newcommand{\HTCondor}{\texttt{HTCondor}\xspace}
+
+%\usepackage{lineno}
+%\linenumbers
+
 % Insert the name of "your journal" with
 % \journalname{myjournal}
 %
@@ -71,10 +89,10 @@ grestore
 
 %\titlerunning{Short form of title}        % if too long for running head
 
-\author{Felix B\"uhrer \and Anton Gamel  \and Michael Janczyk \and
-  Benoit Roland \and
+\author{Felix B\"uhrer \and Anton Gamel \and Thomas Hauth \and Michael Janczyk \and
+  Beno\^it Roland \and
   Markus Schumacher \and
-  Ulrike Schnoor \and Bernd Wiebelt \and Thomas Hauth
+  Ulrike Schnoor \and Dirk von Suchodoletz \and Bernd Wiebelt
   % etc.
 }
 
@@ -93,19 +111,16 @@ grestore
 \maketitle
 
 \begin{abstract}
-Particle physics experiments at the Large Hadron Collider (LHC) need a
-great quantity of computing resources for data processing, simulation, and analysis.
-High Performance Computing (HPC) resources provided by research institutions
-can be useful supplements to the existing World-wide LHC Computing
-Grid (WLCG) resources
-allocated by the collaborations. At the University of Frei\-burg, the
-shared research cluster NEMO has been made available to ATLAS and CMS
-users accessing it from external machines connected to the WLCG.
- To this effect, the full software environment corresponding to a WLCG center
+The NEMO High Performance Computing Cluster at the University of
+Frei\-burg has been made available to
+researchers of the \ATLAS and \CMS experiments.
+Users access the cluster from external machines connected to the
+World-wide LHC Computing Grid (WLCG).
+ This paper describes how the full software environment corresponding to a WLCG center
  is provided in a virtual machine image. The interplay between the
- schedulers for NEMO and for the external
- cluster is ensured through the ROCED service.
-An OpenStack infrastructure is deployed at NEMO to orchestrate the
+ schedulers for \NEMO and for the external
+ clusters is coordinated through the \Roced service.
+A cloud computing infrastructure is deployed at \NEMO to orchestrate the
 simultaneous usage by bare metal and virtualized jobs.
 Through the setup, resources are provided to users in a transparent,
 automatized, and
@@ -114,7 +129,7 @@ evaluated for particle physics applications.
 
 %Insert your abstract here. Include keywords, PACS and mathematical
 %subject classification numbers as needed.
-\keywords{Virtualization \and Particle Physics \and Grid Computing }
+\keywords{Virtualization \and Particle Physics \and Grid Computing \and Benchmarks}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
@@ -131,8 +146,8 @@ evaluated for particle physics applications.
 
 \input{include/Infrastructure.tex}
 \section{Generation of the image}
-The VREs for ATLAS and CMS software environments are simply OpenStack containers
-in the format of a compatible VM image.
+The VREs for ATLAS and CMS software environments consist in \Openstack containers
+in the format of compatible VM images.
 These images are provided in an automatized
 way allowing versioning and archiving of the environments captured in
 the images.
@@ -149,9 +164,19 @@ the images.
 %$\to$CMS Karlsruhe\\
 \input{include/KarlsruheImageGen.tex}
 
+
+
+
 \section{Interfacing batch systems and virtual resources using ROCED}
 \label{section:roced}
-While virtualized HPC systems and commercial cloud offerings provide the necessities to acquire computing and storage capacity by dynamic resource booking, the computing needs of high energy physics re\-search groups ad\-di\-tion\-al\-ly require work\-flow ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch jobs. While some cloud providers, for example Amazon with AWS Batch~\cite{awsbatch}, provide a service for workflow management, these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
+While virtualized HPC systems and commercial cloud providers offer the
+necessities to acquire computing and storage capacity by dynamic
+resource booking, the computing needs of high energy physics
+re\-search groups ad\-di\-tion\-al\-ly require work\-flow
+ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch
+jobs. Some cloud providers, for example Amazon with AWS
+Batch~\cite{awsbatch}, provide a service for workflow management,
+however these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
 
 \subsection{ROCED}
 \begin{figure*}
@@ -163,9 +188,23 @@ While virtualized HPC systems and commercial cloud offerings provide the necessi
 \end{figure*}
 
 %$\to$ CMS Karlsruhe
-Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler ROCED (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. ROCED is written in a modular
-fashion in python and the interfaces to batch systems and cloud sites are implemented as so-called \textit{Adapters}. This makes ROCED independent of specific user groups or workflows. It provides a scheduling core which collects the current requirement of computing resources and decides if virtual machines need to be started or can be stopped. One or more Requirement Adapters report the current queue status of batch systems to the central scheduling core. Currently, Requirement Adapters are implemented for the Slurm, Torque, HTCondor and GridEngine batch systems. The Site Adapters allow ROCED to start, stop and monitor virtual machines on multiple cloud sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and Moab-based virtualization at HPC centers. Special care has been put into the resilience of ROCED: it can automatically terminate non-responsive machines and restart virtual machines in case some machines dropped out. This allows VM setups orchestrated by ROCED with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
-The modular design of ROCED is shown in fig.~\ref{fig-roced}.
+Many capable batch systems exist today and they can be interfaced to virtualization providers using the cloud meta-scheduler \Roced (Responsive On-demand Cloud Enabled Deployment) which has been developed at the KIT since 2010~\cite{ROCED}. \Roced is written in a modular
+fashion in python and the interfaces to batch systems and cloud sites
+are implemented as so-called \textit{Adapters}. This makes \Roced
+independent of specific user groups or workflows. It provides a
+scheduling core which collects the current requirement of computing
+resources and decides if virtual machines need to be started or can be
+stopped. One or more Requirement Adapters report the current queue
+status of batch systems to the central scheduling core. Currently,
+Requirement Adapters are implemented for the Slurm, Torque, HTCondor
+and GridEngine batch systems. The Site Adapters allow \Roced to start,
+stop, and monitor virtual machines on multiple cloud
+sites. Implementations exist for Amazon EC2, OpenStack, OpenNebula and
+Moab-based virtualization at HPC centers. Special care has been put
+into the resilience of \Roced: it can automatically terminate
+non-responsive machines and restart virtual machines in case some
+machines have dropped out. This allows VM setups orchestrated by \Roced with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
+The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
@@ -178,11 +217,12 @@ The modular design of ROCED is shown in fig.~\ref{fig-roced}.
 
 \section{Analysis of performance and usage}
 
-This apporach has been implemented and put into production in the research groups at University of Freiburg (Physikalisches Institut) and the Karlsruhe Institute of Technology (Institute of Experimental Particle Physics). The following chapter presents the statistical analysis of the performance of the virtualized setup both in terms of job performance as well as usage statistics.
+This approach has been implemented and put into production in the research groups at the University of Freiburg (Physikalisches Institut) and the Karlsruhe Institute of Technology (Institute of Experimental
+Particle Physics). The following section presents the statistical analysis of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics.
 
-\subsection{HEPSPEC benchmarks}
+\subsection{Benchmarks}
 %$\to$ ATLAS Freiburg\\
-\input{include/Hepspec.tex}
+\input{include/Benchmarks.tex}
 
 
 
@@ -194,7 +234,7 @@ This apporach has been implemented and put into production in the research group
 %$\to$ATLAS Freiburg 
 %
 \subsection{Usage statistics}
-Fig. \ref{fig-frplots} show the utilization of virtual machines which were orchestrated by ROCED depending on the resource demands of the users of the KIT group.
+Fig. \ref{fig-frplots} shows the utilization of virtual machines which were orchestrated by \Roced depending on the resource demands of the users of the KIT group.
 At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 NEMO cores.
 
 \begin{figure}
@@ -205,18 +245,18 @@ At peak times, up to 9000 virtual cores were filled with user jobs, consuming mo
 \end{center}
 \end{figure}
 
-The usage of the hybrid cluster model is presented in fig.~\ref{fig-nodeusage}.
+The usage of the hybrid cluster model is presented in Fig.~\ref{fig-nodeusage}.
 The diagram shows the shared usage of NEMO's cluster nodes running either
 bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs or VREs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
 At the beginning the cluster was only containing the operating system and some
-basic development tools, scientific software was added after the the cluster was
+basic development tools, scientific software was added after the cluster was
 already in production mode. Since the VRE for the CMS project was already
-available when the NEMO cluster started it could already use the whole cluster
+available when the NEMO cluster started, it could already use the whole cluster
 while other groups still had to wait for the required scientific software to be deployed on
-the cluster. It explains the high usage by VREs in the first months of
+the cluster. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
 amount of VRE jobs decreased. This figure is only an estimate because VRE
 projects are not forced to use VREs and therefore could run bare-metal jobs as
@@ -321,10 +361,11 @@ well.
 %\end{table}
 
 
-%\begin{acknowledgements}
-%If you'd like to thank anyone, place your comments here
+\begin{acknowledgements}
+Vice, BMBF, ...?
+  % If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
-%\end{acknowledgements}
+\end{acknowledgements}
 
 % BibTeX users please use one of
 %\bibliographystyle{spbasic}      % basic style, author-year citations
@@ -338,6 +379,11 @@ well.
 % and use \bibitem to create references. Consult the Instructions
 % for authors for reference list style.
 %
+\bibitem{HLLHCcompneeds}
+  ATLAS Public results
+  \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/diskHLLHC.pdf},
+  accessed 2018-09-19
+
 \bibitem{Openstack}
 OpenStack Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2018-07-03
@@ -346,13 +392,44 @@ OpenStack Open Source Cloud Computing Software
 ROCED Cloud Meta-Scheduler project website
 \url{https://github.com/roced-scheduler/ROCED}, accessed 2018-07-03
 
+\bibitem{Omnipath}
+  Omni-Path:
+"Intel Architects High Performance Computing System Designs to Bring
+Power of Supercomputing Mainstream",
+\texttt{\href{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/}{https://newsroom.intel.com/news-releases/intel-\\architects-high-performance-computing-system-\\designs-to-bring-power-of-supercomputing-mainstream}},
+Intel. 16 November 2015, accessed 2018-09-20
+%https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream
+\bibitem{BeeGFS}
+BeeGFS Parallel Cluster File system:
+\url{https://www.beegfs.io/content/}, accessed 2018-09-20
+\bibitem{hpc-symp:2016}
+Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
+  Flexible HPC: bwForCluster NEMO,
+  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
+
+
+%\bibitem{VirtualisationScientificComp}
+%  This needs a reference
+
+
 \bibitem{Moab}
 Adaptive Computing Moab
 \url{http://www.adaptivecomputing.com/moab-hpc-basic-edition/}, accessed 2018-07-03
 
-% Commented out, because reference is not used in text currently
-%\bibitem{VirtualisationScientificComp}
-%  This needs a reference
+
+\bibitem{packer}
+
+Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
+\url{https://www.packer.io/}, accessed 2018-07-03
+
+\bibitem{kickstart}
+\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
+
+\bibitem{puppet}
+
+Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
+\url{https://puppet.com/}, accessed 2018-07-03
+
 
 \bibitem{OZ}
 Oz image generation toolkit
@@ -370,31 +447,56 @@ HTCondor workload manager
 HTCondor Connection Brokering
 \url{http://research.cs.wisc.edu/htcondor/manual/v8.6/3_9Networking_includes.html}, accessed 2018-07-03
 
-\bibitem{packer}
-
-Packer: tool for creating machine and container images for multiple platforms from a single source configuration. 
-\url{https://www.packer.io/}, accessed 2018-07-03
-
-\bibitem{kickstart}
-\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
-
-\bibitem{puppet}
-
-Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
-\url{https://puppet.com/}, accessed 2018-07-03
-
+\bibitem{Slurm}
+  Slurm
+  \url{https://slurm.schedmd.com}, accessed 2018-07-03
+    
 \bibitem{SlurmElastic}
 Slurm Elastic Computing
 \url{https://slurm.schedmd.com/elastic_computing.html}, accessed 2018-07-03
 
-\bibitem{hpc-symp:2016}
-Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
-  Flexible HPC: bwForCluster NEMO,
-  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
   \url{http://books.ub.uni-heidelberg.de/heibooks/reader/download/308/308-4-79237-1-10-20171002.pdf}
 
 \bibitem{Hepspec} HEPiX Benchmarking Working Group:
 \url{https://twiki.cern.ch/twiki/bin/view/FIOgroup/TsiBenchHEPSPEC}, accessed 2018-01-29
+
+
+\bibitem{Alef:2017jyx}
+M.~Alef {\it et al.},
+``Benchmarking cloud resources for HEP'',
+J.\ Phys.\ Conf.\ Ser.\  {\bf 898} (2017) no.9,  092056.
+doi:10.1088/1742-6596/898/9/092056
+%%CITATION = doi:10.1088/1742-6596/898/9/092056;%%
+
+\bibitem{DB12}
+Graciani, Ricardo and Andrew McNab, Dirac benchmark 2012, 
+\url{https://gitlab.cern.ch/mcnab/dirac-benchmark/tree/master}
+
+\bibitem{DeSalvo:2010zza}
+A.~De Salvo and F.~Brasolin,
+``Benchmarking the ATLAS software through the kit validation engine'',
+J.\ Phys.\ Conf.\ Ser.\  {\bf 219} (2010) 042037.
+doi:10.1088/1742-6596/219/4/042037
+%%CITATION = doi:10.1088/1742-6596/219/4/042037;%%
+%4 citations counted in INSPIRE as of 11 Sep 2018
+
+\bibitem{Agostinelli:2002hh}                               
+S.~Agostinelli {\it et al.} [GEANT4 Collaboration],        
+``GEANT4: A Simulation toolkit'',                          
+Nucl.\ Instrum.\ Meth.\ A {\bf 506} (2003) 250.            
+doi:10.1016/S0168-9002(03)01368-8                          
+%%CITATION = doi:10.1016/S0168-9002(03)01368-8;%%          
+%9602 citations counted in INSPIRE as of 11 Sep 2018       
+
+\bibitem{SL6}
+Fermilab and CERN,
+``Scientific Linux 6'',
+\url{http://www.scientificlinux.org/}
+
+\bibitem{CentOS7}
+The CentOS Project,
+``CentOS Linux 7'',
+\url{https://www.centos.org/}
 
 \bibitem{PowhegBox}
    P. Nason, JHEP 0411 (2004) 040, hep-ph/0409146;
@@ -405,8 +507,7 @@ Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
 
 T. Sjöstrand et al: An Introduction to PYTHIA 8.2. Comput. Phys. Commun. 191 (2015) 159-177. DOI:10.1016/j.cpc.2015.01.024". arXiv hep-ph 1410.3012
 
-\bibitem{vice}
-TODO
+
 
 %title={Flexible HPC: bwForCluster NEMO},
 %authors={Dirk von Suchodoletz and Bernd Wiebelt and Konrad Meier and
