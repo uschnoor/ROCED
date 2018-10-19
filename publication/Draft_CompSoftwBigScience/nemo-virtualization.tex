@@ -72,8 +72,8 @@ grestore
 \newcommand{\OZ}{\texttt{OZ}\xspace}
 \newcommand{\HTCondor}{\texttt{HTCondor}\xspace}
 
-%\usepackage{lineno}
-%\linenumbers
+\usepackage{lineno}
+\linenumbers
 
 % Insert the name of "your journal" with
 % \journalname{myjournal}
@@ -89,19 +89,54 @@ grestore
 
 %\titlerunning{Short form of title}        % if too long for running head
 
-\author{Felix B\"uhrer \and Anton Gamel \and Thomas Hauth \and Michael Janczyk \and
-  Beno\^it Roland \and
-  Markus Schumacher \and
-  Ulrike Schnoor \and Dirk von Suchodoletz \and Bernd Wiebelt
+\author{Felix B\"uhrer \and Frank Fischer \and Georg Fleig \and Anton
+  Gamel \and Manuel Giffels \and Thomas Hauth \and Michael Janczyk
+  \and Konrad Meier \and
+G\"unter Quast \and  Beno\^it Roland \and
+  Markus Schumacher \and Ulrike Schnoor \and Dirk von Suchodoletz \and Bernd Wiebelt
   % etc.
 }
 
+
+
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{U. Schnoor \at
-              CERN \\
-              \email{ulrike.schnoor@cern.ch}           %  \\
-%             \emph{Present address:} of F. Author  %  if needed
+\institute{ F. B\"uhrer \at Universit\"at Freiburg, Physikalisches
+  Institut, Hermann-Herder-Str. 3, 79104 Freiburg, Germany
+  \and F. Fischer \at Karls\-ruher Institut f\"ur Technologie, Institut f\"ur Experimentelle
+  Teilchenphysik, Wolfgang-Gaede-Str. 1, 76131 Karls\-ruhe, Germany
+ \and G. Fleig \at Karls\-ruher Institut f\"ur Technologie, Institut f\"ur Experimentelle
+Teilchenphysik, Wolfgang-Gaede-Str. 1, 76131 Karls\-ruhe, Germany
+  \and A. Gamel  \at  Universit\"at Freiburg, Physikalisches
+  Institut, Hermann-Herder-Str. 3, 79104 Freiburg, Germany \at  Universit\"at Freiburg, Rechenzentrum, Hermann-Herder-Str.10, 79104
+  Freiburg, Germany
+  \and M. Giffels \at Karls\-ruher Institut f\"ur Technologie, Institut f\"ur Experimentelle
+  Teilchenphysik, Wolfgang-Gaede-Str. 1, 76131 Karls\-ruhe, Germany
+  \and T. Hauth \at Karls\-ruher Institut f\"ur Technologie, Institut f\"ur Experimentelle
+  Teilchenphysik, Wolfgang-Gaede-Str. 1, 76131 Karls\-ruhe, Germany
+  \and M. Janczyk \at  Universit\"at Freiburg, Rechenzentrum,
+  Hermann-Herder-Str. 10, 79104
+  Freiburg, Germany
+  \and K. Meier  \at  Universit\"at Freiburg, Rechenzentrum,
+  Hermann-Herder-Str. 10, 79104
+  Freiburg, Germany
+  \and G. Quast \at Karls\-ruher Institut f\"ur Technologie, Institut f\"ur
+  Experimentelle Teilchenphysik, Wolfgang-Gaede-Str. 1, 76131
+  Karls\-ruhe, Germany
+  \and  B. Roland \at  Universit\"at Freiburg, Physikalisches
+  Institut, Hermann-Herder-Str. 3, 79104 Freiburg, Germany
+  \and  M. Schumacher \at  Universit\"at Freiburg, Physikalisches
+  Institut, Hermann-Herder-Str. 3, 79104 Freiburg, Germany
+  \and  U. Schnoor \at   Universit\"at Freiburg, Physikalisches
+  Institut, Hermann-Herder-Str. 3, 79104 Freiburg, Germany 
+  \\\email{ulrike.schnoor@cern.ch}    \at \emph{Now at} CERN, CH-1211 Geneva
+  23, Switzerland        %  \\
+ \and D. von Suchodoletz \at Universit\"at Freiburg, Rechenzentrum,
+ Hermann-Herder-Str. 10, 79104
+  Freiburg, Germany 
+ \and B. Wiebelt \at Universit\"at Freiburg, Rechenzentrum,
+ Hermann-Herder-Str. 10, 79104
+ Freiburg, Germany
 }
 
 \date{Received: date / Accepted: date}
@@ -274,7 +309,7 @@ well.
 
 \begin{figure}
 \begin{center}
-  \includegraphics[width=0.9\linewidth]{figures/NodeUsage_2016-09_2018-06.png}
+  \includegraphics[width=\linewidth]{figures/NodeUsage_2016-09_2018-09.pdf}
   \caption{Usage of the \NEMO cluster in the time between September 2016
     to June 2018. The blue bars indicate the usage by jobs
     running directly in the hosts' operating system, while the orange bars are jobs
@@ -362,9 +397,15 @@ well.
 
 
 \begin{acknowledgements}
-The authors acknowledge support by the state of Baden-W\"urttemberg through bwHPC
-and the German Research Foundation (DFG) through grant no INST 39/963-1 FUGG (bwForCluster NEMO).
-Furthermore the ViCE project is sponsored by the Ministry of Science, Research and the Arts, Baden-W\"urttemberg, Germany. The support is gratefully acknowledged.
+This research is supported by the Ministerium für Wissenschaft, Forschung und
+Kunst Baden-W\"urttemberg through the bwHPC grant
+and by the German Research Foundation (DFG) through grant no INST
+39/963-1 FUGG for the bwForCluster NEMO.
+The work of F.B. was supported by the Virtual Open Science
+Collaboration Environment (ViCE) project MWK 34-7547.221 funded by the Ministerium f\"ür Wissenschaft, Forschung und
+Kunst Baden-W\"urttemberg.
+The work of U.S. was supported by  the Bundesministerium f\"ur Bildung und Forschung in the project 05H15VFCA1 
+    “Higgs-Physik mit dem und Grid-Computing f\"ür das ATLAS-Experiment am LHC”. 
 \end{acknowledgements}
 
 % BibTeX users please use one of
