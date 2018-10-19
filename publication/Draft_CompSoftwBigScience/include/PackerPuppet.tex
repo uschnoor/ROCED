@@ -4,7 +4,7 @@ A reasonable approach to generate the image is the open-source tool
 \Packer allows to configure an image based on an ISO image file using a \texttt{kickstart}~\cite{kickstart} file and flexible script-based configuration. 
 It also provides an interface to \Puppet making it particularly convenient if an existing \Puppet role is to be used for the images. If the roles are defined according to the hostname of the machine as is conventional in \Puppet with \Hieradata, the hostname needs to be set in the scripts supplied to \Packer. Propagation of certificates requires an initial manual start of a machine with the same hostname to allow handshake signing of the certificate from the \Puppet server.
 
-\Packer's interface to \Puppet allows a fully automated image generation with up-to-date and version-controlled configuration. At the end of the generation run, the image is automatically transferred to the \\\Openstack image server.
+\Packer's interface to \Puppet allows a fully automated image generation with up-to-date and version-controlled configuration. At the end of the generation run, the image is automatically transferred to the \Openstack image server.
 
 
 
