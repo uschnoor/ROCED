@@ -76,7 +76,7 @@ grestore
 \linenumbers
 
 % Insert the name of "your journal" with
-% \journalname{myjournal}
+\journalname{Computing and Software for Big Science}
 %
 \begin{document}
 
@@ -164,7 +164,8 @@ evaluated for particle physics applications.
 
 %Insert your abstract here. Include keywords, PACS and mathematical
 %subject classification numbers as needed.
-\keywords{Virtualization \and Particle Physics \and Grid Computing \and Benchmarks}
+\keywords{Virtualization \and Particle Physics \and Grid Computing
+  \and Benchmarks \and Opportunistic Usage}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
@@ -189,20 +190,20 @@ the images.
 % The approaches used in the
 % different groups are described in the following.
 
-\subsection{Packer combined with Puppet}
+\subsection{\Packer combined with \Puppet}
 
 \input{include/PackerPuppet.tex}
 
 
 
-\subsection{Image generation using the Oz toolkit}
+\subsection{Image generation using the \OZ toolkit}
 %$\to$CMS Karlsruhe\\
 \input{include/KarlsruheImageGen.tex}
 
 
 
 
-\section{Interfacing batch systems and virtual resources using ROCED}
+\section{Interfacing batch systems and virtual resources using \Roced}
 \label{section:roced}
 While HPC systems with support for virtualized research environments and commercial cloud providers offer the
 necessities to acquire computing and storage capacity by dynamic
@@ -213,7 +214,7 @@ jobs. Some cloud providers, for example Amazon with AWS
 Batch~\cite{awsbatch}, provide a service for workflow management,
 however these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
 
-\subsection{ROCED}
+\subsection{\Roced}
 \begin{figure*}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/roced_design_flat.pdf}
@@ -241,11 +242,11 @@ non-responsive machines and restart virtual machines in case some
 machines have dropped out. This allows VM setups orchestrated by \Roced with thousands of virtual machines and many tens of thousands of jobs to run in production environments.
 The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
-\subsection{Using HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
+\subsection{Using \HTCondor as front-end scheduler}\label{sec:ROCED:HTCondor}
 %$\to$ CMS Karlsruhe
 \input{include/HTCondor.tex}
 
-\subsection{Using SLURM as front-end scheduler}
+\subsection{Using \Slurm as front-end scheduler}
 %$\to$ ATLAS Freiburg\\
 \input{include/Slurm.tex}
 
@@ -310,8 +311,8 @@ well.
 \begin{figure}
 \begin{center}
   \includegraphics[width=\linewidth]{figures/NodeUsage_2016-09_2018-09.pdf}
-  \caption{Usage of the \NEMO cluster in the time between September 2016
-    to June 2018. The blue bars indicate the usage by jobs
+  \caption{Usage of the \NEMO cluster in the time from September 2016
+    to September 2018. The blue bars indicate the usage by jobs
     running directly in the hosts' operating system, while the orange bars are jobs
     running in virtual machines.}
   \label{fig-nodeusage}
@@ -425,6 +426,12 @@ The work of U.S. was supported by  the Bundesministerium f\"ur Bildung und Forsc
   \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/diskHLLHC.pdf},
   accessed 2018-09-19
 
+\bibitem{wlcg} LHC Computing Grid: Technical Design Report, 
+  CERN-LHCC-2005-024 20, June 2005
+
+
+\bibitem{nemo} bwForCluster \NEMO \url{https://www.hpc.uni-freiburg.de/nemo}, accessed 2018-10-21
+  
 \bibitem{Openstack}
 OpenStack Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2018-07-03
