@@ -1,14 +1,14 @@
-A system for the dynamic, on-demand provisioning of virtual machines to run jobs
+A novel system for the dynamic, on-demand provisioning of virtual machines to run jobs
 in a high energy physics context on an external, not dedicated resource as
 realized at the HPC cluster \NEMO at the University of Freiburg has been
-described. An interface between the schedulers of the
+implemented. An interface between the schedulers of the
 host system and the external system from which requests are sent is needed to
-monitor and steer jobs in a scalable way. This is implemented in the \Roced package
-which is deployed for the described use-cases.
-This approach can be generalized to other platforms and possibly also other
-forms of virtualized environments (e.g. containers).
+monitor and steer jobs in a scalable way. For this workflow the cloud meta-scheduler \Roced
+has been implemented and deployed for the described use-cases.
+The approach can be adapted to work with other platforms and could be extended to
+container technologies like Singularity~\cite{VRE2017}.
 
-The CPU performance and usage of the setup have been analyzed.
+The CPU performance and usage of the setup have been analyzed for the job execution environment.
 The expected performance loss due to the virtualization has been found to be
 sufficiently small to be compensated by the added flexibility and other benefits
 of this setup.
@@ -17,4 +17,7 @@ A possible extension of such a virtualized setup is the provisioning of function
 for snapshots and migration of jobs. This would facilitate the efficient integration of
 long-running monolithic jobs into HPC clusters.
 
-
+The provided solution extends the available compute ressources for HEP calculations
+and could be one possibilitly to cope with new data from the upcoming High-Luminosity
+upgrade of the LHC. Since HEP VREs are perfect for backfilling this could be used on various
+cluster ressources.
