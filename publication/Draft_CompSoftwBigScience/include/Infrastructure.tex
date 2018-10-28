@@ -2,7 +2,7 @@ Hardware virtualization has become mainstream technology over the last decade as
 both to host more than one operating system on a single server and to strictly
 separate users of software environments.
 Hardware and software stacks are decoupled and therefore complete software
-environment can be migrated easily.
+environment can be migrated across hardware boundaries.
 While widespread in computer center
 operation this technique is rarely applied in HPC.
 % it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
@@ -16,7 +16,7 @@ medium scaled research
 infrastructures like cloud, storage, and especially HPC services adapted to the
 needs of various scientific communities. Significant standardization
 in hardware and software is necessary for the operation of compute systems comprised of
-more than 1000 individual nodes with a small group of administrators.
+more than 1000 individual nodes combined with a small group of administrators.
 
 The level of granularity of the software stack provided is not fine enough to
 directly support the requirements of world-wide efforts like the
@@ -27,14 +27,14 @@ Transferring expertise from the operation of the established local
 private cloud, %in cooperation with the ViCE project~\cite{vice},
 the use of \Openstack as a cloud platform has been identified
 as a
-suitable solution for \NEMO. This approach provides a more flexible software
+suitable solution for \NEMO. This approach provides a user defined software
 deployment in addition to the existing software module system.
 The resulting challenges range from the automated creation of suitable
 virtual machines to their on-demand deployment and scheduling.
 
 \subsection{Research Cluster NEMO}
 
-The research cluster ``bwForCluster \NEMO'' is a cluster for state-wide
+The research cluster \NEMO is a cluster for state-wide
 research in the scientific fields Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. It started its operation on the 1st of August 2016
 %with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
@@ -55,17 +55,17 @@ updates of the operating system or the provisioning of software packages of a
 certain version. From the researcher's perspective the VRE is an individual
 virtual node whose operating system, applications and configurations
 as well as certain hardware-level parameters, e.g. CPU and RAM, can be
-configured fully autonomously by the researcher.
+configured fully autonomously by the researcher within agreed upon limits.
 
 
 To increase the flexibility in hosted software environments, the standard bare metal
-operation of \NEMO is extended with a parallel installation of \Openstack
+operation of \NEMO is extended with an installation of \Openstack
 components~\cite{hpc-symp:2016}.
 The \NEMO cluster uses Adaptive's Workload Manager \Moab~\cite{Moab} as a
 scheduler of compute jobs.
 \Openstack as well can schedule virtual machines on the same nodes and
 resources.
-To avoid overlap, it is necessary to define the master scheduler
+To avoid conflicts, it is necessary to define the master scheduler
 which decides the job assignment to the worker nodes.
 Both \Moab and \Openstack are
 unaware that another scheduler exists within the cluster and there is
@@ -73,7 +73,7 @@ no API which enables them to  communicate with each other. Since the majority of
 bare metal HPC cluster, \Moab is deployed as the primary scheduler. It allows for
 detailed job description and offers sophisticated scheduling features like
 fair-share, priority-based scheduling, detailed limits,
-etc. \Openstack 's task is to schedule the virtual machines, but \Moab will initially start the VRE
+etc. \Openstack 's task is to deploy the virtual machines, but \Moab will initially start the VRE
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
 reserved resources with the required flavor, i.e. the resource definition in \Openstack.
 
@@ -86,7 +86,7 @@ script regularly checks if the VRE is still running and terminates the job when
 the VRE has ended.
 When the job ends, \Openstack gets a signal to terminate the virtual machine and
 the VRE job ends as well.  Neither \Moab nor \Openstack have access
-inside the VRE, so they cannot assess if the VRE is actually active or
+inside the VRE, so they cannot assess if the VRE is actually busy or
 idle.
 The software package \Roced (described in
 further detail in Section~\ref{section:roced}) has been introduced to

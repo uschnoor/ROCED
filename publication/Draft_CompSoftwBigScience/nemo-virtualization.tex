@@ -58,7 +58,7 @@ grestore
 %
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
-\newcommand{\Openstack}{\texttt{OpenStack}\xspace}
+\newcommand{\Openstack}{\texttt{Open\-Stack}\xspace}
 \newcommand{\Roced}{\texttt{ROCED}\xspace}
 \newcommand{\ATLAS}{ATLAS\xspace}
 \newcommand{\CMS}{CMS\xspace}
@@ -151,7 +151,7 @@ Frei\-burg has been made available to
 researchers of the \ATLAS and \CMS experiments.
 Users access the cluster from external machines connected to the
 World-wide LHC Computing Grid (WLCG).
- This paper describes how the full software environment corresponding to a WLCG center
+ This paper describes how the full software environment of the WLCG
  is provided in a virtual machine image. The interplay between the
  schedulers for \NEMO and for the external
  clusters is coordinated through the \Roced service.
@@ -180,7 +180,7 @@ evaluated for particle physics applications.
 \label{sec:openstack}
 
 \input{include/Infrastructure.tex}
-\section{Generation of the image}
+\section{Generation of the VRE image}
 The VREs for ATLAS and CMS software environments consist in \Openstack containers
 in the format of compatible VM images.
 These images are provided in an automatized
@@ -252,8 +252,8 @@ The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \section{Analysis of performance and usage}
 
-This approach has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
-Particle Physics). The following section presents the statistical analysis of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics.
+This ROCED-based slution has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
+Particle Physics). To prove the usefulness of this approach statistical analyses of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics were conducted.
 
 \subsection{Benchmarks}
 %$\to$ ATLAS Freiburg\\
@@ -275,7 +275,7 @@ At peak times, up to 9000 virtual cores were filled with user jobs, consuming mo
 \begin{figure}
 \begin{center}
   \includegraphics[width=1.0\linewidth]{figures/NEMO_KIT_utiliztion.pdf}
-  \caption{Utilization of the shared HPC system by booted virtual machines. Up to 9000 virtual cores were in use at peak times. The fluctuations in the utilization reflects the patterns of the submission of jobs by our institute users. The number of draining slots displays the amount of job slots still processing jobs while the rest of the node's slot are already empty.}
+  \caption{Utilization of the shared HPC system by booted virtual machines. Up to 9000 virtual cores were in use at peak times. The fluctuations in the utilization reflects the patterns of the submission of jobs by the CMS users at the physics institute in Karlsruhe. The number of draining slots displays the amount of job slots still processing jobs while the rest of the node's slot are already empty.}
   \label{fig-frplots}
 \end{center}
 \end{figure}
@@ -290,12 +290,12 @@ At the beginning the cluster was only containing the operating system and some
 basic development tools, scientific software was added after the cluster was
 already in production mode. Since the VRE for the CMS project was already
 available when the \NEMO cluster started, it could already use the whole cluster
-while other groups still had to wait for the required scientific software to be deployed on
-the cluster. This explains the high usage by VREs in the first months of
+while other groups still had to migrate from other ressources. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
-amount of VRE jobs decreased. This figure is only an estimate because VRE
-projects are not forced to use VREs and therefore could run bare-metal jobs as
-well.
+amount of VRE jobs decreased.
+% This figure is only an estimate because VRE
+% projects are not forced to use VREs and therefore could run bare-metal jobs as
+% well.
 
 % The shared usage of the \NEMO cluster between jobs running in virtual
 % machines and within the cluster operating system is illustrated in
@@ -310,10 +310,11 @@ well.
 \begin{figure}
 \begin{center}
   \includegraphics[width=\linewidth]{figures/NodeUsage_2016-09_2018-09.pdf}
-  \caption{Usage of the \NEMO cluster in the time between September 2016
+  \caption{Estimated usage of the \NEMO cluster in the time between September 2016
     to June 2018. The blue bars indicate the usage by jobs
     running directly in the hosts' operating system, while the orange bars are jobs
-    running in virtual machines.}
+    running in virtual machines. The decrease of VRE jobs is partially explained
+    by an increasing number of bare metal jobs submitted.}
   \label{fig-nodeusage}
 \end{center}
 \end{figure}
@@ -397,15 +398,13 @@ well.
 
 
 \begin{acknowledgements}
-This research is supported by the Ministerium für Wissenschaft, Forschung und
-Kunst Baden-W\"urttemberg through the bwHPC grant
+This research is supported by the Ministry of Science, Research and the Arts Baden-W\"urttemberg through the bwHPC grant
 and by the German Research Foundation (DFG) through grant no INST
 39/963-1 FUGG for the bwForCluster NEMO.
 The work of F.B. was supported by the Virtual Open Science
-Collaboration Environment (ViCE) project MWK 34-7547.221 funded by the Ministerium f\"ür Wissenschaft, Forschung und
-Kunst Baden-W\"urttemberg.
-The work of U.S. was supported by  the Bundesministerium f\"ur Bildung und Forschung in the project 05H15VFCA1 
-    “Higgs-Physik mit dem und Grid-Computing f\"ür das ATLAS-Experiment am LHC”. 
+Collaboration Environment (ViCE) project MWK 34-7547.221 funded by the Ministry of Science, Research and the Arts Baden-W\"urttemberg.
+The work of U.S. was supported by  the Bundesministerium f\"ur Bildung und Forschung in the project 05H15VFCA1
+``Higgs-Physik mit dem und Grid-Computing f\"ür das ATLAS-Experiment am LHC''.
 \end{acknowledgements}
 
 % BibTeX users please use one of
@@ -443,11 +442,16 @@ Intel. 16 November 2015, accessed 2018-09-20
 \bibitem{BeeGFS}
 BeeGFS Parallel Cluster File system:
 \url{https://www.beegfs.io/content/}, accessed 2018-09-20
+
 \bibitem{hpc-symp:2016}
 Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
   Flexible HPC: bwForCluster \NEMO,
-  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016,
+  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016
 
+\bibitem{VRE2017}
+Michael Janczyk, Bernd Wiebelt, Dirk von Suchodoletz,
+  Virtualized Research Environments on the bwForCluster \NEMO,
+  Proceedings of the 4th bwHPC Symposium October 4th 2017
 
 %\bibitem{VirtualisationScientificComp}
 %  This needs a reference
@@ -556,6 +560,18 @@ T. Sjöstrand et al: An Introduction to PYTHIA 8.2. Comput. Phys. Commun. 191 (2
 %url={http://books.ub.uni
 %heidelberg.de/heibooks/reader/download/308/308-4-79237-1-10-20171002.pdf}
 %}
+
+% {VRE2017,
+%   title={Virtualized Research Environments on the bwForCluster NEMO},
+%   booktitle={Proceedings of the 4th bwHPC Symposium October 4th, 2017,
+% Alte Aula Eberhard Karls Universit{\"a}t T{\"u}bingen},
+%   editors={Jens Kr{\"uger and Thomas Walter},
+%   author={Janczyk, Michael and Wiebelt, Bernd and von Suchodoletz, Dirk},
+%   pages={37--40},
+%   year={2017},
+%   url={http://hdl.handle.net/10900/83815},
+%   doi={http://dx.doi.org/10.15496/publikation-25205}
+% }
 
 %\bibitem{RefJ}
 % Format for Journal Reference
