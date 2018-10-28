@@ -59,7 +59,7 @@ grestore
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
 \newcommand{\Openstack}{\texttt{Open\-Stack}\xspace}
-\newcommand{\Roced}{\texttt{ROCED}\xspace}
+\newcommand{\Roced}{\texttt{Roced}\xspace}
 \newcommand{\ATLAS}{ATLAS\xspace}
 \newcommand{\CMS}{CMS\xspace}
 \newcommand{\NEMO}{NEMO\xspace}
@@ -69,8 +69,13 @@ grestore
 \newcommand{\Moab}{\texttt{Moab}\xspace}
 \newcommand{\Slurm}{\texttt{Slurm}\xspace}
 \newcommand{\BeeGFS}{\textsc{BeeGFS}\xspace}
-\newcommand{\OZ}{\texttt{OZ}\xspace}
+\newcommand{\OZ}{\texttt{Oz}\xspace}
 \newcommand{\HTCondor}{\texttt{HTCondor}\xspace}
+\newcommand{\kickstart}{\texttt{kickstart}\xspace}
+\newcommand{\sinfo}{\texttt{sinfo}\xspace}
+
+
+
 
 \usepackage{lineno}
 \linenumbers
@@ -253,8 +258,10 @@ The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \section{Analysis of performance and usage}
 
-This ROCED-based slution has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
-Particle Physics). To prove the usefulness of this approach statistical analyses of the performance of the virtualized setup both in terms of CPU benchmarks and usage statistics were conducted.
+The ROCED-based solution described above has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
+Particle Physics). To prove the usefulness of this approach
+statistical analyses of the performance of the virtualized setup both
+in terms of CPU benchmarks and usage statistics have been conducted.
 
 \subsection{Benchmarks}
 %$\to$ ATLAS Freiburg\\
@@ -288,7 +295,7 @@ jobs or VREs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
 At the beginning the cluster was only containing the operating system and some
-basic development tools, scientific software was added after the cluster was
+basic development tools. Scientific software was added after the cluster was
 already in production mode. Since the VRE for the CMS project was already
 available when the \NEMO cluster started, it could already use the whole cluster
 while other groups still had to migrate from other ressources. This explains the high usage by VREs in the first months of

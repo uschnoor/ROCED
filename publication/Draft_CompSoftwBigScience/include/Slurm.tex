@@ -4,10 +4,10 @@ the ATLAS group at University of Freiburg.
 \Slurm provides a built-in functionality for the dynamic
 startup of resources in the \textit{Slurm Elastic Computing}
 module~\cite{SlurmElastic}.
-However, this module has been found to be unsuitable for resources which are not
-expected to be available within a fixed time period, in this case due to
-the presence of a queue in the host system which may postpone the start
-of a resource by a significant, varying period.
+However, this module is based on the assumption of a fixed maximum
+startup time of the machines.
+In the considered case, due to the queue in the host system, the start of a
+resource can be delayed by a significant, varying time period.
 In addition the transfer of information, such as error states, from one scheduler to the
 other, and therefore to the user, is very limited.
 Therefore, \Roced has been chosen as the interface between the
