@@ -32,7 +32,7 @@ deployment in addition to the existing software module system.
 The resulting challenges range from the automated creation of suitable
 virtual machines to their on-demand deployment and scheduling.
 
-\subsection{Research Cluster NEMO}
+\subsection{Research Cluster \NEMO}
 
 The research cluster ``bwForCluster \NEMO'' is a cluster for state-wide
 research in the scientific fields Elementary Particle Physics, Neuroscience and
@@ -72,7 +72,7 @@ unaware that another scheduler exists within the cluster and there is
 no API which enables them to  communicate with each other. Since the majority of users still use the
 bare metal HPC cluster, \Moab is deployed as the primary scheduler. It allows for
 detailed job description and offers sophisticated scheduling features like
-fair-share, priority-based scheduling, detailed limits,
+fair-share, priority-based scheduling, detailed time limits,
 etc. \Openstack 's task is to schedule the virtual machines, but \Moab will initially start the VRE
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
 reserved resources with the required flavor, i.e. the resource definition in \Openstack.
