@@ -1,14 +1,15 @@
+Benchmark tests are performed with the primary goal to measure the performance of the CPU for High Energy Physics applications. 
 Alongside the legacy HEP-SPEC06 (HS06) benchmark \cite{Hepspec}, the performance of the compute resources is furthermore evaluated with the ATLAS Kit Validation
 KV \cite{DeSalvo:2010zza}, a fast benchmark developed to provide real-time information of the WLCG performance and available in the CERN benchmark suite \cite{Alef:2017jyx}.
 The primary target is to measure the performance of the CPU for High Energy Physics applications.
 The KV benchmark is making use of the simulation toolkit GEANT4 \cite{Agostinelli:2002hh} to simulate the interactions of single muon events in the detector of the ATLAS experiment
-and provides as ouput the number of events produced per second. It constitutes a realistic workload for this kind of jobs. \\
+and provides as ouput the number of events produced per second. It constitutes a realistic workload for High Energy Physics jobs. \\
 
 To assess the impact of the virtualization, the performance of the identical hardware configuration (20 cores Intel Xeon E5-2630 CPUs) has been determined either deployed via
 the standard bare metal operation on the \NEMO cluster (\NEMO bare metal) and on the ATLAS Tier-3 center in Freiburg (ATLAS Tier-3 bare metal), or as virtual machines on the
 \NEMO cluster (\NEMO VM). On the ATLAS Tier-3 bare metal and on the virtual machines running on the \NEMO cluster, hyper-threading (HT) technology is activated. Both are using Scientific
 Linux 6 \cite{SL6} as the operating system.
-On the cluster \NEMO bare metal jobs are restricted to 20 cores by cgroups, since the application mix is broader than on HEP clusters. The opertaing system is CentOS7 \cite{CentOS7}.
+On the cluster \NEMO bare metal jobs are restricted to 20 cores by cgroups, since the application mix is broader than on HEP clusters. The operating system is CentOS7 \cite{CentOS7}.
 The scores of the HEP-SPEC06 and KV benchmarks have been determined for these three configurations as a function of the number of cores actually used by the benchmarking processes.
 This number ranges from 2 to 40 for the ATLAS Tier-3 bare metal and for the \NEMO VM, for which HT is enabled, and from 2 to 20 for the \NEMO bare metal, for which HT is not implemented.
 The benchmarks have been run 20 times for each core multiplicity value, and the means and standard deviations of the corresponding distributions have been extracted. \\
