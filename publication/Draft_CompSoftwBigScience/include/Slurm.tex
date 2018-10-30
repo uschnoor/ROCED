@@ -18,7 +18,8 @@ scheduler on the submission side.
 \begin{figure}
 
 \includegraphics[width=0.95\linewidth]{figures/virtualisierung_ROCED.png}
-\caption{Implementation of \Roced with \Slurm on the BFG cluster used by ATLAS researchers.}
+\caption{Implementation of \Roced with \Slurm on the Tier-3 cluster of
+  the WLCG used by ATLAS researchers in Freiburg.}
 \label{fig:slurmRocedBFG}
 \end{figure}
 
@@ -38,7 +39,7 @@ available, information from the \Slurm \texttt{squeue} and
 Since the ATLAS Freiburg group comprises three sub-groups, each mapped
 to a different production account on \NEMO, special care is taken to
 avoid interference of resources used by another account to ensure fair share on \NEMO, while
-allowing jobs from one group to occupy otherwise idle resources of another group.
+nevertheless allowing jobs from one group to occupy otherwise idle resources of another group.
 
 \Roced determines the amount of virtual machines to be started and sends the
 corresponding VRE job submission commands to \Moab.
