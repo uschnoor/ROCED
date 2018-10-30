@@ -1,5 +1,5 @@
 Hardware virtualization has become mainstream technology over the last decade as it allows
-both to host more than one operating system on a single server and to strictly
+to host more than one operating system on a single server and to strictly
 separate users of software environments.
 Hardware and software stacks are decoupled and therefore complete software
 environment can be migrated across hardware boundaries.
@@ -35,16 +35,23 @@ virtual machines to their on-demand deployment and scheduling.
 \subsection{Research Cluster \NEMO}
 
 The research cluster \NEMO is a cluster for state-wide
-research in the scientific fields Elementary Particle Physics, Neuroscience and
-Microsystems Engineering. It started its operation on the 1st of August 2016
+research in the scientific fields of Elementary Particle Physics, Neuroscience and
+Microsystems Engineering. Operation started on the 1st of August 2016
 %with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
 and consists currently of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
 Omni-Path~\cite{Omnipath} spans a high speed low latency network of 100\,Gbit/s between nodes.
-The parallel storage is based on \BeeGFS~\cite{BeeGFS} with
-% 576\,TB capacity.
-768\,TB capacity.
+The parallel storage has
+768\,TB of usable capacity and is based on \BeeGFS~\cite{BeeGFS}.
 %In October 2017 the \NEMO cluster was extended by research groups and offers
 %currently 900 nodes and a total capacity of 768\,TB of parallel storage.
+
+A pre-requirement to execute a VRE is the efficient
+provisioning of data which has to cross institutional boundaries in the CMS use-case.
+To transfer the input data into the VRE from the storage system at
+the KIT and to store back the results a signficant bandwidth is needed. The
+NEMO cluster is connected with two 40\,Gbit/s links to the main router of the
+University of Freiburg which itself is linked to the BelWue at
+100\,Gbit/s.
 
 \subsection{Separation of software environments}
 
