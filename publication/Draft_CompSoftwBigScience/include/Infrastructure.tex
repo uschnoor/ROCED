@@ -1,8 +1,8 @@
 Hardware virtualization has become mainstream technology over the last decade as it allows
 to host more than one operating system on a single server and to strictly
 separate users of software environments.
-Hardware and software stacks are decoupled and therefore complete software
-environment can be migrated across hardware boundaries.
+Hardware and software stacks are decoupled, such that complete software
+environments can be migrated across hardware boundaries.
 While widespread in computer center
 operation this technique is rarely applied in HPC.
 % it is still skeptically seen in the field of scientific computing~\cite{VirtualisationScientificComp} and
@@ -36,10 +36,9 @@ virtual machines to their on-demand deployment and scheduling.
 
 The research cluster \NEMO is a cluster for 
 research in the federal state of Baden-W\"urttemberg in the scientific fields of Elementary Particle Physics, Neuroscience and
-Microsystems Engineering. Operation started on the 1st of August 2016
-%with then 748 nodes having 20 physical cores and 128\,GiB of RAM each.
-and consists currently of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
-Omni-Path~\cite{Omnipath} spans a high speed low latency network of 100\,Gbit/s between nodes.
+Microsystems Engineering. Operation started on  August 1, 2016.
+It currently consists of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
+Omni-Path~\cite{Omnipath} spans a high-speed, low-latency network of 100\,Gbit/s between nodes.
 The parallel storage has
 768\,TB of usable capacity and is based on \BeeGFS~\cite{BeeGFS}.
 %In October 2017 the \NEMO cluster was extended by research groups and offers
@@ -47,8 +46,8 @@ The parallel storage has
 
 A pre-requirement to execute a VRE is the efficient
 provisioning of data which has to cross institutional boundaries in the CMS use-case.
-To transfer the input data into the VRE from the storage system at
-the KIT and to store back the results a signficant bandwidth is needed. The
+A signficant bandwidth is needed to transfer the input data into the VRE from the storage system at
+the Karlsruhe Institute of Technology (KIT) and to store back the results. The
 NEMO cluster is connected with two 40\,Gbit/s links to the main router of the
 University of Freiburg which itself is linked to the network of
 scientific institutions in Baden-W\"urttemberg, BelW\"u, at
@@ -85,10 +84,10 @@ etc. \Openstack 's task is to deploy the virtual machines, but \Moab will initia
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
 reserved resources with the required flavor, i.e. the resource definition in \Openstack.
 
-When a VRE job is submitted to the \NEMO cluster, \Moab will first calculate the
+When a VRE job is submitted to the \NEMO cluster, \Moab  first calculates the
 priority and the needed resources of the job and then inserts it into its queue.
 When the job is in line for execution and the requested resources are available,
-the job will start a script which then starts the VRE on the selected node
+the job  runs a script which then starts the VRE on the selected node
 within the resource boundaries. During the run-time of the VRE a monitoring
 script regularly checks if the VRE is still running and terminates the job when
 the VRE has ended.

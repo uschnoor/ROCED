@@ -59,7 +59,7 @@ grestore
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
 \newcommand{\Openstack}{\texttt{Open\-Stack}\xspace}
-\newcommand{\Roced}{\texttt{Roced}\xspace}
+\newcommand{\Roced}{{ROCED}\xspace}
 \newcommand{\ATLAS}{ATLAS\xspace}
 \newcommand{\CMS}{CMS\xspace}
 \newcommand{\NEMO}{NEMO\xspace}
@@ -245,13 +245,13 @@ re\-search groups ad\-di\-tion\-al\-ly require work\-flow
 ma\-na\-ge\-ment sys\-tems capable of maintaining thousands of batch
 jobs. Some cloud providers, for example Amazon with AWS
 Batch~\cite{awsbatch}, provide a service for workflow management,
-however these offerings are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalabe batch system and a virtual machine scheduler is desirable.
+however these offers are often limited to one specific cloud instance. To dynamically distribute batch jobs to multiple sites and manage machine life-time on specific sites, a combination of a highly-scalable batch system and a virtual machine scheduler is desirable.
 
 \subsection{\Roced}
 \begin{figure*}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{figures/roced_design_flat.pdf}
-  \caption{Overview of the \Roced modular design. The  \Roced Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on an cloud site and the Integration Adapter ensure that newly booted machines are integrated into the batch system.}
+  \caption{Overview of the \Roced modular design. The  \Roced Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on a cloud site and the Integration Adapters ensure that newly booted machines are integrated into the batch system.}
   \label{fig-roced}
 \end{center}
 \end{figure*}
@@ -286,7 +286,7 @@ The modular design of \Roced is shown in Fig.~\ref{fig-roced}.
 
 \section{Analysis of performance and usage}
 
-The ROCED-based solution described above has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the Karlsruhe Institute of Technology (Institute of Experimental
+The ROCED-based solution described above has been implemented and put into production by the research groups at the University of Freiburg (Institute of Physics) and the KIT (Institute of Experimental
 Particle Physics). To prove the usefulness of this approach
 statistical analyses of the performance of the virtualized setup both
 in terms of CPU benchmarks and usage statistics have been conducted.
@@ -319,7 +319,7 @@ At peak times, up to 9000 virtual cores were filled with user jobs, consuming mo
 The usage of the hybrid cluster model is presented in Fig.~\ref{fig-nodeusage}.
 The diagram shows the shared usage of \NEMO's cluster nodes running either
 bare-metal or virtualized jobs. The part of the cluster which runs virtualized
-jobs or VREs changes dynamically from job to job, since the VREs are started by
+jobs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
 At the beginning the cluster was only containing the operating system and some
@@ -328,7 +328,7 @@ already in production mode. Since the VRE for the CMS project was already
 available when the \NEMO cluster started, it could already use the whole cluster
 while other groups still had to migrate from other ressources. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
-amount of VRE jobs decreased.
+fraction of VRE jobs decreased.
 % This figure is only an estimate because VRE
 % projects are not forced to use VREs and therefore could run bare-metal jobs as
 % well.
@@ -462,18 +462,23 @@ and Research within the project 05H15VKCCA ``Physik bei h\"ochsten Energien mit 
 % for authors for reference list style.
 %
 \bibitem{HLLHCcompneeds}
-  ATLAS Public results
-  \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/diskHLLHC.pdf},
+  ATLAS Collaboration (2018) Estimation of ATLAS computing needs vs
+  predictable increase on a flat budget. ATLAS Public results
+  \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/cpuHLLHC.pdf},
   accessed 2018-09-19
 
-\bibitem{wlcg} LHC Computing Grid: Technical Design Report, 
-  CERN-LHCC-2005-024 20, June 2005
+\bibitem{wlcg}	Eck C, Knobloch J, Robertson L, Bird I, Bos K, Brook
+  N, Düllmann D, Fisk I, Foster D, Gibbard B, Grandi C, Grey F, Harvey
+  J, Heiss A, Hemmer F, Jarp S, Jones R, Kelsey D, Lamanna M, Marten
+  H, Mato-Vila P, Ould-Saada F, Panzer-Steindel B, Perini L, Schutz Y,
+  Schwickerath U, Shiers J, Wenaus T (2005) LHC Computing Grid: Technical Design Report, 
+  CERN-LHCC-2005-024
 
 
 \bibitem{nemo} bwForCluster \NEMO \url{https://www.hpc.uni-freiburg.de/nemo}, accessed 2018-10-21
   
 \bibitem{Openstack}
-OpenStack Open Source Cloud Computing Software
+OpenStack: Open Source Cloud Computing Software
 \url{https://www.openstack.org/}, accessed 2018-07-03
 
 \bibitem{ROCED}
@@ -481,28 +486,24 @@ OpenStack Open Source Cloud Computing Software
 \url{https://github.com/roced-scheduler/ROCED}, accessed 2018-07-03
 
 \bibitem{Omnipath}
-  Omni-Path:
-"Intel Architects High Performance Computing System Designs to Bring
-Power of Supercomputing Mainstream",
-\texttt{\href{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/}{https://newsroom.intel.com/news-releases/intel-\\architects-high-performance-computing-system-\\designs-to-bring-power-of-supercomputing-mainstream}},
-Intel. 16 November 2015, accessed 2018-09-20
+ Intel (2015) Omni-Path:
+Intel Architects High Performance Computing System Designs to Bring
+Power of Supercomputing Mainstream,
+\texttt{\href{https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream/}{https://newsroom.intel.com/news-releases/intel-\\architects-high-performance-computing-system-\\designs-to-bring-power-of-supercomputing-mainstream}}, accessed 2018-09-20
 %https://newsroom.intel.com/news-releases/intel-architects-high-performance-computing-system-designs-to-bring-power-of-supercomputing-mainstream
 \bibitem{BeeGFS}
 BeeGFS Parallel Cluster File system:
 \url{https://www.beegfs.io/content/}, accessed 2018-09-20
 
 \bibitem{hpc-symp:2016}
-Dirk von Suchodoletz, Bernd Wiebelt, Konrad Meier, Michael Janczyk,
+ von Suchodoletz D,  Wiebelt B,  Meier K,  Janczyk M (2016)
   Flexible HPC: bwForCluster \NEMO,
-  Proceedings of the 3rd bwHPC-Symposium: Heidelberg 2016
+  Proceedings of the 3rd bwHPC-Symposium % in Heidelberg
 
 \bibitem{VRE2017}
-Michael Janczyk, Bernd Wiebelt, Dirk von Suchodoletz,
+ Janczyk M,  Wiebelt B, von Suchodoletz D (2017)
   Virtualized Research Environments on the bwForCluster \NEMO,
-  Proceedings of the 4th bwHPC Symposium October 4th 2017
-
-%\bibitem{VirtualisationScientificComp}
-%  This needs a reference
+  Proceedings of the 4th bwHPC Symposium 
 
 
 \bibitem{Moab}
@@ -514,10 +515,11 @@ Packer: tool for creating machine and container images for multiple platforms fr
 \url{https://www.packer.io/}, accessed 2018-07-03
 
 \bibitem{kickstart}
+ Redhat: Kickstart
 \url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/installation_guide/ch-kickstart2}, accessed 2018-07-03
 
 \bibitem{puppet}
-Puppet Enterprise. ``IT automation for cloud, security, and DevOps.''
+Puppet Enterprise. IT automation for cloud, security, and DevOps.
 \url{https://puppet.com/}, accessed 2018-07-03
 
 
@@ -538,7 +540,7 @@ HTCondor Connection Brokering
 \url{http://research.cs.wisc.edu/htcondor/manual/v8.6/3_9Networking_includes.html}, accessed 2018-07-03
 
 \bibitem{Slurm}
-  Slurm
+  Slurm workload manager
   \url{https://slurm.schedmd.com}, accessed 2018-07-03
     
 \bibitem{SlurmElastic}
@@ -551,27 +553,22 @@ Slurm Elastic Computing
 
 
 \bibitem{Alef:2017jyx}
-M.~Alef {\it et al.},
-``Benchmarking cloud resources for HEP'',
+Alef M  et al. (2017) Benchmarking cloud resources for HEP,
 J.\ Phys.\ Conf.\ Ser.\  {\bf 898} (2017) no.9,  092056.
 doi:10.1088/1742-6596/898/9/092056
 %%CITATION = doi:10.1088/1742-6596/898/9/092056;%%
 
-\bibitem{DB12}
-Graciani, Ricardo and Andrew McNab, Dirac benchmark 2012, 
-\url{https://gitlab.cern.ch/mcnab/dirac-benchmark/tree/master}
-
 \bibitem{DeSalvo:2010zza}
-A.~De Salvo and F.~Brasolin,
-``Benchmarking the ATLAS software through the kit validation engine'',
+De Salvo A and Brasolin F (2010)
+Benchmarking the ATLAS software through the kit validation engine,
 J.\ Phys.\ Conf.\ Ser.\  {\bf 219} (2010) 042037.
 doi:10.1088/1742-6596/219/4/042037
 %%CITATION = doi:10.1088/1742-6596/219/4/042037;%%
 %4 citations counted in INSPIRE as of 11 Sep 2018
 
 \bibitem{Agostinelli:2002hh}                               
-S.~Agostinelli {\it et al.} [GEANT4 Collaboration],        
-``GEANT4: A Simulation toolkit'',                          
+Agostinelli S  et al. [GEANT4 Collaboration] (2003),        
+GEANT4: A Simulation toolkit,                          
 Nucl.\ Instrum.\ Meth.\ A {\bf 506} (2003) 250.            
 doi:10.1016/S0168-9002(03)01368-8                          
 %%CITATION = doi:10.1016/S0168-9002(03)01368-8;%%          
@@ -579,13 +576,13 @@ doi:10.1016/S0168-9002(03)01368-8
 
 \bibitem{SL6}
 Fermilab and CERN,
-``Scientific Linux 6'',
-\url{http://www.scientificlinux.org/}
+Scientific Linux 6,
+\url{http://www.scientificlinux.org/}, accessed 2018-11-03
 
 \bibitem{CentOS7}
 The CentOS Project,
-``CentOS Linux 7'',
-\url{https://www.centos.org/}
+CentOS Linux 7,
+\url{https://www.centos.org/}, accessed 2018-11-03
 
 
 
