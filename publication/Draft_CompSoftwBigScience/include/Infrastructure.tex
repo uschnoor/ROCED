@@ -12,23 +12,23 @@ operation this technique is rarely applied in HPC.
 % Infrastructure setting
 
 The computer center at the University of Freiburg provides
-medium scaled research
+medium scale research
 infrastructures like cloud, storage, and especially HPC services adapted to the
 needs of various scientific communities. Significant standardization
 in hardware and software is necessary for the operation of compute systems comprised of
-more than 1000 individual nodes combined with a small group of administrators.
+more than 1000 individual nodes by a small group of administrators.
 
-The level of granularity of the software stack provided is not fine enough to
-directly support the requirements of world-wide efforts like the
-ATLAS or CMS experiments.
-Therefore, novel approaches are necessary to ensure optimal use of the system and to open the cluster to as many different use-cases as
+To support whole research environments wich are required by world-wide efforts like the
+ATLAS or CMS experiments, novel approaches are necessary to ensure optimal use of the system
+and to open the cluster to as many different use-cases as
 possible without increasing the operational effort.
 Transferring expertise from the operation of the established local
 private cloud, %in cooperation with the ViCE project~\cite{vice},
 the use of \Openstack as a cloud platform has been identified
 as a
 suitable solution for \NEMO. This approach provides a user defined software
-deployment in addition to the existing software module system.
+deployment in addition to the existing software modules environment used for
+providing different kinds of software packages \cite{online:modules}.
 The resulting challenges range from the automated creation of suitable
 virtual machines to their on-demand deployment and scheduling.
 
@@ -38,9 +38,9 @@ The research cluster \NEMO is a cluster for
 research in the federal state of Baden-W\"urttemberg in the scientific fields of Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. Operation started on  August 1, 2016.
 It currently consists of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
-Omni-Path~\cite{Omnipath} spans a high-speed, low-latency network of 100\,Gbit/s between nodes.
+Omni-Path~\cite{Omnipath} provides a high-speed, low-latency network of 100\,Gbit/s between nodes.
 The parallel storage has
-768\,TB of usable capacity and is based on \BeeGFS~\cite{BeeGFS}.
+768 TB of usable capacity and is based on \BeeGFS~\cite{BeeGFS}.
 %In October 2017 the \NEMO cluster was extended by research groups and offers
 %currently 900 nodes and a total capacity of 768\,TB of parallel storage.
 
@@ -82,17 +82,19 @@ detailed job description and offers sophisticated scheduling features like
 fair-share, priority-based scheduling, detailed time limits,
 etc. \Openstack 's task is to deploy the virtual machines, but \Moab will initially start the VRE
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
-reserved resources with the required flavor, i.e. the resource definition in \Openstack.
+reserved resources with the required flavor, i.e. according to the resource definition in \Openstack.
 
-When a VRE job is submitted to the \NEMO cluster, \Moab  first calculates the
+A VRE job is like any other bare-atal job.
+When a VRE job is submitted to the \NEMO cluster, \Moab first calculates the
 priority and the needed resources of the job and then inserts it into its queue.
-When the job is in line for execution and the requested resources are available,
-the job  runs a script which then starts the VRE on the selected node
-within the resource boundaries. During the run-time of the VRE a monitoring
-script regularly checks if the VRE is still running and terminates the job when
-the VRE has ended.
-When the job ends, \Openstack gets a signal to terminate the virtual machine and
-the VRE job ends as well.  Neither \Moab nor \Openstack have access
+If the VRE job is in line for execution and the requested resources are available,
+the job runs a script which starts the VRE (a virtual machine in our case) on the selected node
+within the resource boundaries. This can be compared to a bare-metal job script starting a scientific software.
+During the run-time of the virtual machine (VRE) the job runs a monitoring
+script which regularly checks if the virtual machine is still running.
+When the VRE teminates by an internal shutdown of the virtal machine the VRE job ends, as well.
+If the VRE job ends e.g. when it hits the wall-time, \Openstack gets a signal to terminate the virtual machine and
+the VRE job ends as well. Neither \Moab nor \Openstack have access
 inside the VRE, so they cannot assess if the VRE is actually busy or
 idle.
 The software package \Roced (described in
