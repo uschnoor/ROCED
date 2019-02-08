@@ -219,7 +219,7 @@ The research cluster \NEMO is a cluster for
 research in the federal state of Baden-W\"urttemberg in the scientific fields of Elementary Particle Physics, Neuroscience and
 Microsystems Engineering. Operation started on  August 1, 2016.
 It currently consists of 900 nodes with 20 physical cores and 128\,GiB of RAM each.
-Omni-Path~\cite{Omnipath} spans a high-speed, low-latency network of 100\,Gbit/s between nodes.
+Omni-Path~\cite{Omnipath} provides a high-speed, low-latency network of 100\,Gbit/s between nodes.
 The parallel storage has
 768\,TB of usable capacity and is based on \BeeGFS~\cite{BeeGFS}.
 
@@ -262,18 +262,20 @@ detailed job description and offers sophisticated scheduling features like
 fair-share, priority-based scheduling, detailed time limits,
 etc. \Openstack 's task is to deploy the virtual machines, but \Moab will initially start the VRE
 jobs and the VRE job will instruct \Openstack to start the virtual machine on the
-reserved resources with the required flavor, i.e. the resource definition in \Openstack.
+reserved resources with the required flavor, i.e. according to the resource definition in \Openstack.
 
+A VRE job is like any other bare-metal job.
 When a VRE job is submitted to the \NEMO cluster, \Moab  first calculates the
 priority and the needed resources of the job and then inserts it into its queue.
-When the job is in line for execution and the requested resources are available,
-the job  runs a script which then starts the VRE on the selected node
-within the resource boundaries. During the run-time of the VRE a monitoring
-script regularly checks if the VRE is still running and terminates the job when
-the VRE has ended.
-When the job ends, \Openstack gets a signal to terminate the virtual machine and
-the VRE job ends as well.  Neither \Moab nor \Openstack have access
-inside the VRE, so they cannot assess if the VRE is actually busy or
+If the VRE job is in line for execution and the requested resources are available,
+the job runs a script which starts the VRE (a virtual machine in our case) on the selected node
+within the resource boundaries. This can be compared to a bare-metal job script starting a scientific software.
+During the run-time of the virtual machine (VRE) the job runs a monitoring
+script which regularly checks if the virtual machine is still running.
+When the VRE teminates by an internal shutdown of the virtal machine, the VRE job ends.
+If the VRE job ends e.g. when it hits the wall-time, \Openstack gets a signal to terminate the virtual machine and
+the VRE job ends as well. Neither \Moab nor \Openstack have access
+ inside the VRE, so they cannot assess if the VRE is actually busy or
 idle.
 The software package \Roced (described in
 further detail in Section~\ref{section:roced}) has been introduced to
@@ -283,9 +285,8 @@ different HPC schedulers,  translating resources and monitoring usage inside the
 virtual machine, as well as starting and stopping VRE images on demand.
 
 \section{Generation of the VRE image}
-The VREs for ATLAS and CMS software environments consist in \Openstack containers
-in the format of compatible VM images.
-These images are provided in an automatized
+The VREs for ATLAS and CMS software environments consist in \Openstack compatible VM images.
+These virtual machines are provided in an automatized
 way allowing versioning and archiving of the environments captured in
 the images.
 
@@ -482,12 +483,14 @@ a standard bare-metal job.
 
 At the beginning the cluster was only containing the operating system and some
 basic development tools. Scientific software was added after the cluster was
-already in production mode. Since the VRE for the CMS project was already
+already in production mode. Since the VRE for the CMS group at the KIT was already
 available when the \NEMO cluster started, it could already use the whole cluster
 while other groups still had to migrate from other ressources. This explains the high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
-fraction of VRE jobs decreased.
-
+type of jobs started to increase in numbers and the fraction of VRE
+jobs decreased. A longer job queue and other remote cluster ressources are
+another explanation, since ROCED dynamically queues VRE jobs depending on the
+queue length on the remote sites.
 
 \begin{figure}
 \begin{center}
@@ -599,7 +602,7 @@ Collaboration Environment (ViCE) project MWK 34-7547.221 funded by the
 Ministry of Science, Research and the Arts Baden-W\"urttemberg.
 The work of U.S. was supported by  the Federal Ministry of Education
 and Research within the project 05H15VFCA1
-``Higgs-Physik mit dem und Grid-Computing f\"ür das ATLAS-Experiment
+``Higgs-Physik mit dem und Grid-Computing f\"ur das ATLAS-Experiment
 am LHC''.
 The work of T.H. was supported by the Federal Ministry of Education
 and Research within the project 05H15VKCCA ``Physik bei h\"ochsten Energien mit dem CMS-Experiment
@@ -625,7 +628,7 @@ and Research within the project 05H15VKCCA ``Physik bei h\"ochsten Energien mit 
   accessed 2018-09-19
 
 \bibitem{wlcg}	Eck C, Knobloch J, Robertson L, Bird I, Bos K, Brook
-  N, Düllmann D, Fisk I, Foster D, Gibbard B, Grandi C, Grey F, Harvey
+  N, D\"ullmann D, Fisk I, Foster D, Gibbard B, Grandi C, Grey F, Harvey
   J, Heiss A, Hemmer F, Jarp S, Jones R, Kelsey D, Lamanna M, Marten
   H, Mato-Vila P, Ould-Saada F, Panzer-Steindel B, Perini L, Schutz Y,
   Schwickerath U, Shiers J, Wenaus T (2005) LHC Computing Grid: Technical Design Report, 
@@ -741,8 +744,10 @@ The CentOS Project,
 CentOS Linux 7,
 \url{https://www.centos.org/}, accessed 2018-11-03
 
-
-
+\bibitem{online:modules}
+Environment Modules open source project,
+Environment Modules,
+\url{http://modules.sourceforge.net}, accessed 2019-02-07
 
 %\bibitem{RefJ}
 % Format for Journal Reference
