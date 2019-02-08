@@ -163,9 +163,8 @@ evaluated for particle physics applications.
 
 \input{include/Infrastructure.tex}
 \section{Generation of the VRE image}
-The VREs for ATLAS and CMS software environments consist in \Openstack containers
-in the format of compatible VM images.
-These images are provided in an automatized
+The VREs for ATLAS and CMS software environments consist in \Openstack compatible VM images.
+These virtual machines are provided in an automatized
 way allowing versioning and archiving of the environments captured in
 the images.
 % The approaches used in the
@@ -270,13 +269,29 @@ bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
+\begin{figure}[ht]
+\centering
+  \includegraphics[width=\linewidth]{figures/NodeUsage_2016-09_2018-09.pdf}
+  \caption{Estimated usage of the \NEMO cluster in the time from September 2016
+    to September 2018. The orange bars indicate the usage by jobs
+    running directly in the hosts' operating system, while the blue bars are jobs
+    running in virtual machines. The decrease of VRE jobs is partially explained
+    by an increasing number of bare-metal jobs submitted.}
+  \label{fig-nodeusage}
+\end{figure}
+
 At the beginning the cluster was only containing the operating system and some
 basic development tools. Scientific software was added after the cluster was
-already in production mode. Since the VRE for the CMS project was already
+already in production mode. Since the VRE for the CMS collaboration was already
 available when the \NEMO cluster started, it could already use the whole cluster
-while other groups still had to migrate from other ressources. This explains the high usage by VREs in the first months of
+while other groups still had to migrate from other ressources. This explains the
+high usage by VREs in the first months of
 operation. With more and more software being available for bare-metal usage the
-fraction of VRE jobs decreased.
+type of job stared to increase in numbers and the fraction of VRE
+jobs decreased. A longer job queue and other remote cluster ressources are
+another explanation, since ROCED dynamically queues VRE jobs depending on the
+queue length on the remote sites.
+
 % This figure is only an estimate because VRE
 % projects are not forced to use VREs and therefore could run bare-metal jobs as
 % well.
@@ -290,18 +305,6 @@ fraction of VRE jobs decreased.
 % completely flexible and can be adapted to the current needs and
 % priorities of the user community.
 
-
-\begin{figure}
-\begin{center}
-  \includegraphics[width=\linewidth]{figures/NodeUsage_2016-09_2018-09.pdf}
-  \caption{Estimated usage of the \NEMO cluster in the time from September 2016
-    to September 2018. The orange bars indicate the usage by jobs
-    running directly in the hosts' operating system, while the blue bars are jobs
-    running in virtual machines. The decrease of VRE jobs is partially explained
-    by an increasing number of bare metal jobs submitted.}
-  \label{fig-nodeusage}
-\end{center}
-\end{figure}
 
 \section{Conclusions and Outlook}
 \input{include/Conclusions}
@@ -532,8 +535,10 @@ The CentOS Project,
 CentOS Linux 7,
 \url{https://www.centos.org/}, accessed 2018-11-03
 
-
-
+\bibitem{online:modules}
+Environment Modules open source project,
+Environment Modules,
+\url{http://modules.sourceforge.net}, accessed 2019-02-07
 
 %title={Flexible HPC: bwForCluster NEMO},
 %authors={Dirk von Suchodoletz and Bernd Wiebelt and Konrad Meier and
