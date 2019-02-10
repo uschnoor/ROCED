@@ -129,13 +129,9 @@ G\"unter Quast \and  Beno\^it Roland  \and Ulrike Schnoor \and
 \maketitle
 
 \begin{abstract}
-The \NEMO High Performance Computing Cluster at the University of
-Frei\-burg has been made available to
-researchers of the \ATLAS and \CMS experiments.
-Users access the cluster from external machines connected to the
-World-wide LHC Computing Grid (WLCG).
- This paper describes how the full software environment of the WLCG
- is provided in a virtual machine image. The interplay between the
+
+A setup for dynamically providing resources of an external, non-dedicated cluster to researchers of the ATLAS and CMS experiments in the WLCG environment is described as it has been realized at the NEMO High Performance Computing cluster at the University of Freiburg. Techniques to provide the full WLCG software environment in a virtual machine image are described. The interplay
+between the
  schedulers for \NEMO and for the external
  clusters is coordinated through the \Roced service.
 A cloud computing infrastructure is deployed at \NEMO to orchestrate the
@@ -165,11 +161,12 @@ Grid (WLCG)~\cite{wlcg} resources
 allocated by the collaborations.
 
 
-This paper presents the concepts and implementation of providing a HPC resource, the
+This paper presents the concepts and their implementation of providing a HPC resource, the
 shared research cluster \NEMO~\cite{nemo} at the University of Freiburg, to ATLAS and CMS users accessing external clusters connected to the WLCG with the purpose of accommodating data production as well as
-data analysis on the HPC host system. The HPC cluster \NEMO at
-the University of Freiburg is deploying an \Openstack~\cite{Openstack} instance to handle the
-virtual machines. The challenge is in provisioning, setup, scheduling, and decommissioning the virtual research environments (VRE) dynamically and according to demand. For this purpose, the schedulers on \NEMO and on the external resources are
+data analysis on the HPC host system.
+The  \NEMO cluster deploys an \Openstack~\cite{Openstack} instance to handle the
+virtual machines. The challenge is in dynamically provisioning,
+setting up, scheduling, and decommissioning the virtual research environments (VRE)  according to demand. For this purpose, the schedulers on \NEMO and on the external resources are
 connected through the \Roced service~\cite{ROCED}.
 
 
@@ -182,7 +179,7 @@ as it would be installed on a compute cluster fitted to the demands of ATLAS or 
 
 Hardware virtualization has become mainstream technology over the last decade as it allows
 to host more than one operating system on a single server and to strictly
-separate users of software environments.
+separate users of different software environments.
 Hardware and software stacks are decoupled, such that complete software
 environments can be migrated across hardware boundaries.
 While widespread in computer center
@@ -193,23 +190,23 @@ operation this technique is rarely applied in HPC.
 
 
 The computer center at the University of Freiburg provides
-medium scaled research
+medium scale research
 infrastructures like cloud, storage, and especially HPC services adapted to the
 needs of various scientific communities. Significant standardization
 in hardware and software is necessary for the operation of compute systems comprised of
-more than 1000 individual nodes combined with a small group of administrators.
+more than 1000 individual nodes by a small group of administrators.
 
-The level of granularity of the software stack provided is not fine enough to
-directly support the requirements of world-wide efforts like the
-ATLAS or CMS experiments.
-Therefore, novel approaches are necessary to ensure optimal use of the system and to open the cluster to as many different use-cases as
+To support complete research environments which are required by world-wide efforts like the
+ATLAS or CMS experiments, novel approaches are necessary to ensure optimal use of the system
+and to open the cluster to as many different use-cases as
 possible without increasing the operational effort.
 Transferring expertise from the operation of the established local
 private cloud, 
 the use of \Openstack as a cloud platform has been identified
 as a
 suitable solution for \NEMO. This approach provides a user defined software
-deployment in addition to the existing software module system.
+deployment in addition to the existing software  modules environment used for
+providing different kinds of software packages \cite{online:modules}.
 The resulting challenges range from the automated creation of suitable
 virtual machines to their on-demand deployment and scheduling.
 
@@ -296,7 +293,7 @@ the images.
 One approach to generate the image is the open-source tool
 \Packer~\cite{packer}, interfaced to the system configuration framework \Puppet~\cite{puppet}.
 \Packer allows to configure an image based on an ISO image file using a \kickstart~\cite{kickstart} file and flexible script-based configuration. 
-It also provides an interface to \Puppet making it particularly convenient if an existing \Puppet role is to be used for the images. If the roles are defined according to the hostname of the machine as is conventional in \Puppet with \Hieradata, the hostname needs to be set in the scripts supplied to \Packer. Propagation of certificates requires an initial manual start of a machine with the same hostname to allow handshake signing of the certificate from the \Puppet server.
+It also provides an interface to \Puppet making it particularly convenient if an existing \Puppet role is to be used for the images. If the roles are defined according to the hostname of the machine as is conventional in \Puppet with \texttt{Hiera}, the hostname needs to be set in the scripts supplied to \Packer. Propagation of certificates requires an initial manual start of a machine with the same hostname to allow handshake signing of the certificate from the \Puppet server.
 
 \Packer's interface to \Puppet allows a fully automated image generation with up-to-date and version-controlled configuration. At the end of the generation run, the image is  transferred to the \Openstack image server.
 
@@ -329,7 +326,14 @@ however these offers are often limited to one specific cloud instance. To dynami
 \begin{figure*}
 \begin{center}
   \includegraphics[width=0.9\linewidth]{roced_design_flat.pdf}
-  \caption{Overview of the \Roced modular design. The  \Roced Core contains the Broker which decides when and on which sites new virtual machines are booted. The Requirement Adapters report about the utilization and resource requirements of the attached batch systems. The Site Adapter is responsible to manage the lifetime of virtual machines on a cloud site and the Integration Adapters ensure that newly booted machines are integrated into the batch system.}
+  \caption{Overview of the \Roced modular design. The  \Roced Core
+    contains the Broker which decides when and on which sites new
+    virtual machines are booted. The Requirement Adapters report about
+    the utilization and resource requirements of the attached batch
+    systems. The Site Adapter is responsible to manage the lifetime of
+    virtual machines on a cloud site and the Integration Adapters
+    ensure that newly booted machines are integrated into the batch
+    system. From~\cite{ROCED}.}
   \label{fig-roced}
 \end{center}
 \end{figure*}
@@ -364,7 +368,7 @@ This client is started after the machine has fully booted and connects to the ce
 
 Alternatively to the approach described above, the
 open-source workload managing system \Slurm~\cite{Slurm} has been interfaced into \Roced by
-the ATLAS group at University of Freiburg.
+the ATLAS group at the University of Freiburg.
 \Slurm provides a built-in functionality for the dynamic
 startup of resources in the \textit{Slurm Elastic Computing}
 module~\cite{SlurmElastic}.
@@ -481,12 +485,12 @@ bare-metal or virtualized jobs. The part of the cluster which runs virtualized
 jobs changes dynamically from job to job, since the VREs are started by
 a standard bare-metal job.
 
-At the beginning the cluster was only containing the operating system and some
-basic development tools. Scientific software was added after the cluster was
-already in production mode. Since the VRE for the CMS group at the KIT was already
-available when the \NEMO cluster started, it could already use the whole cluster
-while other groups still had to migrate from other resources. This explains the high usage by VREs in the first months of
-operation. With more and more software being available for bare-metal usage the
+Initially almost the whole \NEMO  cluster was available to the CMS users,
+since they could already profit from their VRE being deployed while
+other users had to wait for the installation of specific scientific
+software.
+This explains the high usage by VREs in the first months of
+operation. As more and more software became available for bare-metal usage the
 type of jobs started to increase in numbers and the fraction of VRE
 jobs decreased. A longer job queue and other remote cluster resources are
 another explanation, since ROCED dynamically queues VRE jobs depending on the
@@ -518,8 +522,8 @@ in a high energy physics context on an external, not dedicated resource as
 realized at the HPC cluster \NEMO at the University of Freiburg has been
 implemented. An interface between the schedulers of the
 host system and the external systems from which requests are sent is needed to
-monitor and steer jobs in a scalable way. For this workflow the cloud meta-scheduler \Roced
-has been implemented and deployed for the described use-cases.
+monitor and steer jobs in a scalable way.
+This interface has been provided by the deployment of the cloud meta-scheduler \Roced.
 The approach can be adapted to work with other platforms and could be extended to
 container technologies like Singularity~\cite{VRE2017}.
 
@@ -627,11 +631,13 @@ and Research within the project 05H15VKCCA ``Physik bei h\"ochsten Energien mit 
   \url{https://twiki.cern.ch/twiki/pub/AtlasPublic/ComputingandSoftwarePublicResults/cpuHLLHC.pdf},
   accessed 2018-09-19
 
-\bibitem{wlcg}	Eck C, Knobloch J, Robertson L, Bird I, Bos K, Brook
-  N, D\"ullmann D, Fisk I, Foster D, Gibbard B, Grandi C, Grey F, Harvey
-  J, Heiss A, Hemmer F, Jarp S, Jones R, Kelsey D, Lamanna M, Marten
-  H, Mato-Vila P, Ould-Saada F, Panzer-Steindel B, Perini L, Schutz Y,
-  Schwickerath U, Shiers J, Wenaus T (2005) LHC Computing Grid: Technical Design Report, 
+\bibitem{wlcg}	Eck C et al
+%	Eck C, Knobloch J, Robertson L, Bird I, Bos K, Brook
+%  N, D\"ullmann D, Fisk I, Foster D, Gibbard B, Grandi C, Grey F, Harvey
+%  J, Heiss A, Hemmer F, Jarp S, Jones R, Kelsey D, Lamanna M, Marten
+%  H, Mato-Vila P, Ould-Saada F, Panzer-Steindel B, Perini L, Schutz Y,
+%  Schwickerath U, Shiers J, Wenaus T
+  (2005) LHC Computing Grid: Technical Design Report, 
   CERN-LHCC-2005-024
 
 
@@ -644,6 +650,11 @@ OpenStack: Open Source Cloud Computing Software
 \bibitem{ROCED}
 \Roced Cloud Meta-Scheduler project website
 \url{https://github.com/roced-scheduler/ROCED}, accessed 2018-07-03
+
+\bibitem{online:modules}
+Environment Modules open source project,
+Environment Modules,
+\url{http://modules.sourceforge.net}, accessed 2019-02-07
 
 \bibitem{Omnipath}
  Intel (2015) Omni-Path:
@@ -710,7 +721,7 @@ Slurm Elastic Computing
 
 \bibitem{Hepspec} HEPiX Benchmarking Working Group:
 \url{https://twiki.cern.ch/twiki/bin/view/FIOgroup/TsiBenchHEPSPEC}
-and \url{http://w3.hepix.org/benchmarking.html} accessed 2018-01-29
+and \url{http://w3.hepix.org/benchmarking.html}, accessed 2018-01-29
 
 
 
@@ -744,10 +755,6 @@ The CentOS Project,
 CentOS Linux 7,
 \url{https://www.centos.org/}, accessed 2018-11-03
 
-\bibitem{online:modules}
-Environment Modules open source project,
-Environment Modules,
-\url{http://modules.sourceforge.net}, accessed 2019-02-07
 
 %\bibitem{RefJ}
 % Format for Journal Reference
