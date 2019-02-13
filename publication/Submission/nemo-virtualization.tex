@@ -486,16 +486,12 @@ bare-metal or virtualized jobs. The set of worker nodes running
 virtualized jobs changes  dynamically from job to job, since the VREs
 are started by a standard bare-metal job.
 
-Initially almost the whole \NEMO  cluster was available to the CMS users,
-since they could already profit from their VRE being deployed while
-other users had to wait for the installation of specific scientific
-software.
-This explains the high usage by VREs in the first months of
-operation. As more and more software became available for bare-metal usage the
-type of jobs started to increase in numbers and the fraction of VRE
-jobs decreased. A longer job queue and other remote cluster resources are
-another explanation, since ROCED dynamically queues VRE jobs depending on the
-queue length on the remote sites.
+
+Initially almost the whole \NEMO cluster was available to the CMS users, since they could already profit from their VRE being deployed while other users had to wait for the installation of specific scientific software.
+This explains the high usage by VREs in the first months of operation. As more and more software became available for bare-metal usage this type of jobs started to increase in numbers and the fraction of VRE jobs decreased.
+At the same time, the CMS group at KIT also gained access to other opportunistic resources which were handled by the KIT \Roced instance as well. Due to the longer queue on \NEMO, the other resources were prefered by \Roced, and therefore the total number of VRE jobs from the CMS group on \NEMO decreased.
+
+
 
 \begin{figure}
 \begin{center}
@@ -606,9 +602,9 @@ The work of F.B. and T.H. was supported by the Virtual Open Science
 Collaboration Environment (ViCE) project MWK 34-7547.221 funded by the
 Ministry of Science, Research and the Arts Baden-W\"urttemberg.
 The work of U.S. was supported by  the Federal Ministry of Education
-and Research within the project 05H15VFCA1
-``Higgs-Physik mit dem und Grid-Computing f\"ur das ATLAS-Experiment
-am LHC''.
+and Research within the project
+05H15VFCA1 ``Untersuchung von Proton-Proton-Wechselwirkungen im
+ATLAS-Experiment am Large Hadron Collider'' in the framework of ``Verbundprojekt 05H2015 - Physik bei h\"ochsten Energien mit dem ATLAS-Experiment am LHC (BMBF-FSP 103)''.
 The work of T.H. was supported by the Federal Ministry of Education
 and Research within the project 05H15VKCCA ``Physik bei h\"ochsten Energien mit dem CMS-Experiment
     am LHC''.
