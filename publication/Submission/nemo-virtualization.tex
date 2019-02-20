@@ -471,7 +471,7 @@ for the two configurations, particularly for the KV benchmark, and the loss of p
 \subsection{Usage statistics}
 Fig. \ref{fig-frplots} shows the utilization of virtual machines which were orchestrated by \Roced depending on the resource demands of the users of the KIT group.
 At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 \NEMO cores. 
-Due to the wall-time limitation at \NEMO, \Roced is going to drain virtual machines before hitting the limit. Draining job slots do not accept new jobs, while already started once potentially still occupy parts of the nodes in draining mode, which can lead to an overall efficiency degradation.  One counter measure is to utilze those nodes in a so called backfilling mode by taking into account the remaining wall-time and to assign preferable short running jobs to the concerned nodes.
+Due to the wall-time limitation at \NEMO, \Roced is going to drain virtual machines before hitting the limit. Draining job slots do not accept new jobs, while already started ones potentially still occupy parts of the nodes in draining mode, which can lead to an overall efficiency degradation.  One counter measure is to utilize those nodes in a so called backfilling mode by taking into account the remaining wall-time and to assign preferable short running jobs to the concerned nodes.
 
 \begin{figure}
 \begin{center}
