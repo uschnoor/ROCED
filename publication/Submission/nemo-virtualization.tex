@@ -223,7 +223,7 @@ The parallel storage has
 
 A pre-requirement to execute a VRE is the efficient
 provisioning of data which has to cross institutional boundaries in the CMS use-case.
-A signficant bandwidth is needed to transfer the input data into the VRE from the storage system at
+A significant bandwidth is needed to transfer the input data into the VRE from the storage system at
 the Karlsruhe Institute of Technology (KIT) and to store back the results. The
 NEMO cluster is connected with two 40\,Gbit/s links to the main router of the
 University of Freiburg which itself is linked to the network of
@@ -470,7 +470,8 @@ for the two configurations, particularly for the KV benchmark, and the loss of p
 
 \subsection{Usage statistics}
 Fig. \ref{fig-frplots} shows the utilization of virtual machines which were orchestrated by \Roced depending on the resource demands of the users of the KIT group.
-At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 \NEMO cores.
+At peak times, up to 9000 virtual cores were filled with user jobs, consuming more than a half of the initial 16000 \NEMO cores. 
+Due to the wall-time limitation at \NEMO, \Roced is going to drain virtual machines before hitting the limit. Draining job slots do not accept new jobs, while already started once potentially still occupy parts of the nodes in draining mode, which can lead to an overall efficiency degradation.  One counter measure is to utilze those nodes in a so called backfilling mode by taking into account the remaining wall-time and to assign preferable short running jobs to the concerned nodes.
 
 \begin{figure}
 \begin{center}
@@ -489,7 +490,7 @@ are started by a standard bare-metal job.
 
 Initially almost the whole \NEMO cluster was available to the CMS users, since they could already profit from their VRE being deployed while other users had to wait for the installation of specific scientific software.
 This explains the high usage by VREs in the first months of operation. As more and more software became available for bare-metal usage this type of jobs started to increase in numbers and the fraction of VRE jobs decreased.
-At the same time, the CMS group at KIT also gained access to other opportunistic resources which were handled by the KIT \Roced instance as well. Due to the longer queue on \NEMO, the other resources were prefered by \Roced, and therefore the total number of VRE jobs from the CMS group on \NEMO decreased.
+At the same time, the CMS group at KIT also gained access to other opportunistic resources which were handled by the KIT \Roced instance as well. Due to the longer queue on \NEMO, the other resources were preferred by \Roced, and therefore the total number of VRE jobs from the CMS group on \NEMO decreased.
 
 
 
@@ -534,7 +535,7 @@ for snapshots and migration of jobs. This would facilitate the efficient integra
 long-running monolithic jobs into HPC clusters.
 
 The provided solution extends the available compute resources for HEP calculations
-and could be one possibilitly to cope with new data from the upcoming High-Luminosity
+and could be one possibility to cope with new data from the upcoming High-Luminosity
 upgrade of the LHC. Since HEP VREs are perfect for backfilling this could be used on various
 cluster ressources.
 
